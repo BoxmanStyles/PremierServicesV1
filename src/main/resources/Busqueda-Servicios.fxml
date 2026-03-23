@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="583.0" prefWidth="811.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.BusquedaServiciosController">
+
+    <!-- Header -->
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-padding: 20;">
+            <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+                <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services">
+               <effect>
+                  <Bloom threshold="0.0" />
+               </effect></Label>
+                <Region opacity="0.0" HBox.hgrow="ALWAYS" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Mis Reservas" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Favoritos" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Iniciar Sesion" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Center Content -->
+    <center>
+        <VBox prefHeight="438.0" prefWidth="642.0" spacing="20.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+
+            <!-- Search Section -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10;">
+                <Label prefHeight="40.0" prefWidth="554.0" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Encuentra el Servicio Perfecto para tu Evento">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+
+                <!-- Search Bar -->
+                <HBox spacing="15.0">
+                    <TextField fx:id="txtBusqueda" promptText="Que servicio necesitas? (Ejemplo: fotografo, catering, DJ...)" style="-fx-font-size: 14; -fx-padding: 12;" HBox.hgrow="ALWAYS" />
+                    <Button onAction="#buscarServicios" style="-fx-background-color: #003566; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand;" text=" Buscar" />
+                </HBox>
+
+                <VBox spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 10;">
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Filtros de Búsqueda" />
+                    
+                    <GridPane hgap="15.0" vgap="15.0">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="20" />
+                            <ColumnConstraints percentWidth="20" />
+                            <ColumnConstraints percentWidth="20" />
+                            <ColumnConstraints percentWidth="20" />
+                            <ColumnConstraints percentWidth="20" />
+                        </columnConstraints>
+
+                        <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 13;" text="Categoria" />
+                            <ComboBox fx:id="cmbCategoria" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Todas" />
+                        </VBox>
+
+                        <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 13;" text="Ubicacion" />
+                            <ComboBox fx:id="cmbUbicacion" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Todas" />
+                        </VBox>
+
+                        <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 13;" text="Rango de Precio" />
+                            <ComboBox fx:id="cmbPrecio" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Cualquier precio" />
+                        </VBox>
+
+                        <VBox spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 13;" text="Calificacion" />
+                            <ComboBox fx:id="cmbCalificacion" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Cualquiera" />
+                        </VBox>
+
+                        <VBox spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 13;" text="Fecha del Evento" />
+                            <DatePicker fx:id="dpFecha" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Seleccionar fecha" />
+                        </VBox>
+                  <rowConstraints>
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+                </VBox>
+            </VBox>
+
+            <!-- Results Header -->
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label fx:id="lblResultados" style="-fx-font-size: 16; -fx-text-fill: #555;" text="Mostrando 0 resultados" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label style="-fx-font-size: 14;" text="Ordenar por:" />
+                <ComboBox fx:id="cmbOrden" onAction="#ordenarResultados" prefWidth="200.0" />
+            </HBox>
+
+            <!-- Services Grid -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                <FlowPane fx:id="flowServicios" hgap="20.0" prefWrapLength="1200.0" vgap="20.0">
+                    <!-- Services cards will be added here dynamically -->
+                </FlowPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

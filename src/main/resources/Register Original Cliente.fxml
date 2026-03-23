@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="729.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.RegistroProveedorController">
+
+    <children>
+
+        <Separator layoutX="168.0" layoutY="196.0" prefWidth="465.0" />
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="800.0" spacing="20.0" style="-fx-padding: 20;">
+                <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../../Downloads/Logo.png" />
+                    </image>
+                </ImageView>
+                <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services">
+                    <effect>
+                        <Bloom threshold="0.0" />
+                    </effect>
+                </Label>
+                <Region opacity="0.0" HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Inicio" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Reservas" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Sign in" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Register" textFill="WHITE" />
+                <ImageView blendMode="LIGHTEN" fitHeight="56.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../../Downloads/Icon%20perfil.jpg" />
+                    </image>
+                    <effect>
+                        <Glow level="0.99" />
+                    </effect>
+                </ImageView>
+            </HBox>
+        </VBox>
+      <VBox alignment="CENTER" layoutX="225.0" layoutY="199.0" prefHeight="519.0" prefWidth="350.0" spacing="15.0">
+         <children>
+            <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Información Personal">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <VBox prefWidth="350.0" spacing="5.0">
+               <children>
+                  <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Nombre Completo">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="nombreField" promptText="Ingrese su nombre completo" style="-fx-font-size: 14; -fx-padding: 10;" />
+               </children>
+            </VBox>
+            <VBox prefWidth="350.0" spacing="5.0">
+               <children>
+                  <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Correo Electronico">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="emailField" promptText="ejemplo@correo.com" style="-fx-font-size: 14; -fx-padding: 10;" />
+               </children>
+            </VBox>
+            <VBox prefWidth="350.0" spacing="5.0">
+               <children>
+                  <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Contraseña">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="passwordField" promptText="Mínimo 8 caracteres" style="-fx-font-size: 14; -fx-padding: 10;" />
+               </children>
+            </VBox>
+            <VBox prefWidth="350.0" spacing="5.0">
+               <children>
+                  <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Confirmar Contraseña">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="confirmPasswordField" promptText="Repita su contraseña" style="-fx-font-size: 14; -fx-padding: 10;" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER_LEFT" prefWidth="350.0">
+               <children>
+                  <CheckBox fx:id="terminosCheckBox" style="-fx-text-fill: #34495e;" text="Acepto los términos y condiciones" />
+               </children>
+            </HBox>
+            <Label fx:id="lblMensaje" prefWidth="350.0" style="-fx-padding: 5;" wrapText="true" />
+            <HBox alignment="CENTER" prefWidth="350.0" spacing="15.0">
+               <children>
+                  <Button fx:id="registrarButton" defaultButton="true" onAction="#onRegistrarClick" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white;                                        -fx-font-size: 16; -fx-font-weight: bold;                                        -fx-padding: 12; -fx-background-radius: 5;                                        -fx-cursor: hand;" text="Registrar" />
+                  <Button fx:id="cancelarButton" onAction="#onCancelarClick" prefWidth="160.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;                                        -fx-font-size: 16; -fx-font-weight: bold;                                        -fx-padding: 12; -fx-background-radius: 5;                                        -fx-cursor: hand;" text="Cancelar" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefWidth="350.0" spacing="5.0" style="-fx-padding-top: 10;">
+               <children>
+                  <Label style="-fx-text-fill: #7f8c8d;" text="¿Ya tienes cuenta?" />
+                  <Hyperlink onAction="#onLoginClick" style="-fx-text-fill: #3498db; -fx-font-weight: bold;" text="Inicia sesión aquí" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Text layoutX="270.0" layoutY="142.0" text="Registrate como Cliente" wrappingWidth="305.0">
+         <font>
+            <Font name="Franklin Gothic Medium Italic" size="26.0" />
+         </font>
+      </Text>
+      <Text layoutX="315.0" layoutY="171.0" opacity="0.52" text="Encuentra los mejores servicios">
+         <font>
+            <Font name="Franklin Gothic Medium Cond" size="15.0" />
+         </font>
+      </Text>
+
+    </children>
+</AnchorPane>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="765.0" prefWidth="973.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.LoginProveedorController">
+
+    <children>
+      <ImageView blendMode="HARD_LIGHT" cache="true" cacheHint="QUALITY" fitHeight="664.0" fitWidth="1180.0" layoutX="-173.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../Downloads/Backgroud1.jpg" />
+         </image>
+         <effect>
+            <BoxBlur iterations="100" width="14.0" />
+         </effect>
+      </ImageView>
+
+        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="372.0" layoutY="194.0" opacity="0.71" text="Elije el plan que mejor se te acomode !!">
+            <font>
+                <Font name="Franklin Gothic Medium Cond" size="18.0" />
+            </font>
+        </Text>
+
+        <Separator layoutX="125.0" layoutY="212.0" prefHeight="11.0" prefWidth="730.0" />
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1007.0" spacing="20.0" style="-fx-padding: 20;">
+                <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../../Downloads/Logo.png" />
+                    </image>
+                </ImageView>
+                <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services">
+                    <effect>
+                        <Bloom threshold="0.0" />
+                    </effect>
+                </Label>
+                <Region opacity="0.0" HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Inicio" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Reservas" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Sign in" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Register" textFill="WHITE" />
+                <ImageView blendMode="LIGHTEN" fitHeight="56.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../../Downloads/Icon%20perfil.jpg" />
+                    </image>
+                    <effect>
+                        <Glow level="0.99" />
+                    </effect>
+                </ImageView>
+            </HBox>
+        </VBox>
+        <Text fontSmoothingType="LCD" layoutX="308.0" layoutY="165.0" text="Suspcripciones" wrappingWidth="366.0">
+            <font>
+                <Font name="Franklin Gothic Medium Italic" size="56.0" />
+            </font>
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.5921052694320679" green="0.5482456088066101" blue="0.5482456088066101" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.5657894611358643" green="0.5657894611358643" blue="0.5657894611358643" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+         <effect>
+            <Bloom />
+         </effect>
+        </Text>
+      <Button layoutX="34.0" layoutY="130.0" mnemonicParsing="false" style="-fx-background-color: black;" text="&lt; Atras" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="17.0" />
+         </font>
+      </Button>
+      <Pane layoutX="34.0" layoutY="241.0" prefHeight="381.0" prefWidth="285.0" style="-fx-background-color: black;">
+         <children>
+            <Pane layoutY="332.0" prefHeight="49.0" prefWidth="285.0" style="-fx-background-color: white;">
+               <children>
+                  <CheckBox layoutX="81.0" layoutY="7.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Elegir plan">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </Pane>
+            <Text fontSmoothingType="LCD" layoutX="91.0" layoutY="40.0" text="Rookie" wrappingWidth="187.0">
+               <font>
+                  <Font name="Franklin Gothic Medium Italic" size="28.0" />
+               </font>
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.5921052694320679" green="0.5482456088066101" blue="0.5482456088066101" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+               <effect>
+                  <Bloom threshold="0.0" />
+               </effect>
+            </Text>
+            <Text fill="WHITE" fontSmoothingType="LCD" layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Incluye:" underline="true" wrappingWidth="220.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <TextArea editable="false" layoutY="100.0" prefHeight="174.0" prefWidth="285.0" style="-fx-background-color: Black; -fx-border-radius: 50px;" text="-Visibilidad básica en los resultados de búsqueda.&#10;-Posicionamiento estándar dentro de la categoría del servicio.&#10;-Aparición después de planes con mayor prioridad.&#10;&#10;Ajuste de visibilidad según:&#10;&#10;-Calificaciones del suplidor.&#10;-Cancelaciones.&#10;-Tiempos de respuesta." wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font></TextArea>
+         </children>
+      </Pane>
+
+          <Button fx:id="loginButton" defaultButton="true" layoutX="316.0" layoutY="652.0" onAction="#onLoginClick" prefHeight="49.0" prefWidth="360.0" style="-fx-background-color: #007cff; -fx-text-fill: white;                                -fx-font-size: 16; -fx-font-weight: bold;                                -fx-padding: 12; -fx-background-radius: 5;                                -fx-cursor: hand;" text="Siguiente" />
+      <Pane layoutX="677.0" layoutY="235.0" prefHeight="381.0" prefWidth="285.0" style="-fx-background-color: black;">
+         <children>
+            <Pane layoutY="340.0" prefHeight="49.0" prefWidth="285.0" style="-fx-background-color: white;">
+               <children>
+                  <CheckBox layoutX="81.0" layoutY="7.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Elegir plan">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </Pane>
+            <Text fontSmoothingType="LCD" layoutX="73.0" layoutY="40.0" text="Plan Prime" wrappingWidth="140.0">
+               <font>
+                  <Font name="Franklin Gothic Medium Italic" size="28.0" />
+               </font>
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.5921052694320679" green="0.5482456088066101" blue="0.5482456088066101" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+               <effect>
+                  <Bloom threshold="0.0" />
+               </effect>
+            </Text>
+            <Text fill="WHITE" fontSmoothingType="LCD" layoutX="14.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Incluye:" underline="true" wrappingWidth="220.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <TextArea editable="false" layoutY="105.0" prefHeight="174.0" prefWidth="285.0" style="-fx-background-color: Black; -fx-border-radius: 50px;" text="Todo lo del plan Rookie, Elite y además:&#10;&#10;-Prioridad máxima en resultados de búsqueda.&#10;-Inclusión en promociones internas del sistema.&#10;-Aparición en recomendaciones automáticas.&#10;-Máxima exposición del perfil dentro de la plataforma." wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </TextArea>
+         </children></Pane>
+      <Pane layoutX="360.0" layoutY="241.0" prefHeight="381.0" prefWidth="285.0" style="-fx-background-color: black;">
+         <children>
+      
+                          <VBox alignment="CENTER" layoutX="-83.0" layoutY="-40.0" prefWidth="350.0" spacing="18.0">
+      
+                              <children>
+                      <VBox prefWidth="350.0" spacing="5.0" />
+      
+                                  <VBox prefWidth="350.0" spacing="5.0" />
+      
+                                  <Label fx:id="lblMensaje" prefWidth="350.0" style="-fx-padding: 5;" wrapText="true" />
+      
+                                  <HBox alignment="CENTER" prefWidth="350.0" />
+      
+                                  <HBox alignment="CENTER" prefWidth="350.0" spacing="5.0" />
+                  </children>
+              </VBox>
+            <Pane layoutY="340.0" prefHeight="42.0" prefWidth="285.0" style="-fx-background-color: white;">
+               <children>
+                  <CheckBox layoutX="81.0" layoutY="7.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Elegir plan">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </CheckBox>
+                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="13.0" layoutY="-275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Incluye:" underline="true" wrappingWidth="220.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+            <Text fontSmoothingType="LCD" layoutX="88.0" layoutY="40.0" text="Plan Elite" wrappingWidth="187.0">
+               <font>
+                  <Font name="Franklin Gothic Medium Italic" size="28.0" />
+               </font>
+               <fill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.5921052694320679" green="0.5482456088066101" blue="0.5482456088066101" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </fill>
+               <effect>
+                  <Bloom threshold="0.0" />
+               </effect>
+            </Text>
+            <TextArea editable="false" layoutY="106.0" prefHeight="174.0" prefWidth="285.0" style="-fx-background-color: Black; -fx-border-radius: 50px;" text="Todo lo del plan Rookie y además:&#10;&#10;-Posicionamiento mejorado en búsquedas.&#10;-Mayor frecuencia de aparición frente a suplidores       básicos.&#10;-Acceso a estadísticas de rendimiento del perfil.&#10;-Seguimiento del desempeño dentro de la plataforma." wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </TextArea>
+         </children>
+      </Pane>
+
+    </children>
+</AnchorPane>
