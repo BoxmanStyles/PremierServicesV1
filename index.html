@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premier Services - Plataforma de Servicios para Eventos</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="IMG/Logo.png" type="image/png">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="mainHeader">
+    <nav class="nav container">
+      <a href="#" class="logo" onclick="showPage('home')">
+        <img src="IMG/Logo.png" alt="Premier Services Logo" class="logo-img">
+        Premier Services
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#servicios" onclick="showPage('home')">Servicios</a></li>
+        <li><a href="#como-funciona" onclick="showPage('home')">Como Funciona</a></li>
+        <li><a href="#suplidores" onclick="showPage('home')">Suplidores</a></li>
+        <li><a href="#contacto" onclick="showPage('home')">Contacto</a></li>
+      </ul>
+      <div class="nav-buttons" id="navButtons">
+        <button class="btn btn-secondary" onclick="openModal('loginModal')">Iniciar Sesion</button>
+        <button class="btn btn-primary" onclick="openModal('registerModal')">Registrarse</button>
+      </div>
+      <div class="nav-user" id="navUser" style="display: none;">
+        <div class="user-menu">
+          <button class="user-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <span id="userName">Usuario</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="#" onclick="showPage('dashboard')">Mi Panel</a>
+            <a href="#" onclick="showPage('profile')">Mi Perfil</a>
+            <a href="#" onclick="showPage('messages')">Mensajes</a>
+            <a href="#" onclick="showPage('bookings')">Reservas</a>
+            <hr>
+            <a href="#" onclick="logout()">Cerrar Sesion</a>
+          </div>
+        </div>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main id="mainContent">
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content container">
+          <div class="hero-text">
+            <span class="hero-badge">Plataforma #1 en Eventos</span>
+            <h1 class="hero-title">Encuentra los mejores <span class="highlight">suplidores</span> para tu evento</h1>
+            <p class="hero-description">Conectamos clientes con los mejores proveedores de servicios para eventos. Cotiza, reserva y paga de forma segura en un solo lugar.</p>
+            <div class="hero-search">
+              <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" placeholder="Que servicio necesitas?" id="searchInput">
+                <button class="btn btn-primary search-btn" onclick="searchSuppliers()">Buscar</button>
+              </div>
+            </div>
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-number">2,500+</span>
+                <span class="stat-label">Suplidores verificados</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">15,000+</span>
+                <span class="stat-label">Eventos exitosos</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">4.9</span>
+                <span class="stat-label">Calificacion promedio</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-image">
+            <div class="hero-card hero-card-1">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="card-text">
+                <span class="card-title">Bodas</span>
+                <span class="card-subtitle">+500 suplidores</span>
+              </div>
+            </div>
+            <div class="hero-card hero-card-2">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="card-text">
+                <span class="card-title">Cumpleanos</span>
+                <span class="card-subtitle">+350 suplidores</span>
+              </div>
+            </div>
+            <div class="hero-card hero-card-3">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              </div>
+              <div class="card-text">
+                <span class="card-title">Corporativos</span>
+                <span class="card-subtitle">+200 suplidores</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-bg"></div>
+      </section>
+
+      <!-- Services Section -->
+      <section class="services" id="servicios">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-badge">Nuestros Servicios</span>
+            <h2 class="section-title">Todo lo que necesitas para tu evento perfecto</h2>
+            <p class="section-description">Explora nuestra amplia variedad de categorias y encuentra el suplidor ideal para cada detalle de tu evento.</p>
+          </div>
+          <div class="services-grid">
+            <div class="service-card" onclick="filterByCategory('catering')">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </div>
+              <h3>Catering</h3>
+              <p>Menus personalizados para todo tipo de eventos y paladares.</p>
+              <span class="service-count">450+ suplidores</span>
+            </div>
+            <div class="service-card" onclick="filterByCategory('fotografia')">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+              <h3>Fotografia y Video</h3>
+              <p>Captura cada momento especial con profesionales expertos.</p>
+              <span class="service-count">380+ suplidores</span>
+            </div>
+            <div class="service-card" onclick="filterByCategory('musica')">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              </div>
+              <h3>Musica y Entretenimiento</h3>
+              <p>DJs, bandas en vivo y animacion para todas las edades.</p>
+              <span class="service-count">290+ suplidores</span>
+            </div>
+            <div class="service-card" onclick="filterByCategory('decoracion')">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <h3>Decoracion y Flores</h3>
+              <p>Transforma cualquier espacio en un lugar magico.</p>
+              <span class="service-count">320+ suplidores</span>
+            </div>
+            <div class="service-card" onclick="filterByCategory('venue')">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              </div>
+              <h3>Salones y Venues</h3>
+              <p>Encuentra el lugar perfecto para tu celebracion.</p>
+              <span class="service-count">180+ lugares</span>
+            </div>
+            <div class="service-card" onclick="filterByCategory('alquiler')">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <h3>Alquiler de Equipos</h3>
+              <p>Mobiliario, carpas, iluminacion y mas.</p>
+              <span class="service-count">210+ suplidores</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="how-it-works" id="como-funciona">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-badge">Proceso Simple</span>
+            <h2 class="section-title">Como funciona Premier Services?</h2>
+            <p class="section-description">En solo 4 pasos, tendras todo listo para tu evento.</p>
+          </div>
+          <div class="steps-container">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>Busca y Explora</h3>
+                <p>Utiliza nuestros filtros avanzados para encontrar suplidores por categoria, ubicacion, presupuesto y disponibilidad.</p>
+              </div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>Contacta y Cotiza</h3>
+                <p>Inicia una conversacion con los suplidores a traves de nuestro sistema de mensajeria. Recibe cotizaciones personalizadas.</p>
+              </div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>Reserva y Paga</h3>
+                <p>Confirma tu reserva y realiza el pago de forma segura. Tu dinero esta protegido hasta la finalizacion del servicio.</p>
+              </div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3>Disfruta y Evalua</h3>
+                <p>Disfruta de tu evento y al finalizar, evalua al suplidor para ayudar a otros usuarios.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features">
+        <div class="container">
+          <div class="features-grid">
+            <div class="features-content">
+              <span class="section-badge">Garantia Total</span>
+              <h2 class="section-title">Tu tranquilidad es nuestra prioridad</h2>
+              <ul class="features-list">
+                <li>
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </div>
+                  <div class="feature-text">
+                    <h4>Pagos Seguros (Escrow)</h4>
+                    <p>Tu dinero esta protegido hasta que confirmes la satisfaccion del servicio.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+                  </div>
+                  <div class="feature-text">
+                    <h4>Suplidores Verificados</h4>
+                    <p>Todos nuestros proveedores pasan por un proceso de verificacion riguroso.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+                  </div>
+                  <div class="feature-text">
+                    <h4>Sistema de Reputacion</h4>
+                    <p>Resenas verificadas que te ayudan a tomar la mejor decision.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div class="feature-text">
+                    <h4>Proteccion al Cliente</h4>
+                    <p>En caso de incumplimiento, gestionamos reembolsos parciales o totales.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="features-image">
+              <div class="trust-card">
+                <div class="trust-header">
+                  <span class="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88"/></svg>
+                  </span>
+                  <span class="trust-badge">Certificado</span>
+                </div>
+                <h3>Plataforma de Confianza</h3>
+                <p>Mas de 15,000 eventos realizados con exito y 98% de satisfaccion.</p>
+                <div class="trust-stats">
+                  <div class="trust-stat">
+                    <span class="trust-number">98%</span>
+                    <span class="trust-label">Satisfaccion</span>
+                  </div>
+                  <div class="trust-stat">
+                    <span class="trust-number">24/7</span>
+                    <span class="trust-label">Soporte</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Suppliers Section -->
+      <section class="suppliers" id="suplidores">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-badge">Suplidores Destacados</span>
+            <h2 class="section-title">Los mejores profesionales te esperan</h2>
+            <p class="section-description">Conoce algunos de nuestros suplidores mejor calificados.</p>
+          </div>
+          <div class="suppliers-grid" id="suppliersGrid">
+            <!-- Suppliers will be loaded dynamically -->
+          </div>
+          <div class="suppliers-cta">
+            <button class="btn btn-primary btn-large" onclick="showPage('explore')">Ver Todos los Suplidores</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <div class="container">
+          <div class="cta-content">
+            <h2>Eres proveedor de servicios para eventos?</h2>
+            <p>Unete a nuestra plataforma y conecta con miles de clientes potenciales. Aumenta tu visibilidad y haz crecer tu negocio.</p>
+            <div class="cta-buttons">
+              <button class="btn btn-white" onclick="openModal('registerModal'); setTimeout(() => selectUserType('supplier'), 100)">Registrarme como Suplidor</button>
+              <button class="btn btn-outline-white" onclick="openModal('plansModal')">Ver Planes y Precios</button>
+            </div>
+            <div class="cta-features">
+              <span>Sin cuotas de registro</span>
+              <span>Panel de administracion</span>
+              <span>Soporte dedicado</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="contact" id="contacto">
+        <div class="container">
+          <div class="contact-grid">
+            <div class="contact-info">
+              <span class="section-badge">Contactanos</span>
+              <h2 class="section-title">Tienes alguna pregunta?</h2>
+              <p>Estamos aqui para ayudarte. Nuestro equipo de soporte esta disponible las 24 horas.</p>
+              <div class="contact-methods">
+                <div class="contact-method">
+                  <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </span>
+                  <div>
+                    <h4>Email</h4>
+                    <p>soporte@premierservices.com</p>
+                  </div>
+                </div>
+                <div class="contact-method">
+                  <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  </span>
+                  <div>
+                    <h4>Telefono</h4>
+                    <p>+1 (809) 555-0123</p>
+                  </div>
+                </div>
+                <div class="contact-method" onclick="openModal('chatModal')" style="cursor: pointer;">
+                  <span class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </span>
+                  <div>
+                    <h4>Chat en Vivo</h4>
+                    <p>Disponible 24/7</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="contact-form-container">
+              <form class="contact-form" id="contactForm" onsubmit="submitContactForm(event)">
+                <div class="form-group">
+                  <label for="contactName">Nombre completo</label>
+                  <input type="text" id="contactName" name="name" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                  <label for="contactEmail">Correo electronico</label>
+                  <input type="email" id="contactEmail" name="email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                  <label for="contactSubject">Asunto</label>
+                  <select id="contactSubject" name="subject" required>
+                    <option value="">Selecciona una opcion</option>
+                    <option value="general">Consulta General</option>
+                    <option value="soporte">Soporte Tecnico</option>
+                    <option value="suplidores">Informacion para Suplidores</option>
+                    <option value="reclamos">Reclamos</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="contactMessage">Mensaje</label>
+                  <textarea id="contactMessage" name="message" rows="4" required placeholder="En que podemos ayudarte?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Enviar Mensaje</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- EXPLORE PAGE -->
+    <div id="explorePage" class="page">
+      <section class="explore-section">
+        <div class="container">
+          <div class="explore-header">
+            <h1>Explorar Suplidores</h1>
+            <p>Encuentra el proveedor perfecto para tu evento</p>
+          </div>
+          
+          <!-- Filters -->
+          <div class="filters-container">
+            <div class="filters-row">
+              <div class="filter-group">
+                <label>Categoria</label>
+                <select id="filterCategory" onchange="applyFilters()">
+                  <option value="">Todas las categorias</option>
+                  <option value="catering">Catering</option>
+                  <option value="fotografia">Fotografia y Video</option>
+                  <option value="musica">Musica y Entretenimiento</option>
+                  <option value="decoracion">Decoracion y Flores</option>
+                  <option value="venue">Salones y Venues</option>
+                  <option value="alquiler">Alquiler de Equipos</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Ubicacion</label>
+                <select id="filterLocation" onchange="applyFilters()">
+                  <option value="">Todas las ubicaciones</option>
+                  <option value="santo-domingo">Santo Domingo</option>
+                  <option value="santiago">Santiago</option>
+                  <option value="punta-cana">Punta Cana</option>
+                  <option value="la-romana">La Romana</option>
+                  <option value="puerto-plata">Puerto Plata</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Precio</label>
+                <select id="filterPrice" onchange="applyFilters()">
+                  <option value="">Cualquier precio</option>
+                  <option value="low">$ - Economico</option>
+                  <option value="medium">$$ - Moderado</option>
+                  <option value="high">$$$ - Premium</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Calificacion</label>
+                <select id="filterRating" onchange="applyFilters()">
+                  <option value="">Cualquier calificacion</option>
+                  <option value="4.5">4.5+ estrellas</option>
+                  <option value="4">4+ estrellas</option>
+                  <option value="3.5">3.5+ estrellas</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Tipo de Evento</label>
+                <select id="filterEventType" onchange="applyFilters()">
+                  <option value="">Todos los eventos</option>
+                  <option value="bodas">Bodas</option>
+                  <option value="cumpleanos">Cumpleanos</option>
+                  <option value="corporativos">Corporativos</option>
+                  <option value="quinceañeras">Quinceañeras</option>
+                  <option value="baby-shower">Baby Shower</option>
+                </select>
+              </div>
+            </div>
+            <div class="filters-actions">
+              <button class="btn btn-secondary" onclick="clearFilters()">Limpiar Filtros</button>
+              <span class="results-count" id="resultsCount">Mostrando 0 suplidores</span>
+            </div>
+          </div>
+
+          <!-- Suppliers Grid -->
+          <div class="suppliers-grid explore-grid" id="exploreGrid">
+            <!-- Suppliers loaded dynamically -->
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- SUPPLIER PROFILE PAGE -->
+    <div id="supplierProfilePage" class="page">
+      <section class="profile-section">
+        <div class="container">
+          <div class="profile-header" id="supplierProfileHeader">
+            <!-- Loaded dynamically -->
+          </div>
+          <div class="profile-content">
+            <div class="profile-main" id="supplierProfileMain">
+              <!-- Loaded dynamically -->
+            </div>
+            <div class="profile-sidebar" id="supplierProfileSidebar">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- CLIENT DASHBOARD PAGE -->
+    <div id="dashboardPage" class="page">
+      <section class="dashboard-section">
+        <div class="container">
+          <div class="dashboard-header">
+            <h1>Mi Panel</h1>
+            <p id="dashboardWelcome">Bienvenido de vuelta</p>
+          </div>
+          
+          <!-- Client Dashboard -->
+          <div id="clientDashboard" class="dashboard-content">
+            <div class="dashboard-stats">
+              <div class="stat-card">
+                <div class="stat-icon blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="clientEventsCount">0</span>
+                  <span class="stat-label">Eventos Activos</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon green">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="clientBookingsCount">0</span>
+                  <span class="stat-label">Reservas Completadas</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon orange">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="clientMessagesCount">0</span>
+                  <span class="stat-label">Mensajes Nuevos</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="clientFavoritesCount">0</span>
+                  <span class="stat-label">Favoritos</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <h3>Proximas Reservas</h3>
+                  <a href="#" onclick="showPage('bookings')">Ver todas</a>
+                </div>
+                <div class="bookings-list" id="clientBookingsList">
+                  <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <p>No tienes reservas proximas</p>
+                    <button class="btn btn-primary" onclick="showPage('explore')">Explorar Suplidores</button>
+                  </div>
+                </div>
+              </div>
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <h3>Mensajes Recientes</h3>
+                  <a href="#" onclick="showPage('messages')">Ver todos</a>
+                </div>
+                <div class="messages-list" id="clientMessagesList">
+                  <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <p>No tienes mensajes nuevos</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-card full-width">
+              <div class="card-header">
+                <h3>Suplidores Recomendados</h3>
+                <a href="#" onclick="showPage('explore')">Ver mas</a>
+              </div>
+              <div class="recommended-suppliers" id="recommendedSuppliers">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Supplier Dashboard -->
+          <div id="supplierDashboard" class="dashboard-content" style="display: none;">
+            <div class="dashboard-stats">
+              <div class="stat-card">
+                <div class="stat-icon blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="supplierViewsCount">0</span>
+                  <span class="stat-label">Visitas al Perfil</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon green">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="supplierEarningsCount">$0</span>
+                  <span class="stat-label">Ganancias del Mes</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon orange">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="supplierBookingsCount">0</span>
+                  <span class="stat-label">Reservas Pendientes</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+                </div>
+                <div class="stat-info">
+                  <span class="stat-value" id="supplierRatingValue">0.0</span>
+                  <span class="stat-label">Calificacion Promedio</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <h3>Solicitudes de Reserva</h3>
+                  <a href="#" onclick="showPage('bookings')">Ver todas</a>
+                </div>
+                <div class="bookings-list" id="supplierBookingsList">
+                  <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <p>No tienes solicitudes pendientes</p>
+                  </div>
+                </div>
+              </div>
+              <div class="dashboard-card">
+                <div class="card-header">
+                  <h3>Mensajes de Clientes</h3>
+                  <a href="#" onclick="showPage('messages')">Ver todos</a>
+                </div>
+                <div class="messages-list" id="supplierMessagesList">
+                  <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <p>No tienes mensajes nuevos</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-card full-width">
+              <div class="card-header">
+                <h3>Resenas Recientes</h3>
+                <a href="#" onclick="showPage('reviews')">Ver todas</a>
+              </div>
+              <div class="reviews-list" id="supplierReviewsList">
+                <div class="empty-state">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+                  <p>Aun no tienes resenas</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-actions">
+              <button class="btn btn-primary" onclick="showPage('editProfile')">Editar Mi Perfil</button>
+              <button class="btn btn-secondary" onclick="openModal('plansModal')">Mejorar Mi Plan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- BOOKINGS PAGE -->
+    <div id="bookingsPage" class="page">
+      <section class="bookings-section">
+        <div class="container">
+          <div class="page-header">
+            <h1>Mis Reservas</h1>
+            <div class="tabs">
+              <button class="tab active" onclick="filterBookings('all')">Todas</button>
+              <button class="tab" onclick="filterBookings('pending')">Pendientes</button>
+              <button class="tab" onclick="filterBookings('confirmed')">Confirmadas</button>
+              <button class="tab" onclick="filterBookings('completed')">Completadas</button>
+            </div>
+          </div>
+          <div class="bookings-container" id="bookingsContainer">
+            <div class="empty-state large">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <h3>No tienes reservas</h3>
+              <p>Cuando realices una reserva, aparecera aqui</p>
+              <button class="btn btn-primary" onclick="showPage('explore')">Explorar Suplidores</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- MESSAGES PAGE -->
+    <div id="messagesPage" class="page">
+      <section class="messages-section">
+        <div class="container">
+          <div class="messages-layout">
+            <div class="conversations-list" id="conversationsList">
+              <div class="conversations-header">
+                <h2>Mensajes</h2>
+              </div>
+              <div class="conversations-items" id="conversationsItems">
+                <div class="empty-state">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <p>No tienes conversaciones</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat-area" id="chatArea">
+              <div class="chat-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <p>Selecciona una conversacion para comenzar</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div id="profilePage" class="page">
+      <section class="profile-edit-section">
+        <div class="container">
+          <div class="page-header">
+            <h1>Mi Perfil</h1>
+          </div>
+          <div class="profile-edit-container">
+            <div class="profile-edit-sidebar">
+              <div class="profile-photo-edit">
+                <div class="avatar-large" id="profileAvatar">U</div>
+                <button class="btn btn-secondary btn-small">Cambiar Foto</button>
+              </div>
+              <div class="profile-menu">
+                <a href="#" class="active" onclick="showProfileSection('personal')">Informacion Personal</a>
+                <a href="#" onclick="showProfileSection('security')">Seguridad</a>
+                <a href="#" onclick="showProfileSection('notifications')">Notificaciones</a>
+                <a href="#" onclick="showProfileSection('payment')">Metodos de Pago</a>
+              </div>
+            </div>
+            <div class="profile-edit-content" id="profileEditContent">
+              <!-- Personal Info Section -->
+              <div id="personalSection" class="profile-section active">
+                <h2>Informacion Personal</h2>
+                <form id="profileForm" onsubmit="saveProfile(event)">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Nombre</label>
+                      <input type="text" id="profileFirstName" placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group">
+                      <label>Apellido</label>
+                      <input type="text" id="profileLastName" placeholder="Tu apellido">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Correo Electronico</label>
+                    <input type="email" id="profileEmail" placeholder="tu@email.com">
+                  </div>
+                  <div class="form-group">
+                    <label>Telefono</label>
+                    <input type="tel" id="profilePhone" placeholder="+1 (809) 555-0000">
+                  </div>
+                  <div class="form-group">
+                    <label>Ubicacion</label>
+                    <select id="profileLocation">
+                      <option value="">Selecciona tu ubicacion</option>
+                      <option value="santo-domingo">Santo Domingo</option>
+                      <option value="santiago">Santiago</option>
+                      <option value="punta-cana">Punta Cana</option>
+                      <option value="la-romana">La Romana</option>
+                      <option value="puerto-plata">Puerto Plata</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="mainFooter">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo" onclick="showPage('home')">
+            <img src="IMG/Logo.png" alt="Premier Services Logo" class="logo-img">
+            Premier Services
+          </a>
+          <p>La plataforma lider para conectar clientes con los mejores proveedores de servicios para eventos.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Plataforma</h4>
+          <ul>
+            <li><a href="#" onclick="showPage('explore')">Buscar Suplidores</a></li>
+            <li><a href="#servicios">Categorias</a></li>
+            <li><a href="#como-funciona">Como Funciona</a></li>
+            <li><a href="#" onclick="openModal('plansModal')">Precios</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Suplidores</h4>
+          <ul>
+            <li><a href="#" onclick="openModal('registerModal'); setTimeout(() => selectUserType('supplier'), 100)">Registrarse</a></li>
+            <li><a href="#" onclick="openModal('plansModal')">Planes de Suscripcion</a></li>
+            <li><a href="#contacto">Centro de Ayuda</a></li>
+            <li><a href="#">Recursos</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Terminos de Servicio</a></li>
+            <li><a href="#">Politica de Privacidad</a></li>
+            <li><a href="#">Politica de Reembolso</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>2024 Premier Services. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODALS -->
+  
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Iniciar Sesion</h3>
+        <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Correo Electronico</label>
+            <input type="email" id="loginEmail" required placeholder="tu@email.com">
+          </div>
+          <div class="form-group">
+            <label>Contrasena</label>
+            <input type="password" id="loginPassword" required placeholder="Tu contrasena">
+          </div>
+          <div class="form-options">
+            <label class="checkbox">
+              <input type="checkbox">
+              <span>Recordarme</span>
+            </label>
+            <a href="#" class="link">Olvidaste tu contrasena?</a>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Iniciar Sesion</button>
+        </form>
+        <div class="modal-footer">
+          <p>No tienes cuenta? <a href="#" onclick="closeModal('loginModal'); openModal('registerModal')">Registrate aqui</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal" id="registerModal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Crear Cuenta</h3>
+        <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Step 1: User Type Selection -->
+        <div id="registerStep1" class="register-step active">
+          <h4>Como deseas registrarte?</h4>
+          <div class="user-type-selection">
+            <div class="user-type-card" onclick="selectUserType('client')">
+              <div class="type-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <h5>Cliente</h5>
+              <p>Busco suplidores para mis eventos</p>
+              <ul class="type-features">
+                <li>Busqueda ilimitada de suplidores</li>
+                <li>Cotizaciones gratuitas</li>
+                <li>Pagos protegidos</li>
+                <li>Soporte 24/7</li>
+              </ul>
+              <span class="type-price">Gratis</span>
+            </div>
+            <div class="user-type-card" onclick="selectUserType('supplier')">
+              <div class="type-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <h5>Proveedor</h5>
+              <p>Ofrezco servicios para eventos</p>
+              <ul class="type-features">
+                <li>Perfil profesional</li>
+                <li>Gestion de reservas</li>
+                <li>Pagos seguros</li>
+                <li>Analiticas de negocio</li>
+              </ul>
+              <span class="type-price">Desde $0/mes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Plan Selection (Only for Suppliers) -->
+        <div id="registerStep2" class="register-step">
+          <button class="back-btn" onclick="goToRegisterStep(1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver
+          </button>
+          <h4>Selecciona tu Plan</h4>
+          <div class="plans-grid">
+            <div class="plan-card" onclick="selectPlan('free')">
+              <div class="plan-header">
+                <h5>Rooki</h5>
+                <div class="plan-price">
+                  <span class="price">$30</span>
+                  <span class="period">/mes</span>
+                </div>
+              </div>
+              <ul class="plan-features">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Perfil basico</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 5 fotos en galeria</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Mensajeria basica</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 10% comision por reserva</li>
+                <li class="disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sin destacado</li>
+                <li class="disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sin analiticas</li>
+              </ul>
+              <button class="btn btn-secondary btn-full">Seleccionar</button>
+            </div>
+            <div class="plan-card popular" onclick="selectPlan('professional')">
+              <div class="popular-badge">Mas Popular</div>
+              <div class="plan-header">
+                <h5>Elite</h5>
+                <div class="plan-price">
+                  <span class="price">$65</span>
+                  <span class="period">/mes</span>
+                </div>
+              </div>
+              <ul class="plan-features">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Perfil verificado</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 25 fotos en galeria</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Mensajeria prioritaria</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 7% comision por reserva</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Destacado en busquedas</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Analiticas basicas</li>
+              </ul>
+              <button class="btn btn-primary btn-full">Seleccionar</button>
+            </div>
+            <div class="plan-card" onclick="selectPlan('premium')">
+              <div class="plan-header">
+                <h5>Prime</h5>
+                <div class="plan-price">
+                  <span class="price">$80</span>
+                  <span class="period">/mes</span>
+                </div>
+              </div>
+              <ul class="plan-features">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Perfil premium verificado</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Fotos ilimitadas</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Soporte prioritario 24/7</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 5% comision por reserva</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Top destacado</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Analiticas avanzadas</li>
+              </ul>
+              <button class="btn btn-secondary btn-full">Seleccionar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Registration Form -->
+        <div id="registerStep3" class="register-step">
+          <button class="back-btn" onclick="goToRegisterStep(selectedUserType === 'client' ? 1 : 2)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver
+          </button>
+          <h4 id="registerFormTitle">Completa tu registro</h4>
+          <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="registerFirstName" required placeholder="Tu nombre">
+              </div>
+              <div class="form-group">
+                <label>Apellido</label>
+                <input type="text" id="registerLastName" required placeholder="Tu apellido">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Correo Electronico</label>
+              <input type="email" id="registerEmail" required placeholder="tu@email.com">
+            </div>
+            <div class="form-group">
+              <label>Telefono</label>
+              <input type="tel" id="registerPhone" required placeholder="+1 (809) 555-0000">
+            </div>
+            <!-- Supplier-specific fields -->
+            <div id="supplierFields" style="display: none;">
+              <div class="form-group">
+                <label>Nombre del Negocio</label>
+                <input type="text" id="registerBusinessName" placeholder="Nombre de tu empresa">
+              </div>
+              <div class="form-group">
+                <label>Categoria Principal</label>
+                <select id="registerCategory">
+                  <option value="">Selecciona una categoria</option>
+                  <option value="catering">Catering</option>
+                  <option value="fotografia">Fotografia y Video</option>
+                  <option value="musica">Musica y Entretenimiento</option>
+                  <option value="decoracion">Decoracion y Flores</option>
+                  <option value="venue">Salones y Venues</option>
+                  <option value="alquiler">Alquiler de Equipos</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Ubicacion</label>
+                <select id="registerLocation">
+                  <option value="">Selecciona tu ubicacion</option>
+                  <option value="santo-domingo">Santo Domingo</option>
+                  <option value="santiago">Santiago</option>
+                  <option value="punta-cana">Punta Cana</option>
+                  <option value="la-romana">La Romana</option>
+                  <option value="puerto-plata">Puerto Plata</option>
+                </select>
+              </div>
+              <!-- Payment Section for Paid Plans -->
+              <div id="paymentSection" class="payment-section" style="display: none;">
+                <div class="payment-header">
+                  <h5>Informacion de Pago</h5>
+                  <p class="payment-plan-info" id="selectedPlanInfo">Plan seleccionado: <strong>Profesional - $29/mes</strong></p>
+                </div>
+                <div class="payment-methods">
+                  <label class="payment-method-option active" onclick="selectPaymentMethod('card')">
+                    <input type="radio" name="paymentMethod" value="card" checked>
+                    <span class="method-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    </span>
+                    <span class="method-label">Tarjeta de Credito/Debito</span>
+                  </label>
+                  <label class="payment-method-option" onclick="selectPaymentMethod('paypal')">
+                    <input type="radio" name="paymentMethod" value="paypal">
+                    <span class="method-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.772.772 0 0 1 .763-.653h6.413c2.905 0 4.97 1.662 4.673 4.46-.43 4.024-3.19 5.398-6.31 5.398H8.296l-.92 5.91a.641.641 0 0 1-.633.54l-.667-.038z"/></svg>
+                    </span>
+                    <span class="method-label">PayPal</span>
+                  </label>
+                </div>
+                <div id="cardPaymentFields" class="card-fields">
+                  <div class="form-group">
+                    <label>Numero de Tarjeta</label>
+                    <div class="card-input-wrapper">
+                      <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)">
+                      <div class="card-icons">
+                        <svg class="card-icon visa" viewBox="0 0 48 48"><path fill="#1565C0" d="M45,35c0,2.209-1.791,4-4,4H7c-2.209,0-4-1.791-4-4V13c0-2.209,1.791-4,4-4h34c2.209,0,4,1.791,4,4V35z"/><path fill="#FFF" d="M15.186 19l-2.626 7.832c0 0-.667-3.313-.733-3.729-1.495-3.411-3.701-3.221-3.701-3.221L10.726 30v-.002h3.161L18.258 19H15.186zM17.689 30L20.56 30 22.296 19 19.389 19zM38.008 19h-3.021l-4.71 11h2.852l.588-1.571h3.596L37.619 30h2.613L38.008 19zM34.513 26.328l1.563-4.157.818 4.157H34.513zM26.369 22.206c0-.606.498-1.057 1.926-1.057.928 0 1.991.674 1.991.674l.466-2.309c0 0-1.358-.515-2.691-.515-3.019 0-4.576 1.444-4.576 3.272 0 3.306 3.979 2.853 3.979 4.551 0 .291-.231.964-1.888.964-1.662 0-2.759-.609-2.759-.609l-.495 2.216c0 0 1.063.606 3.117.606 2.059 0 4.915-1.54 4.915-3.752C30.354 23.586 26.369 23.394 26.369 22.206z"/><path fill="#FFC107" d="M12.212,24.945l-0.966-4.748c0,0-0.437-1.029-1.573-1.029c-1.136,0-4.44,0-4.44,0S10.894,20.84,12.212,24.945z"/></svg>
+                        <svg class="card-icon mastercard" viewBox="0 0 48 48"><path fill="#3F51B5" d="M45,35c0,2.209-1.791,4-4,4H7c-2.209,0-4-1.791-4-4V13c0-2.209,1.791-4,4-4h34c2.209,0,4,1.791,4,4V35z"/><circle cx="30.5" cy="24" r="10" fill="#FFC107"/><circle cx="17.5" cy="24" r="10" fill="#F44336"/><path fill="#FF9800" d="M22,24c0,3.315,1.62,6.25,4.105,8.063C27.725,30.25,29,27.29,29,24s-1.275-6.25-2.895-8.063C23.62,17.75,22,20.685,22,24z"/></svg>
+                        <svg class="card-icon amex" viewBox="0 0 48 48"><path fill="#1976D2" d="M45,35c0,2.209-1.791,4-4,4H7c-2.209,0-4-1.791-4-4V13c0-2.209,1.791-4,4-4h34c2.209,0,4,1.791,4,4V35z"/><path fill="#FFF" d="M22.255 20l-2.113 4.683L18.039 20h-2.695v6.726L12.341 20h-2.274L7 26.981h1.815l.671-1.558h3.432l.682 1.558h3.465v-5.185l2.299 5.185h1.563l2.351-5.095v5.095H25V20H22.255zM10.135 23.915l1.026-2.44 1.066 2.44H10.135zM37.883 23.413L41 20.018h-2.217l-1.994 2.164-1.919-2.164H32v.001l2.988 3.369-3.052 3.593h2.265l2.09-2.283 2.004 2.283h2.854L37.883 23.413zM33 25.168l.673-.774h.028L33 25.168zM40.235 26.981V25.15h-3.29v-1.235h3.193v-1.736h-3.193V21h3.29v-1h-4.893v6.981H40.235z"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Fecha de Expiracion</label>
+                      <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" oninput="formatExpiry(this)">
+                    </div>
+                    <div class="form-group">
+                      <label>CVV</label>
+                      <div class="cvv-input-wrapper">
+                        <input type="text" id="cardCvv" placeholder="123" maxlength="4">
+                        <span class="cvv-tooltip" title="Codigo de 3 o 4 digitos en el reverso de tu tarjeta">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Nombre en la Tarjeta</label>
+                    <input type="text" id="cardName" placeholder="Como aparece en la tarjeta">
+                  </div>
+                </div>
+                <div id="paypalPaymentFields" class="paypal-fields" style="display: none;">
+                  <div class="paypal-notice">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <p>Seras redirigido a PayPal para completar el pago de forma segura despues de crear tu cuenta.</p>
+                  </div>
+                </div>
+                <div class="payment-security">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span>Tus datos estan protegidos con encriptacion SSL de 256 bits</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contrasena</label>
+              <input type="password" id="registerPassword" required placeholder="Minimo 8 caracteres">
+            </div>
+            <div class="form-group">
+              <label>Confirmar Contrasena</label>
+              <input type="password" id="registerPasswordConfirm" required placeholder="Repite tu contrasena">
+            </div>
+            <div class="form-group">
+              <label class="checkbox">
+                <input type="checkbox" required>
+                <span>Acepto los <a href="#">Terminos de Servicio</a> y la <a href="#">Politica de Privacidad</a></span>
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Crear Cuenta</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plans Modal -->
+  <div class="modal" id="plansModal">
+    <div class="modal-content modal-xlarge">
+      <div class="modal-header">
+        <h3>Planes y Precios para Suplidores</h3>
+        <button class="modal-close" onclick="closeModal('plansModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="plans-intro">
+          <p>Elige el plan que mejor se adapte a tu negocio. Todos los planes incluyen acceso a nuestra plataforma segura de pagos.</p>
+        </div>
+        <div class="plans-grid large">
+          <div class="plan-card">
+            <div class="plan-header">
+              <h5>Basico</h5>
+              <div class="plan-price">
+                <span class="price">$0</span>
+                <span class="period">/mes</span>
+              </div>
+              <p class="plan-description">Ideal para comenzar</p>
+            </div>
+            <ul class="plan-features">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Perfil basico</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 5 fotos en galeria</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Mensajeria basica</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 10% comision por reserva</li>
+              <li class="disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sin destacado en busquedas</li>
+              <li class="disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sin insignia verificado</li>
+              <li class="disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sin analiticas</li>
+            </ul>
+            <button class="btn btn-secondary btn-full" onclick="closeModal('plansModal'); openModal('registerModal'); setTimeout(() => { selectUserType('supplier'); setTimeout(() => selectPlan('free'), 100); }, 100)">Comenzar Gratis</button>
+          </div>
+          <div class="plan-card popular">
+            <div class="popular-badge">Mas Popular</div>
+            <div class="plan-header">
+              <h5>Profesional</h5>
+              <div class="plan-price">
+                <span class="price">$29</span>
+                <span class="period">/mes</span>
+              </div>
+              <p class="plan-description">Para negocios en crecimiento</p>
+            </div>
+            <ul class="plan-features">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Perfil verificado con insignia</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 25 fotos + 3 videos</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Mensajeria prioritaria</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 7% comision por reserva</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Destacado en busquedas</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Calendario de disponibilidad</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Analiticas basicas</li>
+            </ul>
+            <button class="btn btn-primary btn-full" onclick="closeModal('plansModal'); openModal('registerModal'); setTimeout(() => { selectUserType('supplier'); setTimeout(() => selectPlan('professional'), 100); }, 100)">Elegir Profesional</button>
+          </div>
+          <div class="plan-card">
+            <div class="plan-header">
+              <h5>Premium</h5>
+              <div class="plan-price">
+                <span class="price">$79</span>
+                <span class="period">/mes</span>
+              </div>
+              <p class="plan-description">Maxima visibilidad</p>
+            </div>
+            <ul class="plan-features">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Perfil premium con badge oro</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Galeria ilimitada</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Soporte prioritario 24/7</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 5% comision por reserva</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Top destacado en home</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Promociones exclusivas</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Analiticas avanzadas + reportes</li>
+            </ul>
+            <button class="btn btn-secondary btn-full" onclick="closeModal('plansModal'); openModal('registerModal'); setTimeout(() => { selectUserType('supplier'); setTimeout(() => selectPlan('premium'), 100); }, 100)">Elegir Premium</button>
+          </div>
+        </div>
+        <div class="plans-faq">
+          <h4>Preguntas Frecuentes</h4>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              Puedo cambiar de plan despues?
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <p>Si, puedes actualizar o degradar tu plan en cualquier momento. Los cambios se aplican en tu proximo ciclo de facturacion.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              Como funciona la comision por reserva?
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <p>La comision se aplica solo cuando se completa una reserva exitosa. Incluye el procesamiento de pagos y la proteccion al cliente.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              Hay contratos a largo plazo?
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <p>No, todos nuestros planes son mes a mes. Puedes cancelar cuando quieras sin penalidades.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal" id="bookingModal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Solicitar Reserva</h3>
+        <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="booking-supplier-info" id="bookingSupplierInfo">
+          <!-- Loaded dynamically -->
+        </div>
+        <form id="bookingForm" onsubmit="submitBooking(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha del Evento</label>
+              <input type="date" id="bookingDate" required>
+            </div>
+            <div class="form-group">
+              <label>Hora de Inicio</label>
+              <input type="time" id="bookingTime" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Evento</label>
+            <select id="bookingEventType" required>
+              <option value="">Selecciona el tipo de evento</option>
+              <option value="boda">Boda</option>
+              <option value="cumpleanos">Cumpleanos</option>
+              <option value="corporativo">Evento Corporativo</option>
+              <option value="quinceañera">Quinceañera</option>
+              <option value="baby-shower">Baby Shower</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Numero de Invitados</label>
+            <input type="number" id="bookingGuests" required placeholder="Cantidad aproximada">
+          </div>
+          <div class="form-group">
+            <label>Ubicacion del Evento</label>
+            <input type="text" id="bookingLocation" required placeholder="Direccion o nombre del lugar">
+          </div>
+          <div class="form-group">
+            <label>Detalles Adicionales</label>
+            <textarea id="bookingDetails" rows="4" placeholder="Describe lo que necesitas, preferencias especiales, etc."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Presupuesto Estimado</label>
+            <select id="bookingBudget">
+              <option value="">Selecciona un rango</option>
+              <option value="500-1000">$500 - $1,000</option>
+              <option value="1000-2500">$1,000 - $2,500</option>
+              <option value="2500-5000">$2,500 - $5,000</option>
+              <option value="5000-10000">$5,000 - $10,000</option>
+              <option value="10000+">Mas de $10,000</option>
+            </select>
+          </div>
+          <div class="booking-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <p>Esta es una solicitud de cotizacion. El suplidor te enviara una propuesta con precios y disponibilidad.</p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Enviar Solicitud</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Modal -->
+  <div class="modal" id="chatModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Chat en Vivo</h3>
+        <button class="modal-close" onclick="closeModal('chatModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            <p>Hola! Bienvenido a Premier Services. Que tipo de servicio estas buscando?</p>
+          </div>
+        </div>
+        <div class="chat-options" id="chatOptions">
+          <button class="chat-option" data-response="catering" onclick="handleChatOption(this)">Catering</button>
+          <button class="chat-option" data-response="fotografia" onclick="handleChatOption(this)">Fotografia</button>
+          <button class="chat-option" data-response="musica" onclick="handleChatOption(this)">Musica</button>
+          <button class="chat-option" data-response="decoracion" onclick="handleChatOption(this)">Decoracion</button>
+          <button class="chat-option" data-response="otro" onclick="handleChatOption(this)">Otro</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Supplier Modal -->
+  <div class="modal" id="messageSupplierModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Enviar Mensaje</h3>
+        <button class="modal-close" onclick="closeModal('messageSupplierModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="message-recipient" id="messageRecipient">
+          <!-- Loaded dynamically -->
+        </div>
+        <form id="messageSupplierForm" onsubmit="sendMessage(event)">
+          <div class="form-group">
+            <label>Asunto</label>
+            <input type="text" id="messageSubject" required placeholder="Asunto del mensaje">
+          </div>
+          <div class="form-group">
+            <label>Mensaje</label>
+            <textarea id="messageContent" rows="5" required placeholder="Escribe tu mensaje aqui..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Chat Button -->
+  <button class="chat-float" onclick="openModal('chatModal')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <span>Ayuda</span>
+  </button>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
