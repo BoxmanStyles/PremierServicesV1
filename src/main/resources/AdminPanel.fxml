@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="829.0" prefWidth="1269.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.AdminPanelController">
+    <children>
+        <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1269.0">
+            <children>
+                <Text layoutX="490.0" layoutY="64.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panel Admin" wrappingWidth="289.21478271484375">
+                    <font>
+                        <Font name="System Bold" size="48.0" />
+                    </font>
+                </Text>
+                <Separator layoutY="90.0" prefHeight="5.0" prefWidth="1269.0" />
+            </children>
+        </Pane>
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1269.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+                            <td>
+                                <Image url="@../../../IMG/Logo.png" />
+                            </image>
+                        </ImageView>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services - Panel Admin">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                            <effect>
+                                <Bloom />
+                            </effect>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="210.0" prefHeight="625.0" prefWidth="1252.0" style="-fx-background-color: #f5f5f5;">
+            <content>
+                <VBox alignment="TOP_CENTER" prefHeight="1053.0" prefWidth="1254.0" spacing="20.0" style="-fx-background-color: #f5f5f5;">
+                    <padding>
+                        <Insets bottom="30.0" left="50.0" right="50.0" top="20.0" />
+                    </padding>
+                    <children>
+                        <Pane prefHeight="608.0" prefWidth="1137.0">
+                            <children>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" height="267.0" layoutX="14.0" layoutY="22.0" stroke="BLACK" strokeType="INSIDE" width="331.0">
+                                    <fill>
+                                        <RadialGradient centerX="0.5276753049055148" centerY="0.31703474845043866" focusAngle="88.15" focusDistance="1.0" radius="1.0">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color green="0.5176470875740051" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.006711409395973154">
+                                                    <color>
+                                                        <Color green="0.5176470875740051" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </fill>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Rectangle>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" height="267.0" layoutX="403.0" layoutY="22.0" stroke="BLACK" strokeType="INSIDE" width="331.0">
+                                    <fill>
+                                        <RadialGradient centerX="0.5276753049055148" centerY="0.31703474845043866" focusAngle="88.15" focusDistance="1.0" radius="1.0">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color green="0.5166666507720947" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </fill>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Rectangle>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" height="267.0" layoutX="792.0" layoutY="22.0" stroke="BLACK" strokeType="INSIDE" width="331.0">
+                                    <fill>
+                                        <RadialGradient centerX="0.5276753049055148" centerY="0.31703474845043866" focusAngle="88.15" focusDistance="1.0" radius="1.0">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color green="0.5166666507720947" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </fill>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Rectangle>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" height="267.0" layoutX="14.0" layoutY="319.0" stroke="BLACK" strokeType="INSIDE" width="331.0">
+                                    <fill>
+                                        <RadialGradient centerX="0.5276753049055148" centerY="0.31703474845043866" focusAngle="88.15" focusDistance="1.0" radius="1.0">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color green="0.5166666507720947" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </fill>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Rectangle>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" height="267.0" layoutX="403.0" layoutY="319.0" stroke="BLACK" strokeType="INSIDE" width="331.0">
+                                    <fill>
+                                        <RadialGradient centerX="0.5276753049055148" centerY="0.31703474845043866" focusAngle="88.15" focusDistance="1.0" radius="1.0">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color green="0.5166666507720947" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </fill>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Rectangle>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" height="267.0" layoutX="792.0" layoutY="319.0" stroke="BLACK" strokeType="INSIDE" width="331.0">
+                                    <fill>
+                                        <RadialGradient centerX="0.5276753049055148" centerY="0.31703474845043866" focusAngle="88.15" focusDistance="1.0" radius="1.0">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color green="0.5166666507720947" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </fill>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Rectangle>
+                                <Button fx:id="btnGestionClientes" layoutX="39.0" layoutY="40.0" mnemonicParsing="false" onAction="#onGestionClientesClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Clientes" textFill="WHITE">
+                                    <font>
+                                        <Font name="Agency FB" size="32.0" />
+                                    </font>
+                                    <effect>
+                                        <DropShadow />
+                                    </effect>
+                                </Button>
+                                <Button fx:id="btnGestionProveedores" layoutX="427.0" layoutY="40.0" mnemonicParsing="false" onAction="#onGestionProveedoresClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Proveedores" textFill="WHITE">
+                                    <font>
+                                        <Font name="Agency FB" size="32.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow>
+                                            <input>
+                                                <DropShadow />
+                                            </input>
+                                        </Glow>
+                                    </effect>
+                                </Button>
+                                <Button fx:id="btnGestionPagosFacturas" layoutX="817.0" layoutY="37.0" mnemonicParsing="false" onAction="#onGestionPagosFacturasClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Pagos y Facturas" textFill="WHITE">
+                                    <font>
+                                        <Font name="Agency FB" size="32.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow>
+                                            <input>
+                                                <DropShadow />
+                                            </input>
+                                        </Glow>
+                                    </effect>
+                                </Button>
+                                <Button fx:id="btnGestionReservas" layoutX="39.0" layoutY="337.0" mnemonicParsing="false" onAction="#onGestionReservasClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Reservas" textFill="WHITE">
+                                    <font>
+                                        <Font name="Agency FB" size="32.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Button>
+                                <Button fx:id="btnGestionServicios" layoutX="427.0" layoutY="337.0" mnemonicParsing="false" onAction="#onGestionServiciosClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Servicios" textFill="WHITE">
+                                    <font>
+                                        <Font name="Agency FB" size="32.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow />
+                                    </effect>
+                                </Button>
+                                <Button fx:id="btnDashboard" layoutX="817.0" layoutY="337.0" mnemonicParsing="false" onAction="#onDashboardClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Dashboard" textFill="WHITE">
+                                    <font>
+                                        <Font name="Agency FB" size="32.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow>
+                                            <input>
+                                                <DropShadow />
+                                            </input>
+                                        </Glow>
+                                    </effect>
+                                </Button>
+                            </children>
+                            <effect>
+                                <DropShadow />
+                            </effect>
+                        </Pane>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

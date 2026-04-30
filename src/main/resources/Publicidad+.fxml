@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="800" prefHeight="600" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+
+    <children>
+
+        <VBox layoutX="250" layoutY="120" spacing="15">
+
+            <Label text="Publicidad" style="-fx-font-size: 22; -fx-font-weight: bold;" />
+
+            <TextField promptText="Título del anuncio" />
+
+            <TextArea promptText="Descripción del anuncio" />
+
+            <Button text="Crear Anuncio" style="-fx-background-color: #007cff; -fx-text-fill: white;" />
+
+        </VBox>
+
+    </children>
+</AnchorPane>

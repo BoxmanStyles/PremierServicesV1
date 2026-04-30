@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="1968.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.controllerGestionPagosFacturas">
+    <children>
+        <HBox alignment="CENTER_LEFT" layoutX="-1.0" prefHeight="110.0" prefWidth="1285.0" spacing="20.0" style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9); -fx-padding: 20;">
+            <children>
+                <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services - Admin Panel">
+                    <effect>
+                        <Bloom threshold="0.0" />
+                    </effect>
+                </Label>
+                <Region opacity="0.0" HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Inicio" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Reservas" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Sign in" textFill="WHITE" />
+                <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Register" textFill="WHITE" />
+                <ImageView blendMode="LIGHTEN" fitHeight="56.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                    <effect>
+                        <Glow level="0.99" />
+                    </effect>
+                </ImageView>
+            </children>
+        </HBox>
+        <ScrollPane layoutY="105.0" prefHeight="1861.0" prefWidth="1285.0">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1860.0" prefWidth="1291.0">
+                    <children>
+                        <Pane layoutY="-2.0" prefHeight="1861.0" prefWidth="1272.0" style="-fx-background-color: #1c2a4f;">
+                            <children>
+                                <Text fill="WHITE" layoutX="454.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrar Pago y Facturacion" wrappingWidth="378.0">
+                                    <font>
+                                        <Font name="Agency FB" size="40.0" />
+                                    </font>
+                                </Text>
+
+                                <!-- Panel de Factura -->
+                                <Pane layoutX="17.0" layoutY="74.0" prefHeight="500.0" prefWidth="1235.0" style="-fx-background-color: white; -fx-border-color: 191970; -fx-border-radius: 75px; -fx-background-radius: 75px;">
+                                    <children>
+                                        <VBox layoutX="24.0" layoutY="72.0" prefHeight="405.0" prefWidth="557.0" style="-fx-background-color: #1a233b; -fx-background-radius: 25px;">
+                                            <children>
+                                                <Pane prefHeight="17.0" prefWidth="550.0" />
+                                                <Pane prefHeight="65.0" prefWidth="492.0">
+                                                    <children>
+                                                        <TextField fx:id="txtNumeroFactura" layoutX="33.0" layoutY="34.0" prefHeight="25.0" prefWidth="214.0" promptText="Número de factura" />
+                                                        <Text fill="WHITE" layoutX="41.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numero de factura:" wrappingWidth="136.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                        <TextField fx:id="txtItbis" layoutX="275.0" layoutY="34.0" prefHeight="25.0" prefWidth="214.0" promptText="ITBIS %" />
+                                                        <Text fill="WHITE" layoutX="283.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ITBIS %:" wrappingWidth="136.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <TextField fx:id="txtIdSuplidor" layoutX="31.0" layoutY="33.0" prefHeight="25.0" prefWidth="214.0" promptText="ID del suplidor" />
+                                                        <Text fill="WHITE" layoutX="39.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Suplidor:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                        <TextField fx:id="txtDescuento" layoutX="274.0" layoutY="35.0" prefHeight="25.0" prefWidth="215.0" promptText="Descuento" />
+                                                        <Text fill="WHITE" layoutX="283.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descuento:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <DatePicker fx:id="dpFechaFactura" layoutX="27.0" layoutY="32.0" prefHeight="25.0" prefWidth="214.0" promptText="Seleccione fecha" />
+                                                        <Text fill="WHITE" layoutX="36.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                        <Text fill="WHITE" layoutX="284.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Estado:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                        <ChoiceBox fx:id="cbEstadoFactura" layoutX="276.0" layoutY="39.0" prefHeight="25.0" prefWidth="212.0" />
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <TextField fx:id="txtSubtotal" layoutX="28.0" layoutY="33.0" prefHeight="25.0" prefWidth="214.0" promptText="Subtotal" />
+                                                        <Text fill="WHITE" layoutX="38.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sub-Total:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                        <TextField fx:id="txtTotal" layoutX="275.0" layoutY="34.0" prefHeight="25.0" prefWidth="214.0" promptText="Total" />
+                                                        <Text fill="WHITE" layoutX="285.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="128.0" prefWidth="550.0">
+                                                    <children>
+                                                        <Button fx:id="registrarFacturaButton" defaultButton="true" layoutX="80.0" layoutY="40.0" onAction="#onRegistrarFacturaClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Crear Factura" />
+                                                        <Button fx:id="limpiarFacturaButton" layoutX="279.0" layoutY="40.0" onAction="#onLimpiarFacturaClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Limpiar" />
+                                                    </children>
+                                                </Pane>
+                                            </children>
+                                        </VBox>
+                                        <Text layoutX="225.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Factura" wrappingWidth="118.13671875">
+                                            <font>
+                                                <Font name="Dubai Bold" size="35.0" />
+                                            </font>
+                                        </Text>
+
+                                        <!-- Panel de Pago -->
+                                        <VBox layoutX="668.0" layoutY="68.0" prefHeight="405.0" prefWidth="550.0" style="-fx-background-color: #1a233b; -fx-background-radius: 25px;">
+                                            <children>
+                                                <Pane prefHeight="17.0" prefWidth="160.0" />
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <TextField fx:id="txtIdReserva" layoutX="133.0" layoutY="33.0" prefHeight="25.0" prefWidth="285.0" promptText="ID de reserva" />
+                                                        <Text fill="WHITE" layoutX="50.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID Reserva:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <ChoiceBox fx:id="cbMetodoPago" layoutX="133.0" layoutY="33.0" prefHeight="25.0" prefWidth="285.0" />
+                                                        <Text fill="WHITE" layoutX="50.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Metodo de pago:" wrappingWidth="108.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <TextField fx:id="txtMontoPago" layoutX="133.0" layoutY="33.0" prefHeight="25.0" prefWidth="285.0" promptText="Monto" />
+                                                        <Text fill="WHITE" layoutX="50.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monto:" wrappingWidth="53.0">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <ChoiceBox fx:id="cbEstadoPago" layoutX="133.0" layoutY="33.0" prefHeight="25.0" prefWidth="285.0" />
+                                                        <Text fill="WHITE" layoutX="50.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Estado:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <DatePicker fx:id="dpFechaPago" layoutX="133.0" layoutY="33.0" prefHeight="25.0" prefWidth="285.0" promptText="Fecha de pago" />
+                                                        <Text fill="WHITE" layoutX="50.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha Pago:" wrappingWidth="74.13671875">
+                                                            <font>
+                                                                <Font name="Dubai Bold" size="15.0" />
+                                                            </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+                                                <Pane prefHeight="83.0" prefWidth="550.0">
+                                                    <children>
+                                                        <Button fx:id="registrarPagoButton" layoutX="93.0" layoutY="30.0" onAction="#onRegistrarPagoClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Realizar Pago" />
+                                                        <Button fx:id="limpiarPagoButton" layoutX="275.0" layoutY="30.0" onAction="#onLimpiarPagoClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Limpiar" />
+                                                    </children>
+                                                </Pane>
+                                            </children>
+                                        </VBox>
+                                        <Text layoutX="901.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pago" wrappingWidth="84.13671875">
+                                            <font>
+                                                <Font name="Dubai Bold" size="35.0" />
+                                            </font>
+                                        </Text>
+                                    </children>
+                                </Pane>
+
+                                <Button layoutX="26.0" layoutY="21.0" onAction="#onAtrasClick" mnemonicParsing="false" text="<< Atras" />
+
+                                <!-- Tabla de Pagos -->
+                                <Pane layoutX="19.0" layoutY="725.0" prefHeight="352.0" prefWidth="1235.0" style="-fx-background-color: white; -fx-border-color: 191970; -fx-border-radius: 75px; -fx-background-radius: 75px;">
+                                    <children>
+                                        <TableView fx:id="tablaPagos" layoutX="66.0" layoutY="14.0" prefHeight="328.0" prefWidth="1096.0">
+                                            <columns>
+                                                <TableColumn fx:id="colIdPago" prefWidth="147.0" text="id_pago" />
+                                                <TableColumn fx:id="colIdReserva" prefWidth="138.0" text="id_reserva" />
+                                                <TableColumn fx:id="colMonto" prefWidth="168.0" text="monto" />
+                                                <TableColumn fx:id="colMetodoPago" prefWidth="205.0" text="metodo_pago" />
+                                                <TableColumn fx:id="colFechaPago" prefWidth="237.0" text="fecha_pago" />
+                                                <TableColumn fx:id="colEstadoPago" prefWidth="200.0" text="estado" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </Pane>
+
+                                <!-- Botones de Pago -->
+                                <Button fx:id="editarPagoButton" layoutX="454.0" layoutY="1109.0" onAction="#onEditarPagoClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Editar" />
+                                <Button fx:id="eliminarPagoButton" layoutX="645.0" layoutY="1109.0" onAction="#onEliminarPagoClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Eliminar" />
+
+                                <!-- Tabla de Facturas -->
+                                <Pane layoutX="19.0" layoutY="1196.0" prefHeight="352.0" prefWidth="1235.0" style="-fx-background-color: white; -fx-border-color: 191970; -fx-border-radius: 75px; -fx-background-radius: 75px;">
+                                    <children>
+                                        <TableView fx:id="tablaFacturas" layoutX="55.0" layoutY="12.0" prefHeight="328.0" prefWidth="1096.0">
+                                            <columns>
+                                                <TableColumn fx:id="colNumeroFactura" prefWidth="121.0" text="numero_factura" />
+                                                <TableColumn fx:id="colComprobante" prefWidth="127.0" text="comprobante" />
+                                                <TableColumn fx:id="colFechaFactura" prefWidth="151.0" text="fecha" />
+                                                <TableColumn fx:id="colIdSuplidorFactura" prefWidth="152.0" text="id_suplidor" />
+                                                <TableColumn fx:id="colSubtotal" prefWidth="122.0" text="subtotal" />
+                                                <TableColumn fx:id="colItbis" prefWidth="117.0" text="itbis" />
+                                                <TableColumn fx:id="colDescuento" prefWidth="153.0" text="descuento" />
+                                                <TableColumn fx:id="colTotal" prefWidth="150.0" text="total" />
+                                                <TableColumn fx:id="colEstadoFactura" prefWidth="151.0" text="estado" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </Pane>
+
+                                <!-- Botones de Factura -->
+                                <Button fx:id="editarFacturaButton" layoutX="454.0" layoutY="1585.0" onAction="#onEditarFacturaClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Editar" />
+                                <Button fx:id="eliminarFacturaButton" layoutX="645.0" layoutY="1585.0" onAction="#onEliminarFacturaClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Eliminar" />
+
+                                <Text fill="WHITE" layoutX="545.0" layoutY="699.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tabla de Pagos" wrappingWidth="180.0">
+                                    <font>
+                                        <Font name="Agency FB" size="40.0" />
+                                    </font>
+                                </Text>
+                                <Text fill="WHITE" layoutX="506.0" layoutY="1170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tabla de Facturas" wrappingWidth="261.0">
+                                    <font>
+                                        <Font name="Agency FB" size="40.0" />
+                                    </font>
+                                </Text>
+                                <Line endX="637.0" layoutX="635.0" layoutY="632.0" startX="-635.0" stroke="WHITE" />
+                                <Line endX="637.0" layoutX="635.0" layoutY="1122.0" startX="-635.0" stroke="WHITE" />
+                            </children>
+                        </Pane>
+                    </children>
+                </AnchorPane>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

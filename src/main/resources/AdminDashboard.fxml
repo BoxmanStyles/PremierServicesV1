@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.AdminDashboardController">
+    <children>
+        <!-- Header -->
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <HBox alignment="CENTER_LEFT" prefHeight="78.0" prefWidth="1280.0" spacing="20.0" style="-fx-padding: 20;">
+                <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services - Dashboard">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                    <effect>
+                        <Bloom />
+                    </effect>
+                </Label>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#onActualizarClick" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" text="🔄 Actualizar" />
+                <Button onAction="#onVolverClick" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" text="← Volver" />
+            </HBox>
+        </VBox>
+
+        <!-- Título -->
+        <Pane layoutX="14.0" layoutY="95.0" prefHeight="70.0" prefWidth="1252.0">
+            <children>
+                <Text layoutX="14.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard Administrativo" wrappingWidth="350.0">
+                    <font>
+                        <Font name="System Bold" size="28.0" />
+                    </font>
+                </Text>
+                <Separator layoutY="60.0" prefHeight="3.0" prefWidth="1252.0" />
+                <Text layoutX="14.0" layoutY="55.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Resumen general de la plataforma" wrappingWidth="400.0">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Text>
+                <Label fx:id="lblFechaActual" layoutX="1100.0" layoutY="25.0" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" text="" />
+            </children>
+        </Pane>
+
+        <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="175.0" prefHeight="720.0" prefWidth="1252.0" style="-fx-background-color: #f5f5f5;">
+            <content>
+                <VBox spacing="20.0" style="-fx-background-color: #f5f5f5;">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <children>
+                        <!-- Tarjetas de Métricas -->
+                        <GridPane hgap="20.0" vgap="20.0">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                            </rowConstraints>
+
+                            <!-- Tarjeta: Clientes -->
+                            <Pane fx:id="cardClientes" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" GridPane.columnIndex="0">
+                                <children>
+                                    <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20;">
+                                        <Text fill="#3498db" style="-fx-font-size: 48;" text="👥" />
+                                        <Label fx:id="lblTotalClientes" style="-fx-font-size: 32; -fx-font-weight: bold;" text="0" />
+                                        <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" text="Clientes Registrados" />
+                                        <Label fx:id="lblClientesMes" style="-fx-text-fill: #27ae60; -fx-font-size: 12;" text="+0 este mes" />
+                                    </VBox>
+                                </children>
+                            </Pane>
+
+                            <!-- Tarjeta: Proveedores -->
+                            <Pane fx:id="cardProveedores" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" GridPane.columnIndex="1">
+                                <children>
+                                    <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20;">
+                                        <Text fill="#e74c3c" style="-fx-font-size: 48;" text="🏢" />
+                                        <Label fx:id="lblTotalProveedores" style="-fx-font-size: 32; -fx-font-weight: bold;" text="0" />
+                                        <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" text="Proveedores Registrados" />
+                                        <Label fx:id="lblProveedoresMes" style="-fx-text-fill: #27ae60; -fx-font-size: 12;" text="+0 este mes" />
+                                    </VBox>
+                                </children>
+                            </Pane>
+
+                            <!-- Tarjeta: Reservas -->
+                            <Pane fx:id="cardReservas" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" GridPane.columnIndex="2">
+                                <children>
+                                    <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20;">
+                                        <Text fill="#f39c12" style="-fx-font-size: 48;" text="📅" />
+                                        <Label fx:id="lblTotalReservas" style="-fx-font-size: 32; -fx-font-weight: bold;" text="0" />
+                                        <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" text="Reservas Activas" />
+                                        <Label fx:id="lblReservasMes" style="-fx-text-fill: #27ae60; -fx-font-size: 12;" text="+0 este mes" />
+                                    </VBox>
+                                </children>
+                            </Pane>
+
+                            <!-- Tarjeta: Ingresos -->
+                            <Pane fx:id="cardIngresos" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" GridPane.columnIndex="3">
+                                <children>
+                                    <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20;">
+                                        <Text fill="#27ae60" style="-fx-font-size: 48;" text="💰" />
+                                        <Label fx:id="lblTotalIngresos" style="-fx-font-size: 32; -fx-font-weight: bold;" text="$0" />
+                                        <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" text="Ingresos Totales" />
+                                        <Label fx:id="lblIngresosMes" style="-fx-text-fill: #27ae60; -fx-font-size: 12;" text="+$0 este mes" />
+                                    </VBox>
+                                </children>
+                            </Pane>
+                        </GridPane>
+
+                        <!-- Gráficos -->
+                        <HBox spacing="20.0">
+                            <!-- Gráfico de Barras - Ingresos Mensuales -->
+                            <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Ingresos Mensuales (USD)" />
+                                    <BarChart fx:id="barChartIngresos" prefHeight="300.0" prefWidth="600.0">
+                                        <xAxis>
+                                            <CategoryAxis label="Meses" />
+                                        </xAxis>
+                                        <yAxis>
+                                            <NumberAxis label="Ingresos (USD)" />
+                                        </yAxis>
+                                    </BarChart>
+                                </children>
+                            </VBox>
+
+                            <!-- Gráfico de Pastel - Distribución de Servicios -->
+                            <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Distribución de Servicios" />
+                                    <PieChart fx:id="pieChartServicios" prefHeight="300.0" prefWidth="400.0" />
+                                </children>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Canvas para métricas adicionales -->
+                        <HBox spacing="20.0">
+                            <!-- Canvas: Evolución de Clientes -->
+                            <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Evolución de Clientes (Últimos 6 meses)" />
+                                    <Pane fx:id="canvasClientesContainer" prefHeight="250.0" prefWidth="400.0" />
+                                </children>
+                            </VBox>
+
+                            <!-- Canvas: Estados de Pagos -->
+                            <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Estados de Pagos" />
+                                    <Pane fx:id="canvasPagosContainer" prefHeight="250.0" prefWidth="400.0" />
+                                </children>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Tabla de Últimos Pagos -->
+                        <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <children>
+                                <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Últimos Pagos Registrados" />
+                                <TableView fx:id="tablaUltimosPagos" prefHeight="250.0">
+                                    <columns>
+                                        <TableColumn fx:id="colIdPago" prefWidth="100.0" text="ID Pago" />
+                                        <TableColumn fx:id="colIdReserva" prefWidth="100.0" text="ID Reserva" />
+                                        <TableColumn fx:id="colMonto" prefWidth="120.0" text="Monto" />
+                                        <TableColumn fx:id="colMetodoPago" prefWidth="150.0" text="Método Pago" />
+                                        <TableColumn fx:id="colFechaPago" prefWidth="150.0" text="Fecha" />
+                                        <TableColumn fx:id="colEstadoPago" prefWidth="120.0" text="Estado" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>
