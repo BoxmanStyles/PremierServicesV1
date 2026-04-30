@@ -28,18 +28,18 @@
     <children>
         <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1269.0">
             <children>
-                <Text layoutX="39.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Perfil de Proveedor" wrappingWidth="450.0">
+                <Text layoutX="21.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Perfil de Proveedor" wrappingWidth="450.0">
                     <font>
                         <Font name="System Bold" size="28.0" />
                     </font>
                 </Text>
                 <Separator layoutY="90.0" prefHeight="3.0" prefWidth="1000.0" />
-                <Text fill="#040404" layoutX="46.0" layoutY="58.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Crea o edita la información del proveedor" wrappingWidth="400.0">
+                <Text fill="#040404" layoutX="21.0" layoutY="72.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Crea o edita la información del proveedor" wrappingWidth="400.0">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Text>
-                <Button layoutX="1149.0" layoutY="32.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="← Volver a Lista">
+                <Button layoutX="1149.0" layoutY="32.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Volver al Panel">
                     <font>
                         <Font size="12.0" />
                     </font>
@@ -63,10 +63,6 @@
                             </effect>
                         </Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Dashboard" textFill="WHITE" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Proveedores" textFill="WHITE" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Clientes" textFill="WHITE" />
-                        <Button mnemonicParsing="false" onAction="#onCerrarSesionClick" style="-fx-background-color: #e74c3c;" text="Cerrar Sesión" textFill="WHITE" />
                     </children>
                 </HBox>
             </children>

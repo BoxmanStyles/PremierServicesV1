@@ -1,14 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="900.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.RegisterV2Controller">
+    <children>
+        <!-- Fondo principal -->
+        <Rectangle arcHeight="26.0" arcWidth="26.0" height="900.0" width="600.0" fill="#0A1832" />
 
+        <!-- Fondo blanco central -->
+        <Rectangle arcHeight="26.0" arcWidth="26.0" height="815.0" layoutX="25.0" layoutY="55.0" width="550.0" fill="white" />
+
+        <!-- Título Register -->
+        <VBox alignment="CENTER" layoutX="25.0" layoutY="55.0" spacing="8.0">
+            <children>
+                <Text fill="#1E1E1E" strokeType="OUTSIDE" strokeWidth="0.0" text="Register" wrappingWidth="550.0">
+                    <font>
+                        <Font name="Inter Bold" size="72.0" />
+                    </font>
+                </Text>
+                <Text fill="#1E1E1E" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome !" wrappingWidth="550.0">
+                    <font>
+                        <Font name="Inter" size="32.0" />
+                    </font>
+                </Text>
+            </children>
+            <effect>
+                <DropShadow height="4.0" radius="2.0" width="4.0" />
+            </effect>
+        </VBox>
+
+        <!-- Formulario -->
+        <VBox layoutX="70.0" layoutY="250.0" spacing="20.0">
+            <children>
+                <!-- Nombre Empresa -->
+                <VBox spacing="8.0">
+                    <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 16; -fx-font-weight: 400;" text="Nombre Empresa:" />
+                    <TextField fx:id="txtNombreEmpresa" prefHeight="40.0" prefWidth="460.0" promptText="Ingrese el nombre de la empresa" style="-fx-background-color: #B2B2B2; -fx-border-color: #D9D9D9; -fx-border-width: 0.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 16;" />
+                </VBox>
+
+                <!-- Email -->
+                <VBox spacing="8.0">
+                    <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 16; -fx-font-weight: 400;" text="Email:" />
+                    <TextField fx:id="txtEmail" prefHeight="40.0" prefWidth="460.0" promptText="correo@ejemplo.com" style="-fx-background-color: #B2B2B2; -fx-border-color: #D9D9D9; -fx-border-width: 0.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 16;" />
+                </VBox>
+
+                <!-- Contraseña -->
+                <VBox spacing="8.0">
+                    <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 16; -fx-font-weight: 400;" text="Contraseña:" />
+                    <PasswordField fx:id="txtContrasena" prefHeight="40.0" prefWidth="460.0" promptText="********" style="-fx-background-color: #B2B2B2; -fx-border-color: #D9D9D9; -fx-border-width: 0.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 16;" />
+                </VBox>
+
+                <!-- Telefono -->
+                <VBox spacing="8.0">
+                    <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 16; -fx-font-weight: 400;" text="Telefono:" />
+                    <TextField fx:id="txtTelefono" prefHeight="40.0" prefWidth="460.0" promptText="809-555-1234" style="-fx-background-color: #B2B2B2; -fx-border-color: #D9D9D9; -fx-border-width: 0.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 16;" />
+                </VBox>
+
+                <!-- Ubicacion -->
+                <VBox spacing="8.0">
+                    <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 16; -fx-font-weight: 400;" text="Ubicacion:" />
+                    <TextField fx:id="txtUbicacion" prefHeight="40.0" prefWidth="460.0" promptText="Ciudad, Pais" style="-fx-background-color: #B2B2B2; -fx-border-color: #D9D9D9; -fx-border-width: 0.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 16;" />
+                </VBox>
+
+                <!-- Direccion -->
+                <VBox spacing="8.0">
+                    <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 16; -fx-font-weight: 400;" text="Direccion:" />
+                    <TextField fx:id="txtDireccion" prefHeight="40.0" prefWidth="460.0" promptText="Calle, Numero" style="-fx-background-color: #B2B2B2; -fx-border-color: #D9D9D9; -fx-border-width: 0.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 16;" />
+                </VBox>
+            </children>
+        </VBox>
+
+        <!-- Boton Continuar -->
+        <Button fx:id="btnContinuar" layoutX="70.0" layoutY="770.0" onAction="#onContinuarClick" prefHeight="48.0" prefWidth="460.0" style="-fx-background-color: #2C2C2C; -fx-border-color: #2C2C2C; -fx-border-radius: 8; -fx-background-radius: 8;" text="Continuar" textFill="white">
+            <font>
+                <Font name="Inter" size="16.0" />
+            </font>
+        </Button>
+
+        <!-- Enlace para iniciar sesión -->
+        <HBox alignment="CENTER" layoutX="70.0" layoutY="830.0" spacing="8.0" prefWidth="460.0">
+            <children>
+                <Label style="-fx-text-fill: #1E1E1E; -fx-font-size: 14;" text="¿Ya tienes una cuenta?" />
+                <Button onAction="#onLoginClick" style="-fx-background-color: transparent; -fx-text-fill: #0088FF; -fx-font-size: 14; -fx-font-weight: bold;" text="Iniciar Sesión" />
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>

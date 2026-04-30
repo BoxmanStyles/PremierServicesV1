@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.Avatar?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -11,339 +10,244 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.AdminEditarPortafolioController">
+<AnchorPane prefHeight="900.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.AdminEditorPortafolioController">
     <children>
         <!-- Header Admin -->
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
-            <HBox alignment="CENTER_LEFT" prefHeight="78.0" prefWidth="1141.0" spacing="20.0" style="-fx-padding: 20;">
+            <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1287.0" spacing="20.0" style="-fx-padding: 20;">
                 <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../../../IMG/Logo.png" />
-                    </image>
                 </ImageView>
                 <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services - Panel Admin">
                     <font>
                         <Font name="System Bold" size="24.0" />
                     </font>
-                    <effect>
-                        <Bloom />
-                    </effect>
                 </Label>
                 <Region HBox.hgrow="ALWAYS" />
             </HBox>
         </VBox>
-      <Pane layoutX="8.0" layoutY="105.0" prefHeight="105.0" prefWidth="1133.0">
-         <children>
-            <Text layoutX="14.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Portafolio del Proveedor" wrappingWidth="518.0">
-               <font>
-                  <Font name="System Bold" size="28.0" />
-               </font>
-            </Text>
-            <Separator layoutY="90.0" prefHeight="3.0" prefWidth="1133.0" />
-            <Text layoutX="14.0" layoutY="69.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Agrega, edita o elimina trabajos del portafolio" wrappingWidth="400.0">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Text>
-            <Button layoutX="995.0" layoutY="39.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Volver al Panel">
-               <font>
-                  <Font size="12.0" />
-               </font>
-            </Button>
-         </children>
-      </Pane>
 
-        <!-- Contenido Principal -->
-        <HBox layoutX="0.0" layoutY="203.0" prefHeight="868.0" prefWidth="1100.0" spacing="20.0">
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-            </padding>
-
-            <!-- Panel Izquierdo: Formulario -->
-            <VBox prefWidth="490.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10;">
-                <children>
-                    <!-- Seleccionar Proveedor -->
-                    <VBox spacing="10.0">
-                        <children>
-                            <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Seleccionar Proveedor">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-
-                            <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                <children>
-                                    <ComboBox fx:id="cmbProveedor" onAction="#onProveedorSeleccionado" prefWidth="340.0" promptText="Seleccione un proveedor" style="-fx-font-size: 14;" />
-                                    <Button onAction="#onRecargarProveedores" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" text="🔄" />
-                                </children>
-                            </HBox>
-
-                            <Label fx:id="lblProveedorInfo" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" text="" wrapText="true" />
-                        </children>
-                    </VBox>
-
-                    <Separator prefWidth="450.0" />
-
-                    <!-- Formulario de Proyecto -->
-                    <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Agregar Nuevo Proyecto al Portafolio">
-                        <font>
-                            <Font size="16.0" />
-                        </font>
-                    </Label>
-
-                    <!-- ID Portafolio -->
-                    <VBox spacing="5.0">
-                        <children>
-                            <Label style="-fx-text-fill: #7f8c8d; -fx-font-weight: bold;" text="ID Portafolio (Auto)">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <TextField fx:id="txtIdPortafolio" disable="true" promptText="Se genera automáticamente" style="-fx-font-size: 14; -fx-padding: 10; -fx-opacity: 0.6;" />
-                        </children>
-                    </VBox>
-
-                    <!-- Título del Proyecto -->
-                    <VBox spacing="5.0">
-                        <children>
-                            <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Titulo del Proyecto">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <TextField fx:id="txtTitulo" promptText="Ej: Boda en la Playa, Evento Corporativo..." style="-fx-font-size: 14; -fx-padding: 10;" />
-                        </children>
-                    </VBox>
-
-                    <!-- Descripción -->
-                    <VBox spacing="5.0">
-                        <children>
-                            <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Descripcion ">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <TextArea fx:id="txtDescripcion" prefRowCount="3" promptText="Describe el proyecto: tipo de evento, detalles, logros..." style="-fx-font-size: 14; -fx-padding: 10;" wrapText="true" />
-                        </children>
-                    </VBox>
-
-                    <!-- Servicio Relacionado -->
-                    <VBox spacing="5.0">
-                        <children>
-                            <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Servicio Relacionado (Opcional)">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <ComboBox fx:id="cmbServicio" prefWidth="450.0" promptText="Seleccione servicio relacionado" style="-fx-font-size: 14;" />
-                        </children>
-                    </VBox>
-
-                    <!-- URL de Imagen -->
-                    <VBox spacing="5.0">
-                        <children>
-                            <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="URL de la Imagen">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                <children>
-                                    <TextField fx:id="txtUrlImagen" prefHeight="40.0" prefWidth="362.0" promptText="https://ejemplo.com/imagen.jpg" style="-fx-font-size: 14; -fx-padding: 10;" HBox.hgrow="ALWAYS" />
-                                    <Button onAction="#onSubirImagenClick" prefHeight="37.0" prefWidth="71.0" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 15;" text="Subir" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-
-                    <!-- Orden y Destacado -->
-                    <HBox spacing="20.0">
-                        <children>
-                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                                <children>
-                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Orden de Visualizacion">
-                                        <font>
-                                            <Font size="12.0" />
-                                        </font>
-                                    </Label>
-                                    <Spinner fx:id="spinOrden" editable="true" prefWidth="200.0" style="-fx-font-size: 14;" />
-                                </children>
-                            </VBox>
-
-                            <VBox spacing="5.0">
-                                <children>
-                                    <Label style="-fx-font-size: 12;" text=" ">
-                                        <font>
-                                            <Font size="12.0" />
-                                        </font>
-                                    </Label>
-                                    <CheckBox fx:id="chkDestacado" style="-fx-font-size: 13; -fx-font-weight: bold;" text="Proyecto Destacado" />
-                                </children>
-                            </VBox>
-                        </children>
-                    </HBox>
-
-                    <!-- Mensaje de Estado -->
-                    <Label fx:id="lblMensaje" alignment="CENTER" minHeight="25.0" style="-fx-padding: 10; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 5;" wrapText="true" />
-
-                    <!-- Botones de Acción -->
-                    <HBox alignment="CENTER" spacing="10.0">
-                        <children>
-                            <Button fx:id="btnAgregar" onAction="#onAgregarClick" prefWidth="140.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5;" text="➕ Agregar">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Button>
-                            <Button fx:id="btnActualizar" onAction="#onActualizarClick" prefWidth="140.0" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5;" text="💾 Actualizar">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Button>
-                            <Button fx:id="btnLimpiar" onAction="#onLimpiarClick" prefWidth="140.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5;" text="🔄 Limpiar">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Button>
-                        </children>
-                    </HBox>
-                </children>
-            </VBox>
-
-            <!-- Panel Derecho: Lista de Proyectos del Portafolio -->
-            <VBox prefWidth="560.0" spacing="15.0" HBox.hgrow="ALWAYS">
-                <children>
-                    <!-- Header de la lista -->
-                    <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
-                        <children>
-                            <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Proyectos del Portafolio">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Label fx:id="lblTotalProyectos" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;" text="1 proyectos" />
-                        </children>
-                    </HBox>
-
+        <Pane layoutX="8.0" layoutY="105.0" prefHeight="105.0" prefWidth="1273.0">
+            <children>
+                <Text layoutX="14.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Portafolio del Proveedor" wrappingWidth="518.0">
+                    <font>
+                        <Font name="System Bold" size="28.0" />
+                    </font>
+                </Text>
+                <Separator layoutY="90.0" prefHeight="5.0" prefWidth="1174.0" />
+                <Text layoutX="14.0" layoutY="69.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Agrega, edita o elimina trabajos del portafolio" wrappingWidth="400.0">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Text>
+                <Button layoutX="1159.0" layoutY="32.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Volver al Panel">
+                    <font>
+                        <Font size="12.0" />
+                    </font>
+                </Button>
+            </children>
+        </Pane>
+      <ScrollPane layoutY="195.0" prefHeight="457.0" prefWidth="1280.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="617.0" prefWidth="1172.0">
+               <children>
+            
+                    <!-- Contenido Principal -->
+                    <HBox prefHeight="868.0" prefWidth="1174.0" spacing="20.0">
+                        <padding>
+                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                        </padding>
+            
+                        <!-- Panel Izquierdo: Formulario -->
+                        <VBox prefHeight="828.0" prefWidth="667.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10;">
+                            <children>
+                                <!-- Seleccionar Proveedor -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Seleccionar Proveedor">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Label>
+            
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <ComboBox fx:id="cmbProveedor" onAction="#onProveedorSeleccionado" prefWidth="340.0" promptText="Seleccione un proveedor" style="-fx-font-size: 14;" />
+                                                <Button onAction="#onRecargarProveedores" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" text="🔄" />
+                                            </children>
+                                        </HBox>
+            
+                                        <Label fx:id="lblProveedorInfo" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" text="" wrapText="true" />
+                                    </children>
+                                </VBox>
+            
+                                <Separator prefWidth="450.0" />
+            
+                                <!-- Formulario de Proyecto -->
+                                <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Agregar Nuevo Proyecto al Portafolio">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+            
+                                <!-- ID Portafolio -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #7f8c8d; -fx-font-weight: bold;" text="ID Portafolio (Auto)">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <TextField fx:id="txtIdPortafolio" disable="true" promptText="Se genera automáticamente" style="-fx-font-size: 14; -fx-padding: 10; -fx-opacity: 0.6;" />
+                                    </children>
+                                </VBox>
+            
+                                <!-- Título del Proyecto -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Titulo del Proyecto">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <TextField fx:id="txtTitulo" promptText="Ej: Boda en la Playa, Evento Corporativo..." style="-fx-font-size: 14; -fx-padding: 10;" />
+                                    </children>
+                                </VBox>
+            
+                                <!-- Descripción -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Descripcion ">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <TextArea fx:id="txtDescripcion" prefRowCount="3" promptText="Describe el proyecto: tipo de evento, detalles, logros..." style="-fx-font-size: 14; -fx-padding: 10;" wrapText="true" />
+                                    </children>
+                                </VBox>
+            
+                                <!-- Servicio Relacionado -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Servicio Relacionado (Opcional)">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <ComboBox fx:id="cmbServicio" prefWidth="450.0" promptText="Seleccione servicio relacionado" style="-fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+            
+                                <!-- URL de Imagen -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="URL de la Imagen">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <TextField fx:id="txtUrlImagen" prefHeight="40.0" prefWidth="362.0" promptText="https://ejemplo.com/imagen.jpg" style="-fx-font-size: 14; -fx-padding: 10;" HBox.hgrow="ALWAYS" />
+                                                <Button onAction="#onSubirImagenClick" prefHeight="37.0" prefWidth="71.0" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 15;" text="Subir" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+            
+                                <!-- Orden y Destacado -->
+                                <HBox spacing="20.0">
+                                    <children>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Orden de Visualizacion">
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font>
+                                                </Label>
+                                                <Spinner fx:id="spinOrden" editable="true" prefWidth="200.0" style="-fx-font-size: 14;" />
+                                            </children>
+                                        </VBox>
+            
+                                        <VBox spacing="5.0">
+                                            <children>
+                                                <Label style="-fx-font-size: 12;" text=" ">
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font>
+                                                </Label>
+                                                <CheckBox fx:id="chkDestacado" style="-fx-font-size: 13; -fx-font-weight: bold;" text="Proyecto Destacado" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+            
+                                <!-- Mensaje de Estado -->
+                                <Label fx:id="lblMensaje" alignment="CENTER" minHeight="25.0" style="-fx-padding: 10; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 5;" wrapText="true" />
+            
+                                <!-- Botones de Acción -->
+                                <HBox alignment="CENTER" spacing="10.0">
+                                    <children>
+                                        <Button fx:id="btnAgregar" onAction="#onAgregarClick" prefWidth="140.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5;" text="➕ Agregar">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Button>
+                                        <Button fx:id="btnActualizar" onAction="#onActualizarClick" prefWidth="140.0" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5;" text="💾 Actualizar">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Button>
+                                        <Button fx:id="btnLimpiar" onAction="#onLimpiarClick" prefWidth="140.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5;" text="🔄 Limpiar">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+            
+                        <!-- Panel Derecho: Lista de Proyectos del Portafolio -->
+                        <VBox prefWidth="560.0" spacing="15.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <!-- Header de la lista -->
+                                <HBox alignment="CENTER_LEFT" prefHeight="65.0" prefWidth="628.0" spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Proyectos del Portafolio">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Label>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="lblTotalProyectos" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;" text="0 proyectos" />
+                                    </children>
+                                </HBox>
+                     
                                 <!-- ScrollPane con la lista de proyectos -->
-                    <ScrollPane fitToWidth="true" prefHeight="620.0" style="-fx-background-color: transparent; -fx-background: transparent;">
-                        <content>
-                            <VBox fx:id="vboxProyectos" spacing="15.0" style="-fx-background-color: transparent;">
-                                <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                </padding>
-                        <children>
-                           <Pane prefHeight="733.0" prefWidth="543.0">
-                              <children>
-                                 <Rectangle arcHeight="5.0" arcWidth="5.0" height="128.0" layoutX="14.0" layoutY="14.0" strokeType="INSIDE" width="503.0">
-                                    <stroke>
-                                       <LinearGradient endX="1.0" endY="1.0">
-                                          <stops>
-                                             <Stop>
-                                                <color>
-                                                   <Color red="0.32894736528396606" green="0.11878655105829239" blue="0.11878655105829239" />
-                                                </color>
-                                             </Stop>
-                                             <Stop offset="1.0">
-                                                <color>
-                                                   <Color green="0.5" blue="1.0" />
-                                                </color>
-                                             </Stop>
-                                          </stops>
-                                       </LinearGradient>
-                                    </stroke>
-                                    <fill>
-                                       <LinearGradient endX="1.0" endY="1.0">
-                                          <stops>
-                                             <Stop>
-                                                <color>
-                                                   <Color red="0.11840000003576279" green="0.23744000494480133" blue="0.3199999928474426" />
-                                                </color>
-                                             </Stop>
-                                             <Stop offset="1.0">
-                                                <color>
-                                                   <Color />
-                                                </color>
-                                             </Stop>
-                                          </stops>
-                                       </LinearGradient>
-                                    </fill></Rectangle>
-                                 <Avatar layoutX="35.0" layoutY="29.0" radius="50.0">
-                                    <image>
-                                       <Image url="@../../../../../Downloads/Photo%20Studio.jpg" />
-                                    </image>
-                                 </Avatar>
-                                 <Rectangle arcHeight="5.0" arcWidth="5.0" height="128.0" layoutX="340.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="183.0">
-                                    <fill>
-                                       <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-                                          <stops>
-                                             <Stop>
-                                                <color>
-                                                   <Color red="0.0973440557718277" green="0.17901641130447388" blue="0.44736841320991516" opacity="0.23000000417232513" />
-                                                </color>
-                                             </Stop>
-                                             <Stop offset="0.006711409395973154">
-                                                <color>
-                                                   <Color red="0.0973440557718277" green="0.17901641130447388" blue="0.44736841320991516" opacity="0.23000000417232513" />
-                                                </color>
-                                             </Stop>
-                                             <Stop offset="1.0">
-                                                <color>
-                                                   <Color red="0.0017056530341506004" green="0.11729207634925842" blue="0.18421052396297455" />
-                                                </color>
-                                             </Stop>
-                                          </stops>
-                                       </RadialGradient>
-                                    </fill>
-                                 </Rectangle>
-                                 <Text fill="WHITE" layoutX="141.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Foto Studio Pro" wrappingWidth="175.0">
-                                    <font>
-                                       <Font size="25.0" />
-                                    </font>
-                                 </Text>
-                                 <Text fill="#aeaeae" layoutX="141.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fotografia Profesional">
-                                    <font>
-                                       <Font size="11.0" />
-                                    </font>
-                                 </Text>
-                                 <Button layoutX="368.0" layoutY="23.0" onAction="#onVolverClick" prefHeight="30.0" prefWidth="138.0" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Editar">
-                                    <font>
-                                       <Font size="12.0" />
-                                    </font>
-                                 </Button>
-                                 <Button layoutX="368.0" layoutY="61.0" onAction="#onVolverClick" prefHeight="30.0" prefWidth="138.0" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Eliminar">
-                                    <font>
-                                       <Font size="12.0" />
-                                    </font>
-                                 </Button>
-                                 <Button layoutX="368.0" layoutY="99.0" onAction="#onVolverClick" prefHeight="30.0" prefWidth="138.0" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Archivar">
-                                    <font>
-                                       <Font size="12.0" />
-                                    </font>
-                                 </Button>
-                              </children>
-                           </Pane>
-                        </children>
-                            </VBox>
-                        </content>
-                    </ScrollPane>
-                </children>
-            </VBox>
-        </HBox>
+                                <ScrollPane fitToWidth="true" prefHeight="620.0" style="-fx-background-color: transparent; -fx-background: transparent;">
+                                    <content>
+                                        <VBox fx:id="vboxProyectos" spacing="15.0" style="-fx-background-color: transparent;">
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </VBox>
+                    </HBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
     </children>
 </AnchorPane>

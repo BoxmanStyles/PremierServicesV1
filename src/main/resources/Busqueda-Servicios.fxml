@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -20,14 +19,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="583.0" prefWidth="811.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.BusquedaServiciosController">
+<BorderPane prefHeight="554.0" prefWidth="811.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.BusquedaServiciosController">
 
     <!-- Header -->
     <top>
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
-            <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-padding: 20;">
+            <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="811.0" spacing="20.0" style="-fx-padding: 20;">
             <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
-            </ImageView>
+               <image>
+                  <Image url="@../../../IMG/Logo.png" />
+               </image></ImageView>
                 <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services">
                <effect>
                   <Bloom threshold="0.0" />
@@ -42,13 +43,13 @@
 
     <!-- Center Content -->
     <center>
-        <VBox prefHeight="438.0" prefWidth="642.0" spacing="20.0">
+        <VBox prefHeight="345.0" prefWidth="811.0" spacing="20.0">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
 
             <!-- Search Section -->
-            <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10;">
+            <VBox prefHeight="279.0" prefWidth="771.0" spacing="15.0" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10;">
                 <Label prefHeight="40.0" prefWidth="554.0" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Encuentra el Servicio Perfecto para tu Evento">
                     <font>
                         <Font name="System Bold" size="20.0" />
@@ -92,11 +93,6 @@
                             <Label style="-fx-font-size: 13;" text="Calificacion" />
                             <ComboBox fx:id="cmbCalificacion" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Cualquiera" />
                         </VBox>
-
-                        <VBox spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="0">
-                            <Label style="-fx-font-size: 13;" text="Fecha del Evento" />
-                            <DatePicker fx:id="dpFecha" onAction="#aplicarFiltros" prefWidth="180.0" promptText="Seleccionar fecha" />
-                        </VBox>
                   <rowConstraints>
                      <RowConstraints />
                   </rowConstraints>
@@ -105,15 +101,15 @@
             </VBox>
 
             <!-- Results Header -->
-            <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="771.0" spacing="20.0">
                 <Label fx:id="lblResultados" style="-fx-font-size: 16; -fx-text-fill: #555;" text="Mostrando 0 resultados" />
-                <Region HBox.hgrow="ALWAYS" />
+                <Region prefHeight="0.0" prefWidth="264.0" HBox.hgrow="ALWAYS" />
                 <Label style="-fx-font-size: 14;" text="Ordenar por:" />
                 <ComboBox fx:id="cmbOrden" onAction="#ordenarResultados" prefWidth="200.0" />
             </HBox>
 
             <!-- Services Grid -->
-            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <ScrollPane fitToWidth="true" prefHeight="179.0" prefWidth="771.0" style="-fx-background-color: transparent;">
                 <FlowPane fx:id="flowServicios" hgap="20.0" prefWrapLength="1200.0" vgap="20.0">
                     <!-- Services cards will be added here dynamically -->
                 </FlowPane>

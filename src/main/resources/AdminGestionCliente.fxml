@@ -2,14 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -22,22 +23,22 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1302.0" prefWidth="1283.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.controllerGestionCliente">
+<AnchorPane prefHeight="1302.0" prefWidth="1270.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.controllerGestionCliente">
     <children>
         <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1269.0">
             <children>
-                <Text layoutX="39.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Clientes" wrappingWidth="450.0">
+                <Text layoutX="22.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Clientes" wrappingWidth="282.66668701171875">
                     <font>
                         <Font name="System Bold" size="28.0" />
                     </font>
                 </Text>
                 <Separator layoutY="90.0" prefHeight="3.0" prefWidth="1000.0" />
-                <Text fill="#040404" layoutX="46.0" layoutY="58.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Crea o edita la información del cliente" wrappingWidth="400.0">
+                <Text fill="#040404" layoutX="22.0" layoutY="68.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Crea o edita la información del cliente" wrappingWidth="400.0">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Text>
-                <Button layoutX="1149.0" layoutY="32.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="← Volver a Lista">
+                <Button layoutX="1149.0" layoutY="32.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Volver al Panel">
                     <font>
                         <Font size="12.0" />
                     </font>
@@ -49,7 +50,9 @@
                 <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1269.0" spacing="20.0" style="-fx-padding: 20;">
                     <children>
                         <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
-                        </ImageView>
+                     <image>
+                        <Image url="@../../../IMG/Logo.png" />
+                     </image></ImageView>
                         <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services - Panel Admin">
                             <font>
                                 <Font name="System Bold" size="24.0" />
@@ -59,15 +62,11 @@
                             </effect>
                         </Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Dashboard" textFill="WHITE" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Proveedores" textFill="WHITE" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: 101120;" text="Clientes" textFill="WHITE" />
-                        <Button mnemonicParsing="false" onAction="#onCerrarSesionClick" style="-fx-background-color: #e74c3c;" text="Cerrar Sesión" textFill="WHITE" />
                     </children>
                 </HBox>
             </children>
         </VBox>
-        <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="210.0" prefHeight="490.0" prefWidth="1269.0" style="-fx-background-color: #f5f5f5;">
+        <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="210.0" prefHeight="409.0" prefWidth="1255.0" style="-fx-background-color: #f5f5f5;">
             <content>
                 <VBox alignment="TOP_CENTER" prefHeight="1053.0" prefWidth="1254.0" spacing="20.0" style="-fx-background-color: #f5f5f5;">
                     <padding>
@@ -85,11 +84,9 @@
                                 <RowConstraints />
                                 <RowConstraints />
                                 <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
                             </rowConstraints>
                             <children>
-                                <!-- Fila 0: Nombre -->
+                                <!-- Fila 0: Nombre y Apellido -->
                                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     <children>
                                         <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Nombre *">
@@ -101,7 +98,6 @@
                                     </children>
                                 </VBox>
 
-                                <!-- Fila 0: Apellido -->
                                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                     <children>
                                         <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Apellido *">
@@ -113,7 +109,7 @@
                                     </children>
                                 </VBox>
 
-                                <!-- Fila 1: Email -->
+                                <!-- Fila 1: Email y Teléfono -->
                                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                                     <children>
                                         <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Email *">
@@ -125,7 +121,6 @@
                                     </children>
                                 </VBox>
 
-                                <!-- Fila 1: Teléfono -->
                                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <children>
                                         <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Teléfono *">
@@ -149,20 +144,8 @@
                                     </children>
                                 </VBox>
 
-                                <!-- Fila 3: Tipo de Cliente -->
-                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                                    <children>
-                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Tipo de Cliente *">
-                                            <font>
-                                                <Font size="12.0" />
-                                            </font>
-                                        </Label>
-                                        <ComboBox fx:id="cmbTipoCliente" prefHeight="39.0" prefWidth="531.0" promptText="Seleccione tipo de cliente" style="-fx-font-size: 14;" />
-                                    </children>
-                                </VBox>
-
                                 <!-- Fila 3: Contraseña -->
-                                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
                                     <children>
                                         <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Contraseña *">
                                             <font>
@@ -173,8 +156,8 @@
                                     </children>
                                 </VBox>
 
-                                <!-- Fila 4: Confirmar Contraseña -->
-                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                                <!-- Fila 3: Confirmar Contraseña -->
+                                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                     <children>
                                         <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Confirmar Contraseña *">
                                             <font>
@@ -192,12 +175,11 @@
                             <columns>
                                 <TableColumn fx:id="colIdCliente" prefWidth="80.0" text="ID Cliente" />
                                 <TableColumn fx:id="colIdUsuario" prefWidth="80.0" text="ID Usuario" />
-                                <TableColumn fx:id="colNombre" prefWidth="150.0" text="Nombre" />
-                                <TableColumn fx:id="colApellido" prefWidth="150.0" text="Apellido" />
-                                <TableColumn fx:id="colEmail" prefWidth="200.0" text="Email" />
-                                <TableColumn fx:id="colTelefono" prefWidth="120.0" text="Teléfono" />
-                                <TableColumn fx:id="colDireccion" prefWidth="200.0" text="Dirección" />
-                                <TableColumn fx:id="colTipoCliente" prefWidth="120.0" text="Tipo Cliente" />
+                                <TableColumn fx:id="colNombre" prefWidth="154.0" text="Nombre" />
+                                <TableColumn fx:id="colApellido" prefWidth="164.0" text="Apellido" />
+                                <TableColumn fx:id="colEmail" prefWidth="242.666748046875" text="Email" />
+                                <TableColumn fx:id="colTelefono" prefWidth="170.6666259765625" text="Teléfono" />
+                                <TableColumn fx:id="colDireccion" prefWidth="264.66668701171875" text="Dirección" />
                             </columns>
                         </TableView>
 

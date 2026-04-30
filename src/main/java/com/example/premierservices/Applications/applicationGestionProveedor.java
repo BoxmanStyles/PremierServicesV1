@@ -9,13 +9,14 @@ public class applicationGestionProveedor extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin Gestion Proveedor.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminGestionProveedor.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setTitle("Premier Services - Gestión de Proveedores");
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);
