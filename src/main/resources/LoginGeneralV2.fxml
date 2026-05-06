@@ -8,22 +8,37 @@
 <?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.Glow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.LoginGeneralControllerV2">
    <children>
-      <ImageView fitHeight="677.0" fitWidth="1288.0" layoutY="-3.0" pickOnBounds="true">
-         <image>
-            <Image url="@../../../IMG/Fondo2.jpg" />
-         </image>
-      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="668.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.7528735632183908">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.8472222089767456" green="0.8599537014961243" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color green="0.2651315927505493" blue="0.5131579041481018" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Rectangle>
       <Pane layoutX="57.0" layoutY="51.0" opacity="0.24" prefHeight="599.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
          <effect>
             <DropShadow spread="0.72">
@@ -77,7 +92,7 @@
                   </VBox>
                </children>
             </Pane>
-            <Button layoutX="1010.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" style="-fx-background-color: a; -fx-border-color: white; -fx-border-radius: 25;" text="Login" textFill="WHITE">
+            <Button layoutX="1010.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;" text="Login" textFill="WHITE">
                <effect>
                   <Glow level="1.0">
                      <input>
@@ -85,7 +100,7 @@
                      </input>
                   </Glow>
                </effect></Button>
-            <Button layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" style="-fx-background-color: a; -fx-border-color: white; -fx-border-radius: 25;" text="Register" textFill="WHITE">
+            <Button layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;" text="Register" textFill="WHITE">
                <effect>
                   <Glow level="1.0">
                      <input>
