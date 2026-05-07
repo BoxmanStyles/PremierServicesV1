@@ -3,23 +3,28 @@ package com.example.premierservices.Controllers;
 import com.example.premierservices.Servicio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.URL;
 import java.sql.*;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class controllerPaginaPrincipal {
+public class AdminPaginaPrincipalController {
 
     @FXML private Pane PanelBuscador;
     @FXML private Pane PanelBandeja;
@@ -29,6 +34,7 @@ public class controllerPaginaPrincipal {
     @FXML private Button btnBuscarPrincipal;
     @FXML private ImageView Logoimg;
     @FXML private Button BotonDeFiltros;
+    @FXML private Button btnNuevoServicio;
 
     private List<Servicio> todosServicios;
     private String categoriaActiva = null;
@@ -52,14 +58,12 @@ public class controllerPaginaPrincipal {
         }
     }
 
-    @FXML
-    protected void Buscador(ActionEvent actionEvent) {
+    @FXML protected void Buscador(ActionEvent actionEvent) {
         PanelBuscador.setVisible(true);
         txtBuscadorPrincipal.requestFocus();
     }
 
-    @FXML
-    protected void SalirBuscar(ActionEvent actionEvent) {
+    @FXML protected void SalirBuscar(ActionEvent actionEvent) {
         PanelBuscador.setVisible(false);
         txtBuscadorPrincipal.clear();
         categoriaActiva = null;
@@ -67,18 +71,15 @@ public class controllerPaginaPrincipal {
         BotonDeFiltros.setVisible(false);
     }
 
-    @FXML
-    protected void BandejaAbrir(ActionEvent actionEvent) {
+    @FXML protected void BandejaAbrir(ActionEvent actionEvent) {
         PanelBandeja.setVisible(true);
     }
 
-    @FXML
-    public void SalirBandeja(ActionEvent actionEvent) {
+    @FXML public void SalirBandeja(ActionEvent actionEvent) {
         PanelBandeja.setVisible(false);
     }
 
-    @FXML
-    protected void filtrarPorCategoria(ActionEvent event) {
+    @FXML protected void filtrarPorCategoria(ActionEvent event) {
         Button btn = (Button) event.getSource();
         String categoria = btn.getText();
         categoriaActiva = categoria;
@@ -86,8 +87,7 @@ public class controllerPaginaPrincipal {
         BotonDeFiltros.setVisible(true);
     }
 
-    @FXML
-    public void AbirYCerrarFiltros(ActionEvent event) {
+    @FXML public void AbirYCerrarFiltros(ActionEvent event) {
         categoriaActiva = null;
         txtBuscadorPrincipal.clear();
         aplicarFiltros();
@@ -222,7 +222,6 @@ public class controllerPaginaPrincipal {
         VBox content = new VBox(12);
         content.setPadding(new Insets(20));
 
-        // Header: categoría, nombre del servicio (título), proveedor (subtítulo)
         VBox leftHeader = new VBox(5);
         Label categoria = new Label(servicio.getCategoria().toUpperCase());
         categoria.setStyle("-fx-text-fill: #667eea; -fx-font-size: 12; -fx-font-weight: bold;");
@@ -235,6 +234,7 @@ public class controllerPaginaPrincipal {
         nombreProveedor.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12;");
 
         leftHeader.getChildren().addAll(categoria, nombreServicio, nombreProveedor);
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -249,7 +249,6 @@ public class controllerPaginaPrincipal {
         header.setAlignment(Pos.CENTER_LEFT);
         header.getChildren().addAll(leftHeader, spacer, rating);
 
-        // Ubicación
         HBox ubicacion = new HBox(5);
         ubicacion.setAlignment(Pos.CENTER_LEFT);
         Label iconUbicacion = new Label("📍");
@@ -257,7 +256,6 @@ public class controllerPaginaPrincipal {
         textUbicacion.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13;");
         ubicacion.getChildren().addAll(iconUbicacion, textUbicacion);
 
-        // Descripción
         Label descripcion = new Label(servicio.getDescripcion());
         descripcion.setWrapText(true);
         descripcion.setMaxWidth(310);
@@ -266,7 +264,7 @@ public class controllerPaginaPrincipal {
 
         Separator separator = new Separator();
 
-        // Fila de precio (encima del botón)
+        // --- NUEVA FILA DE PRECIO (encima de los botones) ---
         VBox priceBox = new VBox(2);
         Label precio = new Label(String.format("$%.0f", servicio.getPrecio()));
         precio.setFont(Font.font("System", FontWeight.BOLD, 20));
@@ -278,30 +276,92 @@ public class controllerPaginaPrincipal {
         HBox priceRow = new HBox();
         priceRow.setAlignment(Pos.CENTER_LEFT);
         priceRow.getChildren().add(priceBox);
+        // opcional: agregar un poco de margen
         VBox.setMargin(priceRow, new Insets(0, 0, 10, 0));
 
-        // Botón Contactar
-        HBox footer = new HBox();
+        // --- FOOTER CON BOTONES (sin el precio, solo botones) ---
+        HBox footer = new HBox(10);
         footer.setAlignment(Pos.CENTER_RIGHT);
-        Button btnContactar = new Button("Contactar");
-        btnContactar.setStyle("-fx-background-color: #003566; -fx-text-fill: white; " +
-                "-fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 20; " +
-                "-fx-background-radius: 6; -fx-cursor: hand;");
-        btnContactar.setOnAction(e -> contactarSuplidor(servicio));
-        footer.getChildren().add(btnContactar);
 
+        Button btnEditar = new Button("Editar");
+        btnEditar.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 12; -fx-padding: 5 15; -fx-background-radius: 6; -fx-cursor: hand;");
+        btnEditar.setOnAction(e -> abrirEditorPortafolio(servicio));
+
+        Button btnEliminar = new Button("Eliminar");
+        btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 12; -fx-padding: 5 15; -fx-background-radius: 6; -fx-cursor: hand;");
+        btnEliminar.setOnAction(e -> eliminarServicio(servicio));
+
+        Button btnContactar = new Button("Contactar");
+        btnContactar.setStyle("-fx-background-color: #003566; -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 6; -fx-cursor: hand;");
+        btnContactar.setOnAction(e -> contactarSuplidor(servicio));
+
+        footer.getChildren().addAll(btnEditar, btnEliminar, btnContactar);
+
+        // Agregar todos los elementos al content
         content.getChildren().addAll(header, ubicacion, descripcion, separator, priceRow, footer);
         card.getChildren().addAll(imagePane, content);
         card.setOnMouseClicked(e -> mostrarDetalleServicio(servicio));
-
         return card;
+    }
+
+    private void eliminarServicio(Servicio servicio) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar eliminación");
+        alert.setHeaderText("¿Está seguro de eliminar este servicio?");
+        alert.setContentText("Servicio: " + servicio.getNombreServicio() + "\nProveedor: " + servicio.getNombreSuplidor());
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            String sql = "UPDATE dbo.tbl_servicios SET estado = 'inactivo' WHERE id_servicio = ?";
+            try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setInt(1, servicio.getIdServicio());
+                pst.executeUpdate();
+                mostrarAlerta("Éxito", "Servicio eliminado correctamente");
+                refrescarServicios();
+            } catch (SQLException ex) {
+                mostrarAlerta("Error", "No se pudo eliminar: " + ex.getMessage());
+            }
+        }
+    }
+
+    private void refrescarServicios() {
+        cargarServicios();
+        categoriaActiva = null;
+        aplicarFiltros();
+        BotonDeFiltros.setVisible(false);
+    }
+
+    private void abrirEditorPortafolio(Servicio servicio) {
+        try {
+            URL fxmlUrl = getClass().getResource("/EditarPortafolio.fxml");
+            if (fxmlUrl == null) {
+                fxmlUrl = getClass().getResource("/com/example/premierservices/EditarPortafolio.fxml");
+            }
+            if (fxmlUrl == null) {
+                mostrarAlerta("Error", "No se encuentra EditarPortafolio.fxml");
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent root = loader.load();
+            EditarPortafolioController controller = loader.getController();
+            controller.setServicioEditando(servicio);
+            controller.setOnGuardado(() -> refrescarServicios());
+            Stage stage = new Stage();
+            stage.setTitle(servicio == null ? "Nuevo Servicio" : "Editar Servicio");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir el editor: " + e.getMessage());
+        }
+    }
+
+    @FXML private void abrirNuevoServicio() {
+        abrirEditorPortafolio(null);
     }
 
     private void mostrarDetalleServicio(Servicio servicio) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(servicio.getNombreServicio());      // título: nombre del servicio
-        alert.setHeaderText(servicio.getNombreSuplidor()); // header: nombre del proveedor
-
+        alert.setTitle(servicio.getNombreServicio());
+        alert.setHeaderText(servicio.getNombreSuplidor());
         String contenido = String.format(
                 "Categoría: %s\nUbicación: %s\nCalificación: %.1f/5.0 (%d reseñas)\n" +
                         "Precio desde: $%.2f\n\nDescripción:\n%s",
@@ -316,17 +376,14 @@ public class controllerPaginaPrincipal {
 
     private void contactarSuplidor(Servicio servicio) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Contactar Suplidor");
-        alert.setHeaderText("Iniciar una conversación con: " + servicio.getNombreSuplidor());
-        alert.setContentText("En la versión completa:\n- Chat en tiempo real\n" +
-                "- Preguntas guiadas según el servicio\n" +
-                "- Generación automática de cotización\n" +
-                "- Fecha en el calendario del proveedor");
+        alert.setTitle("Contactar");
+        alert.setHeaderText("Contactar a " + servicio.getNombreSuplidor());
+        alert.setContentText("Funcionalidad en desarrollo...");
         alert.showAndWait();
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
@@ -338,24 +395,16 @@ public class controllerPaginaPrincipal {
         File filePerfil = new File("C:/Users/jeanm/IdeaProjects/PremierServicesV1/IMG/Perfil 1 sin fondo.png");
         if (filePerfil.exists()) {
             imagenPerfil.setImage(new Image(filePerfil.toURI().toString()));
-        } else {
-            System.err.println("Imagen de perfil no encontrada: " + filePerfil.getAbsolutePath());
         }
-
         File fileLogo = new File("C:/Users/jeanm/IdeaProjects/PremierServicesV1/IMG/Logo.png");
         if (fileLogo.exists()) {
             Logoimg.setImage(new Image(fileLogo.toURI().toString()));
-        } else {
-            System.err.println("Logo no encontrado: " + fileLogo.getAbsolutePath());
         }
-
         btnBuscarPrincipal.setOnAction(e -> realizarBusqueda());
         txtBuscadorPrincipal.setOnAction(e -> realizarBusqueda());
-
         cargarServicios();
         categoriaActiva = null;
         aplicarFiltros();
-
         BotonDeFiltros.setVisible(false);
     }
 }
