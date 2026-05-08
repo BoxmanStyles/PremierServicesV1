@@ -4,10 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -20,96 +18,85 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.LoginGeneralControllerV2">
-   <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="668.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
-         <fill>
-            <RadialGradient centerX="0.5" centerY="0.5" radius="0.7528735632183908">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.8472222089767456" green="0.8599537014961243" blue="1.0" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color green="0.2651315927505493" blue="0.5131579041481018" />
-                     </color>
-                  </Stop>
-               </stops>
-            </RadialGradient>
-         </fill>
-      </Rectangle>
-      <Pane layoutX="57.0" layoutY="51.0" opacity="0.24" prefHeight="599.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
-         <effect>
-            <DropShadow spread="0.72">
-               <input>
-                  <BoxBlur iterations="0" />
-               </input>
-            </DropShadow>
-         </effect>
-      </Pane>
-      <Pane layoutX="56.0" layoutY="54.0" prefHeight="599.0" prefWidth="1189.0">
-         <children>
-            <Pane layoutX="333.0" layoutY="26.0" prefHeight="548.0" prefWidth="524.0" style="-fx-background-color: white; -fx-background-radius: 25;">
-               <children>
-                  <Text layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Logn in" wrappingWidth="150.13671875">
-                     <font>
-                        <Font name="System Bold" size="42.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="191.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome !!" textAlignment="CENTER" wrappingWidth="142.205078125">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Text>
-                  <VBox alignment="CENTER" layoutX="87.0" layoutY="171.0" prefHeight="194.0" prefWidth="350.0" spacing="18.0">
-                     <children>
-                        <VBox prefWidth="350.0" spacing="5.0">
-                           <children>
-                              <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Correo Electronico">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="emailField" promptText="ejemplo@correo.com" style="-fx-font-size: 14; -fx-padding: 10;" />
-                           </children>
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" height="668.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
+            <fill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.7528735632183908">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="0.8472222089767456" green="0.8599537014961243" blue="1.0" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color green="0.2666666805744171" blue="0.5137255191802979" />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </fill>
+        </Rectangle>
+        <Pane layoutX="57.0" layoutY="51.0" opacity="0.24" prefHeight="599.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
+            <effect>
+                <DropShadow spread="0.72">
+                    <input>
+                        <BoxBlur iterations="0" />
+                    </input>
+                </DropShadow>
+            </effect>
+        </Pane>
+        <Pane layoutX="56.0" layoutY="54.0" prefHeight="599.0" prefWidth="1189.0">
+            <children>
+                <Pane layoutX="333.0" layoutY="26.0" prefHeight="548.0" prefWidth="524.0" style="-fx-background-color: white; -fx-background-radius: 25;">
+                    <children>
+                        <Text layoutX="180.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login in" wrappingWidth="164.6411132812499">
+                            <font>
+                                <Font name="System Bold" size="42.0" />
+                            </font>
+                        </Text>
+                        <Text layoutX="191.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome !!" textAlignment="CENTER" wrappingWidth="142.205078125">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Text>
+                        <VBox alignment="CENTER" layoutX="87.0" layoutY="171.0" prefHeight="194.0" prefWidth="350.0" spacing="18.0">
+                            <children>
+                                <VBox prefWidth="350.0" spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Correo Electronico">
+                                            <font><Font size="12.0" /></font>
+                                        </Label>
+                                        <TextField fx:id="emailField" promptText="ejemplo@correo.com" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="350.0" spacing="5.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Contraseña">
+                                            <font><Font size="12.0" /></font>
+                                        </Label>
+                                        <PasswordField fx:id="passwordField" promptText="Ingrese su contraseña" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                    </children>
+                                </VBox>
+                                <Label fx:id="lblMensaje" prefHeight="82.0" prefWidth="395.0" style="-fx-padding: 5;" wrapText="true" />
+                                <Button fx:id="loginButton" defaultButton="true" onAction="#onLoginClick" prefWidth="350.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Iniciar Sesion" />
+                                <HBox alignment="CENTER" prefWidth="350.0" />
+                                <HBox alignment="CENTER" prefWidth="350.0" spacing="5.0" />
+                            </children>
                         </VBox>
-                        <VBox prefWidth="350.0" spacing="5.0">
-                           <children>
-                              <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Contraseña">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Label>
-                              <PasswordField fx:id="passwordField" promptText="Ingrese su contraseña" style="-fx-font-size: 14; -fx-padding: 10;" />
-                           </children>
-                        </VBox>
-                        <Label fx:id="lblMensaje" prefHeight="82.0" prefWidth="395.0" style="-fx-padding: 5;" wrapText="true" />
-                        <Button fx:id="loginButton" defaultButton="true" onAction="#onLoginClick" prefWidth="350.0" style="-fx-background-color: #007cff; -fx-text-fill: white;                                -fx-font-size: 16; -fx-font-weight: bold;                                -fx-padding: 12; -fx-background-radius: 5;                                -fx-cursor: hand;" text="Iniciar Sesion" />
-                        <HBox alignment="CENTER" prefWidth="350.0" />
-                        <HBox alignment="CENTER" prefWidth="350.0" spacing="5.0" />
-                     </children>
-                  </VBox>
-               </children>
-            </Pane>
-            <Button layoutX="1010.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;" text="Login" textFill="WHITE">
-               <effect>
-                  <Glow level="1.0">
-                     <input>
-                        <Blend />
-                     </input>
-                  </Glow>
-               </effect></Button>
-            <Button layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="67.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;" text="Register" textFill="WHITE">
-               <effect>
-                  <Glow level="1.0">
-                     <input>
-                        <Blend />
-                     </input>
-                  </Glow>
-               </effect>
-            </Button>
-         </children>
-      </Pane>
-   </children>
+                        <Text layoutX="131.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?">
+                            <font><Font name="System Bold" size="15.0" /></font>
+                        </Text>
+                        <Text fx:id="irAregister" fill="#0012ff" layoutX="308.0" layoutY="466.0" onMouseClicked="#onRegisterClick" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign up" underline="true">
+                            <font><Font size="15.0" /></font>
+                        </Text>
+                    </children>
+                </Pane>
+                <Button fx:id="AtrasLogin" layoutX="35.0" layoutY="29.0" mnemonicParsing="false" onAction="#volverAPaginaPrincipal" prefHeight="49.0" prefWidth="50.0" style="-fx-background-color: #778899; -fx-background-radius: 30; -fx-text-fill: white;" text="X">
+                    <font><Font size="18.0" /></font>
+                    <effect><DropShadow /></effect>
+                </Button>
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>

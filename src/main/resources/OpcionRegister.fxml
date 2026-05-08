@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.OpcionRegisterController">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" height="678.0" stroke="BLACK" strokeType="INSIDE" width="1298.0">
+            <fill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.7528735632183908">
+                    <stops>
+                        <Stop><color><Color red="0.8472222089767456" green="0.8599537014961243" blue="1.0" /></color></Stop>
+                        <Stop offset="1.0"><color><Color green="0.2666666805744171" blue="0.5137255191802979" /></color></Stop>
+                    </stops>
+                </RadialGradient>
+            </fill>
+        </Rectangle>
+        <Pane layoutX="57.0" layoutY="32.0" opacity="0.24" prefHeight="618.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
+            <effect><DropShadow spread="0.72" /></effect>
+        </Pane>
+        <Pane layoutX="56.0" layoutY="54.0" prefHeight="599.0" prefWidth="1189.0">
+            <children>
+                <Pane layoutX="182.0" layoutY="26.0" prefHeight="548.0" prefWidth="794.0" style="-fx-background-color: white; -fx-background-radius: 25;">
+                    <children>
+                        <Text layoutX="285.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrate como:" wrappingWidth="494.13671875">
+                            <font><Font name="System Bold" size="30.0" /></font>
+                        </Text>
+                        <Text layoutX="117.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Proveedor" wrappingWidth="114.205078125">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Text>
+                        <Pane layoutX="51.0" layoutY="174.0" opacity="0.14" prefHeight="336.0" prefWidth="246.0" style="-fx-background-color: grey; -fx-background-radius: 30px; -fx-border-color: Grey; -fx-border-radius: 30px;">
+                            <effect><DropShadow /></effect>
+                            <children>
+                                <ImageView fx:id="imgProveedor" fitHeight="204.0" fitWidth="200.0" layoutX="23.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
+                                    <effect><Glow level="1.0" /></effect>
+                                </ImageView>
+                                <Button fx:id="RegistrarteProveedor" layoutX="-1.0" layoutY="-2.0" onAction="#irRegistroProveedor" prefHeight="336.0" prefWidth="246.0" style="-fx-background-color: transparent;" />
+                            </children>
+                        </Pane>
+                        <Pane layoutX="500.0" layoutY="174.0" opacity="0.14" prefHeight="336.0" prefWidth="246.0" style="-fx-background-color: grey; -fx-background-radius: 30px; -fx-border-color: Grey; -fx-border-radius: 30px;">
+                            <effect><DropShadow /></effect>
+                            <children>
+                                <ImageView fx:id="imgCliente" fitHeight="200.0" fitWidth="268.0" layoutX="23.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
+                                    <effect><Glow level="1.0" /></effect>
+                                </ImageView>
+                                <Button fx:id="RegistrarteCliente" onAction="#irRegistroCliente" prefHeight="336.0" prefWidth="246.0" style="-fx-background-color: transparent;" />
+                            </children>
+                        </Pane>
+                        <Text layoutX="566.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cliente" textAlignment="CENTER" wrappingWidth="114.205078125">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Text>
+                        <Text layoutX="347.0" layoutY="332.0" strokeType="OUTSIDE" strokeWidth="0.0" text="O" textAlignment="CENTER" wrappingWidth="114.205078125">
+                            <font><Font name="System Bold" size="26.0" /></font>
+                        </Text>
+                        <Pane layoutX="142.0" layoutY="34.0" opacity="0.14" prefHeight="56.0" prefWidth="510.0" style="-fx-background-color: grey; -fx-background-radius: 30px; -fx-border-color: Grey; -fx-border-radius: 30px;">
+                            <effect><DropShadow /></effect>
+                        </Pane>
+                    </children>
+                </Pane>
+                <Button fx:id="IrAlLogin" layoutX="57.0" layoutY="40.0" mnemonicParsing="false" onAction="#volverALogin" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: Grey; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
+                    <effect><Glow /></effect>
+                </Button>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>

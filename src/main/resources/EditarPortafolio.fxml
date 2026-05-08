@@ -15,9 +15,31 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="651.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.EditarPortafolioController">
     <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="651.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color green="0.2666666805744171" blue="0.5137255191802979" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Rectangle>
         <Pane layoutX="57.0" layoutY="51.0" opacity="0.24" prefHeight="572.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
             <effect>
                 <DropShadow spread="0.72">
@@ -36,7 +58,7 @@
                             <children>
                                 <VBox layoutX="15.0" layoutY="14.0" prefHeight="730.0" prefWidth="972.0" spacing="20.0">
                                     <children>
-                                        <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="Gestión de Portafolios (Administrador)" />
+                                        <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="Gestión de Portafolios" />
                                         <Separator />
                                         <VBox spacing="5.0">
                                             <Label style="-fx-font-weight: bold;" text="ID del Proveedor" />
@@ -86,7 +108,10 @@
                 </ScrollPane>
                 <Button fx:id="ElegirTipoRegistro" layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#cancelar" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: Grey; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
                     <effect>
-                        <Glow />
+                        <Glow>
+                     <input>
+                        <DropShadow />
+                     </input></Glow>
                     </effect>
                 </Button>
             </children>

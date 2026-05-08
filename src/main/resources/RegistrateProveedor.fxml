@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="651.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.RegistrateProveedorController">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" height="668.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
+            <fill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.7528735632183908">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="0.8472222089767456" green="0.8599537014961243" blue="1.0" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color green="0.2666666805744171" blue="0.5137255191802979" />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </fill>
+        </Rectangle>
+        <Pane layoutX="57.0" layoutY="51.0" opacity="0.24" prefHeight="572.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
+            <effect>
+                <DropShadow spread="0.72">
+                    <input>
+                        <BoxBlur iterations="0" />
+                    </input>
+                </DropShadow>
+            </effect>
+        </Pane>
+        <Pane layoutX="56.0" layoutY="54.0" prefHeight="519.0" prefWidth="1189.0">
+            <children>
+                <Pane layoutX="80.0" layoutY="26.0" prefHeight="519.0" prefWidth="1036.0" style="-fx-background-color: white; -fx-background-radius: 25;" />
+                <ScrollPane layoutX="154.0" layoutY="42.0" prefHeight="498.0" prefWidth="948.0" style="-fx-background-color: transparent;">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="730.0" prefWidth="998.0">
+                            <children>
+                                <VBox alignment="CENTER" layoutX="74.0" layoutY="110.0" prefHeight="591.0" prefWidth="803.0" spacing="15.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="110.0">
+                                    <children>
+
+                                        <HBox prefWidth="477.0" spacing="40.0">
+                                            <VBox prefWidth="350.0" spacing="15.0">
+                                                <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Información Personal">
+                                                    <font>
+                                                        <Font size="14.0" />
+                                                    </font>
+                                                </Label>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Nombre Completo">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <TextField fx:id="nombreField" promptText="Ingrese su nombre completo" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                                </VBox>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Correo Electronico">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <TextField fx:id="emailField" promptText="ejemplo@correo.com" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                                </VBox>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Contraseña">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <PasswordField fx:id="passwordField" promptText="Mínimo 8 caracteres" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                                </VBox>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Confirmar Contraseña">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <PasswordField fx:id="confirmPasswordField" promptText="Repita su contraseña" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                                </VBox>
+                                            </VBox>
+
+                                            <VBox prefWidth="350.0" spacing="15.0">
+                                                <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Información del Negocio">
+                                                    <font>
+                                                        <Font size="14.0" />
+                                                    </font>
+                                                </Label>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Nombre de la Empresa">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <TextField fx:id="nombreEmpresaField" promptText="Nombre de su empresa o negocio" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                                </VBox>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Teléfono">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <TextField fx:id="telefonoField" promptText="Ej: 809-555-1234" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                                </VBox>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Ubicación">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <ComboBox fx:id="ubicacionComboBox" promptText="Seleccione su ubicación" />
+                                                </VBox>
+                                                <VBox spacing="5.0">
+                                                    <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Descripción del Negocio">
+                                                        <font><Font size="12.0" /></font>
+                                                    </Label>
+                                                    <TextArea fx:id="descripcionArea" prefRowCount="3" promptText="Describa su negocio y servicios..." wrapText="true" />
+                                                </VBox>
+                                            </VBox>
+                                        </HBox>
+
+                                        <CheckBox fx:id="terminosCheckBox" text="Acepto los términos y condiciones" />
+                                        <Label fx:id="lblMensajePersonal" wrapText="true" />
+                                        <Button fx:id="registrarButton" defaultButton="true" onAction="#onRegistrarClick" prefHeight="49.0" prefWidth="222.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Registrar" />
+
+                                        <HBox alignment="CENTER" spacing="5.0">
+                                            <Label style="-fx-text-fill: #7f8c8d;" text="¿Ya tienes cuenta?" />
+                                            <Hyperlink onAction="#irALogin" style="-fx-text-fill: #3498db; -fx-font-weight: bold;" text="Inicia sesión aquí" />
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                                  <Text layoutX="187.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrate como Proveedor" wrappingWidth="567.13671875">
+                                      <font>
+                                          <Font name="System Bold" size="42.0" />
+                                      </font>
+                                  </Text>
+                                  <Text layoutX="368.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome !!" textAlignment="CENTER" wrappingWidth="142.205078125">
+                                      <font>
+                                          <Font size="18.0" />
+                                      </font>
+                                  </Text>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </ScrollPane>
+                <Button fx:id="ElegirTipoRegistro" layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#volverAOpcionRegister" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: Grey; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
+                    <effect>
+                        <Glow />
+                    </effect>
+                </Button>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>

@@ -3,16 +3,21 @@ package com.example.premierservices.Controllers;
 import com.example.premierservices.Servicio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -222,7 +227,6 @@ public class controllerPaginaPrincipal {
         VBox content = new VBox(12);
         content.setPadding(new Insets(20));
 
-        // Header: categoría, nombre del servicio (título), proveedor (subtítulo)
         VBox leftHeader = new VBox(5);
         Label categoria = new Label(servicio.getCategoria().toUpperCase());
         categoria.setStyle("-fx-text-fill: #667eea; -fx-font-size: 12; -fx-font-weight: bold;");
@@ -249,7 +253,6 @@ public class controllerPaginaPrincipal {
         header.setAlignment(Pos.CENTER_LEFT);
         header.getChildren().addAll(leftHeader, spacer, rating);
 
-        // Ubicación
         HBox ubicacion = new HBox(5);
         ubicacion.setAlignment(Pos.CENTER_LEFT);
         Label iconUbicacion = new Label("📍");
@@ -257,7 +260,6 @@ public class controllerPaginaPrincipal {
         textUbicacion.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13;");
         ubicacion.getChildren().addAll(iconUbicacion, textUbicacion);
 
-        // Descripción
         Label descripcion = new Label(servicio.getDescripcion());
         descripcion.setWrapText(true);
         descripcion.setMaxWidth(310);
@@ -266,7 +268,6 @@ public class controllerPaginaPrincipal {
 
         Separator separator = new Separator();
 
-        // Fila de precio (encima del botón)
         VBox priceBox = new VBox(2);
         Label precio = new Label(String.format("$%.0f", servicio.getPrecio()));
         precio.setFont(Font.font("System", FontWeight.BOLD, 20));
@@ -280,7 +281,6 @@ public class controllerPaginaPrincipal {
         priceRow.getChildren().add(priceBox);
         VBox.setMargin(priceRow, new Insets(0, 0, 10, 0));
 
-        // Botón Contactar
         HBox footer = new HBox();
         footer.setAlignment(Pos.CENTER_RIGHT);
         Button btnContactar = new Button("Contactar");
@@ -299,8 +299,8 @@ public class controllerPaginaPrincipal {
 
     private void mostrarDetalleServicio(Servicio servicio) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(servicio.getNombreServicio());      // título: nombre del servicio
-        alert.setHeaderText(servicio.getNombreSuplidor()); // header: nombre del proveedor
+        alert.setTitle(servicio.getNombreServicio());
+        alert.setHeaderText(servicio.getNombreSuplidor());
 
         String contenido = String.format(
                 "Categoría: %s\nUbicación: %s\nCalificación: %.1f/5.0 (%d reseñas)\n" +
@@ -331,6 +331,21 @@ public class controllerPaginaPrincipal {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void AbrirLoginPaquinaPrincipal(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/LoginGeneralV2.fxml"));
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Iniciar Sesión");
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la pantalla de login: " + e.getMessage());
+        }
     }
 
     @FXML
