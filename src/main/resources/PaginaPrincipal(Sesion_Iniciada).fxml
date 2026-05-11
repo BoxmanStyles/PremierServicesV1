@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
@@ -8,7 +9,6 @@
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.effect.Reflection?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -19,54 +19,45 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.controllerPaginaPrincipal">
+<?import javafx.scene.image.Image?>
+<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.PaginaPrincipalSesionController">
     <children>
         <!-- Cabecera fija -->
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
             <children>
                 <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1270.0" spacing="20.0" style="-fx-padding: 20;">
                     <children>
-                        <Button alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#Buscador" prefHeight="24.0" prefWidth="125.0" style="-fx-background-color: tranparent;" text="🔎 Buscar" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="21.0" />
-                            </font>
+                        <Button alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#Buscador" prefHeight="24.0" prefWidth="125.0" style="-fx-background-color: transparent;" text="🔎 Buscar" textFill="WHITE">
+                            <font><Font name="System Bold" size="17.0" /></font>
                         </Button>
                         <Region prefHeight="65.0" prefWidth="309.0" />
                         <Pane prefHeight="60.0" prefWidth="256.0">
                             <children>
                                 <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c" strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
-                                    <font>
-                                        <Font name="Elephant Italic" size="31.0" />
-                                    </font>
-                                    <effect>
-                                        <Glow level="0.37" />
-                                    </effect>
+                                    <font><Font name="Elephant Italic" size="31.0" /></font>
+                                    <effect><Glow level="0.37" /></effect>
                                 </Text>
                                 <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0" layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
                                     <Image url="@../../../IMG/Logo.png" />
-                                    <effect>
-                                        <Glow level="0.81" />
-                                    </effect>
+                                    <effect><Glow level="0.81" /></effect>
                                 </ImageView>
                             </children>
                         </Pane>
                         <Region prefHeight="65.0" prefWidth="168.0" />
-                        <Pane prefHeight="65.0" prefWidth="138.0">
+                        <Pane prefHeight="65.0" prefWidth="170.0" style="-fx-background-color: #142440; -fx-background-radius: 24;">
                             <children>
-                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="77.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
-                                <Button fx:id="AbrirLoginPaquinaPrincipal" alignment="BOTTOM_CENTER" layoutX="7.0" layoutY="8.0" mnemonicParsing="false" onAction="#AbrirLoginPaquinaPrincipal" prefHeight="50.0" prefWidth="109.0" style="-fx-background-color: transparent;" text="Account" textFill="WHITE">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                                </Button>
+                                <!-- ImageView sin imagen fija, se cargará desde el controlador -->
+                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="88.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                                <VBox layoutX="14.0" layoutY="13.0" spacing="4">
+                                    <Label fx:id="lblNombreCliente" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" text="Cliente" />
+                                    <Button onAction="#cerrarSesion" style="-fx-background-color: transparent; -fx-text-fill: #ff6b6b; -fx-font-size: 11px; -fx-cursor: hand; -fx-padding: 0;" text="Cerrar sesión" />
+                                </VBox>
                             </children>
                         </Pane>
                         <Pane prefHeight="65.0" prefWidth="138.0">
                             <children>
                                 <Button fx:id="BandejaAbir" alignment="BOTTOM_CENTER" layoutX="8.0" layoutY="8.0" mnemonicParsing="false" onAction="#BandejaAbrir" prefHeight="50.0" prefWidth="123.0" style="-fx-background-color: transparent;" text="Bandeja 📥" textFill="WHITE">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
+                                    <font><Font size="16.0" /></font>
                                 </Button>
                             </children>
                         </Pane>
@@ -75,33 +66,32 @@
                 <HBox alignment="CENTER_LEFT" prefHeight="53.0" prefWidth="1288.0" spacing="20.0" style="-fx-padding: 20;">
                     <children>
                         <Region prefHeight="25.0" prefWidth="83.0" />
-                        <!-- Botones de categoría -->
-                        <Button fx:id="Fotografia" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Fotografia" textFill="WHITE" />
-                        <Button fx:id="Organizacion" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Organización" textFill="WHITE" />
-                        <Button fx:id="Catering" layoutX="121.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Catering" textFill="WHITE" />
-                        <Button fx:id="Decoracion" layoutX="227.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Decoración" textFill="WHITE" />
-                        <Button fx:id="Audio" layoutX="308.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Audio" textFill="WHITE" />
-                        <Button fx:id="Musica" layoutX="404.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Música" textFill="WHITE" />
-                        <Button fx:id="Banquetes" layoutX="472.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Banquetes" textFill="WHITE" />
-                        <Button fx:id="Flores" layoutX="546.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Flores" textFill="WHITE" />
-                        <Button fx:id="Video" layoutX="638.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Video" textFill="WHITE" />
-                        <Button fx:id="Mobiliario" layoutX="706.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Mobiliario" textFill="WHITE" />
-                        <Button fx:id="Entretenimiento" layoutX="773.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Entretenimiento" textFill="WHITE" />
-                        <Button fx:id="Reposteria" layoutX="863.0" layoutY="30.0" onAction="#filtrarPorCategoria" prefWidth="75.0" style="-fx-background-color: transparent;" text="Repostería" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Fotografia" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Organización" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Catering" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Decoración" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Audio" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Música" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Banquetes" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Flores" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Video" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Mobiliario" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Entretenimiento" textFill="WHITE" />
+                        <Button onAction="#filtrarPorCategoria" prefWidth="75.0" style="-fx-background-color: transparent;" text="Repostería" textFill="WHITE" />
                         <Region prefHeight="25.0" prefWidth="72.0" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
             </children>
         </VBox>
 
-        <!-- Panel buscador desplegable (oculto al inicio) -->
+        <!-- Panel buscador desplegable -->
         <Pane fx:id="PanelBuscador" prefHeight="170.0" prefWidth="1288.0" style="-fx-background-color: #0A1832;" visible="false">
             <children>
                 <TextField fx:id="txtBuscadorPrincipal" alignment="CENTER" layoutX="233.0" layoutY="61.0" prefHeight="65.0" prefWidth="729.0" promptText="Encuentra el evento que buscas" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;">
                     <font><Font size="27.0" /></font>
                     <effect><Bloom threshold="0.21"><input><Reflection topOpacity="0.26" /></input></Bloom></effect>
                 </TextField>
-                <Button fx:id="btnBuscarPrincipal" layoutX="962.0" layoutY="58.0" mnemonicParsing="false" opacity="0.71" prefHeight="71.0" prefWidth="87.0" style="-fx-background-color: tranparent;" text="🔎" textFill="WHITE">
+                <Button fx:id="btnBuscarPrincipal" layoutX="962.0" layoutY="58.0" mnemonicParsing="false" opacity="0.71" prefHeight="71.0" prefWidth="87.0" style="-fx-background-color: transparent;" text="🔎" textFill="WHITE">
                     <font><Font size="28.0" /></font>
                 </Button>
                 <Button layoutX="1135.0" layoutY="60.0" maxHeight="53.0" maxWidth="57.0" mnemonicParsing="false" onAction="#SalirBuscar" prefHeight="53.0" prefWidth="57.0" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: #778899; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
@@ -111,7 +101,7 @@
             </children>
         </Pane>
 
-        <!-- ScrollPane central con las tarjetas de servicios -->
+        <!-- ScrollPane central con las tarjetas -->
         <ScrollPane fitToWidth="true" layoutY="170.0" prefHeight="497.0" prefWidth="1288.0">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="10000.0" prefWidth="1217.0">
@@ -125,7 +115,7 @@
             <children>
                 <ScrollPane layoutX="9.0" layoutY="13.0" prefHeight="526.0" prefWidth="286.0">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="525.0" prefWidth="254.0" style="-fx-background-color: transparent;" />
+                        <AnchorPane fx:id="bandejaContent" minHeight="0.0" minWidth="0.0" prefHeight="525.0" prefWidth="254.0" style="-fx-background-color: transparent;" />
                     </content>
                 </ScrollPane>
                 <Button layoutX="-10.0" layoutY="-6.0" mnemonicParsing="false" onAction="#SalirBandeja" prefHeight="39.0" prefWidth="42.0" style="-fx-background-color: #778899; -fx-background-radius: 25; -fx-text-fill: white;" text="X" textFill="WHITE">
@@ -135,10 +125,19 @@
             </children>
         </Pane>
 
-        <!-- Botón para limpiar filtros (X) -->
+        <!-- Botón para limpiar filtros -->
         <Button fx:id="BotonDeFiltros" layoutX="35.0" layoutY="108.0" mnemonicParsing="false" onAction="#AbirYCerrarFiltros" prefHeight="39.0" prefWidth="42.0" style="-fx-background-color: #778899; -fx-background-radius: 25; -fx-text-fill: white;" text="X" visible="false">
             <font><Font size="18.0" /></font>
             <effect><DropShadow /></effect>
         </Button>
+
+        <!-- Barra de estado inferior -->
+        <HBox alignment="CENTER_LEFT" layoutY="667.0" prefHeight="26.0" prefWidth="1288.0" spacing="8" style="-fx-background-color:#0A1832; -fx-padding:5 16 5 16;">
+            <children>
+                <Label fx:id="labelStatus" style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="© 2026 Premier Services. Todos los derechos reservados." />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="Premier Services — Panel Cliente" />
+            </children>
+        </HBox>
     </children>
 </AnchorPane>

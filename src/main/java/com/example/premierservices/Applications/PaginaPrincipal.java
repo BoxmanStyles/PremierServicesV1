@@ -12,7 +12,7 @@ public class PaginaPrincipal extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 RegistroProveedorApplication.class.getResource(
-                        "/Pagina Principal Beta.fxml"));
+                        "/PaginaPrincipal(Sin_Sesion).fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1288, 668);
 

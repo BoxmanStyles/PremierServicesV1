@@ -3,8 +3,8 @@ package com.example.premierservices;
 public class Servicio {
     private int idServicio;
     private int idSuplidor;
-    private String nombreSuplidor;      // nombre de la empresa (proveedor)
-    private String nombreServicio;      // nombre del servicio (ej: "Fotografía de bodas")
+    private String nombreSuplidor;
+    private String nombreServicio;
     private String categoria;
     private String ubicacion;
     private double calificacion;
@@ -104,4 +104,5 @@ public class Servicio {
                 ", proveedor='" + nombreSuplidor + '\'' +
                 '}';
     }
+
 }

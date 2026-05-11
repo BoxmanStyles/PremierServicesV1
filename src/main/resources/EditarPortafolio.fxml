@@ -1,120 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.BoxBlur?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Glow?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="651.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.EditarPortafolioController">
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.EditarPortafolioController">
     <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="651.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
-         <fill>
-            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color green="0.2666666805744171" blue="0.5137255191802979" />
-                     </color>
-                  </Stop>
-               </stops>
-            </RadialGradient>
-         </fill>
-      </Rectangle>
-        <Pane layoutX="57.0" layoutY="51.0" opacity="0.24" prefHeight="572.0" prefWidth="1189.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
-            <effect>
-                <DropShadow spread="0.72">
-                    <input>
-                        <BoxBlur iterations="0" />
-                    </input>
-                </DropShadow>
-            </effect>
-        </Pane>
-        <Pane layoutX="56.0" layoutY="54.0" prefHeight="519.0" prefWidth="1189.0">
+        <VBox spacing="15.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <Pane layoutX="80.0" layoutY="26.0" prefHeight="519.0" prefWidth="1036.0" style="-fx-background-color: white; -fx-background-radius: 25;" />
-                <ScrollPane layoutX="87.0" layoutY="42.0" prefHeight="490.0" prefWidth="1015.0" style="-fx-background-color: s;">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="998.0" style="-fx-background-color: s; -fx-background-radius: 25px;">
-                            <children>
-                                <VBox layoutX="15.0" layoutY="14.0" prefHeight="730.0" prefWidth="972.0" spacing="20.0">
-                                    <children>
-                                        <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="Gestión de Portafolios" />
-                                        <Separator />
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="ID del Proveedor" />
-                                            <TextField fx:id="txtIdProveedor" promptText="Ej: 1, 2, 3 ..." />
-                                        </VBox>
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="Nombre del servicio" />
-                                            <TextField fx:id="txtNombreServicio" promptText="Ej: Fotografía de Bodas" />
-                                        </VBox>
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="Categoría" />
-                                            <ComboBox fx:id="cmbCategoria" promptText="Seleccione una categoría" />
-                                        </VBox>
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="Ubicación" />
-                                            <ComboBox fx:id="cmbUbicacion" promptText="Seleccione una ubicación" />
-                                        </VBox>
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="Precio (RD$)" />
-                                            <TextField fx:id="txtPrecio" promptText="0.00" />
-                                        </VBox>
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="Descripción" />
-                                            <TextArea fx:id="txtDescripcion" prefHeight="80" promptText="Detalles del servicio..." wrapText="true" />
-                                        </VBox>
-                                        <VBox spacing="5.0">
-                                            <Label style="-fx-font-weight: bold;" text="Imagen del servicio" />
-                                            <HBox spacing="10.0">
-                                                <TextField fx:id="txtRutaImagen" editable="false" HBox.hgrow="ALWAYS" />
-                                                <Button onAction="#seleccionarImagen" text="Examinar..." />
-                                            </HBox>
-                                            <ImageView fx:id="imgVistaPrevia" fitHeight="100" fitWidth="150" preserveRatio="true" />
-                                        </VBox>
-                                        <Label fx:id="lblMensaje" style="-fx-text-fill: red;" wrapText="true" />
+                <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Editar Portafolio" />
 
-                                        <HBox alignment="CENTER_RIGHT" spacing="15.0">
-                                            <Button fx:id="btnEliminar" onAction="#eliminar" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" text="Eliminar" visible="false" />
-                                            <Button onAction="#limpiar" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;" text="Limpiar" />
-                                            <Button onAction="#guardar" style="-fx-background-color: #003566; -fx-text-fill: white; -fx-font-weight: bold;" text="Guardar" />
-                                            <Button onAction="#cancelar" style="-fx-background-color: #778899; -fx-text-fill: white;" text="Cancelar" />
-                                        </HBox>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </ScrollPane>
-                <Button fx:id="ElegirTipoRegistro" layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#cancelar" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: Grey; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
-                    <effect>
-                        <Glow>
-                     <input>
-                        <DropShadow />
-                     </input></Glow>
-                    </effect>
-                </Button>
+                <!-- Campo ID del proveedor (se ocultará en modo proveedor) -->
+                <VBox fx:id="proveedorIdBox" spacing="5.0">
+                    <Label text="ID del Proveedor" />
+                    <TextField fx:id="txtIdProveedor" editable="false" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Nombre del Servicio" />
+                    <TextField fx:id="txtNombreServicio" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Categoría" />
+                    <ComboBox fx:id="cmbCategoria" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Ubicación" />
+                    <ComboBox fx:id="cmbUbicacion" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Precio (RD$)" />
+                    <TextField fx:id="txtPrecio" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Descripción" />
+                    <TextArea fx:id="txtDescripcion" prefHeight="80" wrapText="true" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label text="Imagen (ruta)" />
+                    <HBox spacing="10.0">
+                        <TextField fx:id="txtRutaImagen" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#seleccionarImagen" text="Examinar..." />
+                    </HBox>
+                </VBox>
+
+                <Label fx:id="lblMensaje" wrapText="true" />
+
+                <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                    <Button onAction="#guardar" style="-fx-background-color: #003566; -fx-text-fill: white; -fx-font-weight: bold;" text="Guardar" />
+                    <Button onAction="#cancelar" style="-fx-background-color: #778899; -fx-text-fill: white;" text="Cancelar" />
+                </HBox>
             </children>
-        </Pane>
+        </VBox>
     </children>
 </AnchorPane>

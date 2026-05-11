@@ -10,7 +10,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
+import java.sql.*;
 
 public class RegistrateClienteController {
 
@@ -31,64 +31,119 @@ public class RegistrateClienteController {
 
     @FXML
     private void onRegistrarClick() {
-        mostrarMensaje("Registro de cliente aún no implementado", "info");
-    }
+        if (!validarCampos()) return;
 
-    @FXML
-    private void onCancelarClick() {
-        limpiarCampos();
-    }
+        String nombre = nombreField.getText().trim();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText();
+        boolean terminos = terminosCheckBox.isSelected();
 
-    @FXML
-    private void irALogin(ActionEvent event) {
-        navegarA(event, "LoginGeneralV2.fxml", "Iniciar Sesión");
-    }
+        if (!terminos) {
+            mostrarMensaje("Debe aceptar los términos y condiciones", "error");
+            return;
+        }
+        if (!password.equals(confirmPasswordField.getText())) {
+            mostrarMensaje("Las contraseñas no coinciden", "error");
+            return;
+        }
 
-    @FXML
-    private void volverAOpcionRegister(ActionEvent event) {
-        navegarA(event, "OpcionRegister.fxml", "Elegir tipo de registro");
-    }
-
-    private void navegarA(ActionEvent event, String fxmlNombre, String titulo) {
+        Connection con = null;
         try {
-            URL url = getClass().getResource("/" + fxmlNombre);
-            if (url == null) {
-                System.err.println("No se encontró: " + fxmlNombre);
-                return;
+            con = conectar();
+            con.setAutoCommit(false);
+
+            // Insertar en tbl_usuarios
+            String sqlUser = "INSERT INTO tbl_usuarios (nombre, email, contraseña, tipo_usuario, fecha_registro, estado) VALUES (?, ?, ?, 'cliente', GETDATE(), 'activo')";
+            int idUsuario;
+            try (PreparedStatement pst = con.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS)) {
+                pst.setString(1, nombre);
+                pst.setString(2, email);
+                pst.setString(3, password);
+                pst.executeUpdate();
+                ResultSet rs = pst.getGeneratedKeys();
+                rs.next();
+                idUsuario = rs.getInt(1);
             }
-            Parent root = FXMLLoader.load(url);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Insertar en tbl_clientes
+            String sqlCliente = "INSERT INTO tbl_clientes (id_usuario, tipo_cliente) VALUES (?, 'personal')";
+            try (PreparedStatement pst = con.prepareStatement(sqlCliente)) {
+                pst.setInt(1, idUsuario);
+                pst.executeUpdate();
+            }
+
+            con.commit();
+            mostrarMensaje("Registro exitoso. Ahora inicia sesión.", "exito");
+            // Redirigir al login después de 2 segundos
+            new java.util.Timer().schedule(new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    javafx.application.Platform.runLater(() -> irALogin(null));
+                }
+            }, 2000);
+
+        } catch (SQLException e) {
+            if (con != null) {
+                try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
+            mostrarMensaje("Error al registrar: " + e.getMessage(), "error");
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    @FXML private void onCancelarClick() { limpiarCampos(); }
+    @FXML private void irALogin(ActionEvent event) { navegarA("/LoginGeneralV2.fxml", "Iniciar Sesión", event); }
+    @FXML private void volverAOpcionRegister(ActionEvent event) { navegarA("/OpcionRegister.fxml", "Elegir tipo de registro", event); }
+
+    private void navegarA(String fxml, String titulo, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (event != null) ? (Stage) ((Node) event.getSource()).getScene().getWindow() : (Stage) registrarButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle(titulo);
             stage.centerOnScreen();
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private boolean validarCampos() {
+        if (nombreField.getText().trim().isEmpty()) { mostrarMensaje("Nombre completo requerido", "error"); return false; }
+        if (emailField.getText().trim().isEmpty()) { mostrarMensaje("Correo requerido", "error"); return false; }
+        if (!emailField.getText().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) { mostrarMensaje("Correo inválido", "error"); return false; }
+        if (passwordField.getText().isEmpty()) { mostrarMensaje("Contraseña requerida", "error"); return false; }
+        if (passwordField.getText().length() < 8) { mostrarMensaje("Mínimo 8 caracteres", "error"); return false; }
+        return true;
     }
 
     private void limpiarCampos() {
-        nombreField.clear();
-        emailField.clear();
-        passwordField.clear();
-        confirmPasswordField.clear();
+        nombreField.clear(); emailField.clear(); passwordField.clear(); confirmPasswordField.clear();
         terminosCheckBox.setSelected(false);
         limpiarMensaje();
     }
 
-    private void limpiarMensaje() {
-        lblMensaje.setText("");
-        lblMensaje.setVisible(false);
+    private void limpiarMensaje() { lblMensaje.setText(""); lblMensaje.setVisible(false); }
+
+    private void mostrarMensaje(String msg, String tipo) {
+        lblMensaje.setText(msg);
+        lblMensaje.setVisible(true);
+        if ("error".equals(tipo))
+            lblMensaje.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+        else
+            lblMensaje.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
     }
 
-    private void mostrarMensaje(String mensaje, String tipo) {
-        lblMensaje.setText(mensaje);
-        lblMensaje.setVisible(true);
-        if (tipo.equals("error"))
-            lblMensaje.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
-        else if (tipo.equals("exito"))
-            lblMensaje.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-        else
-            lblMensaje.setStyle("-fx-text-fill: #34495e;");
+    private Connection conectar() {
+        try {
+            String url = "jdbc:sqlserver://26.228.126.202:1433;databaseName=PremierServicesV1;encrypt=true;trustServerCertificate=true";
+            return DriverManager.getConnection(url, "wilenny", "1234");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

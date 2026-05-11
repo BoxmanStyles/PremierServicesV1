@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="593.0" prefWidth="864.0" style="-fx-background-color: #1a233b;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.SplashScreenController">
+    <children>
+        <BorderPane layoutX="131.0" layoutY="98.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom, #0A1832, #4A7FA9); -fx-background-radius: 30;">
+            <center>
+                <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: transparent; -fx-background-radius: 30;">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <Label text="Premier Services" textFill="#50b9ff">
+                        <font>
+                            <Font name="Elephant Italic" size="36.0" />
+                        </font>
+                        <effect>
+                            <Glow />
+                        </effect>
+                    </Label>
+                    <Label fx:id="lblEstado" style="-fx-text-fill: white; -fx-font-size: 14;" text="Cargando recursos..." />
+                    <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
+                </VBox>
+            </center>
+            <effect>
+                <DropShadow />
+            </effect>
+        </BorderPane>
+        <ImageView fx:id="imgCorona" fitHeight="177.0" fitWidth="333.0" layoutX="-13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <effect>
+                <Glow>
+                    <input>
+                        <DropShadow />
+                    </input>
+                </Glow>
+            </effect>
+        </ImageView>
+    </children>
+</Pane>

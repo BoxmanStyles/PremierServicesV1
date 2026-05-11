@@ -14,12 +14,12 @@ public class SplashScreenApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        URL fxmlUrl = getClass().getResource("/com/example/premierservices/SplashScreen.fxml");
+        URL fxmlUrl = getClass().getResource("/com/example/premierservices/INICIO GLOBAL.fxml");
         if (fxmlUrl == null) {
-            fxmlUrl = getClass().getResource("/SplashScreen.fxml");
+            fxmlUrl = getClass().getResource("/INICIO GLOBAL.fxml");
         }
         if (fxmlUrl == null) {
-            System.err.println("ERROR: No se encontró SplashScreen.fxml");
+            System.err.println("ERROR: No se encontró INICIO GLOBAL.fxml");
             return;
         }
         FXMLLoader loader = new FXMLLoader(fxmlUrl);
@@ -29,7 +29,7 @@ public class SplashScreenApplication extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.centerOnScreen();
         primaryStage.show();
-
+ 
         SplashScreenController controller = loader.getController();
         controller.init(primaryStage);
     }

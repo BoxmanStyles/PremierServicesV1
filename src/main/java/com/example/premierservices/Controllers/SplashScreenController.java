@@ -7,9 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -17,8 +19,18 @@ public class SplashScreenController {
 
     @FXML private Label lblEstado;
     @FXML private ProgressIndicator progressIndicator;
+    @FXML private ImageView imgCorona;
 
     private Stage splashStage;
+
+    @FXML
+    public void initialize() {
+        // Cargar imagen de corona
+        File coronaFile = new File("IMG/Corona-Inclinada.png");
+        if (coronaFile.exists()) {
+            imgCorona.setImage(new Image(coronaFile.toURI().toString()));
+        }
+    }
 
     public void init(Stage stage) {
         this.splashStage = stage;
@@ -49,6 +61,7 @@ public class SplashScreenController {
             }
         };
 
+        // Vincular UI con la tarea
         lblEstado.textProperty().bind(tareaCarga.messageProperty());
         progressIndicator.progressProperty().bind(tareaCarga.progressProperty());
 
@@ -57,7 +70,8 @@ public class SplashScreenController {
                 cargarPantallaPrincipal();
             } catch (IOException e) {
                 e.printStackTrace();
-                lblEstado.setText("Error al cargar la aplicación: " + e.getMessage());
+                // No se puede usar lblEstado.setText porque está bindeado, así que mostramos error en consola
+                System.err.println("Error al cargar la aplicación: " + e.getMessage());
             }
         });
 
@@ -65,18 +79,14 @@ public class SplashScreenController {
     }
 
     private void cargarPantallaPrincipal() throws IOException {
-        // Buscar el FXML de la pantalla principal (con espacios en el nombre)
         String[] rutas = {
-                "/Pagina Principal Beta.fxml",
-                "/com/example/premierservices/Pagina Principal Beta.fxml"
+                "/PaginaPrincipal(Sin_Sesion).fxml",
+                "/com/example/premierservices/PaginaPrincipal(Sin_Sesion).fxml"
         };
         URL fxmlUrl = null;
         for (String ruta : rutas) {
             fxmlUrl = getClass().getResource(ruta);
-            if (fxmlUrl != null) {
-                System.out.println("FXML principal encontrado en: " + ruta);
-                break;
-            }
+            if (fxmlUrl != null) break;
         }
         if (fxmlUrl == null) {
             throw new IOException("No se encontró la pantalla principal");
@@ -85,10 +95,8 @@ public class SplashScreenController {
         FXMLLoader loader = new FXMLLoader(fxmlUrl);
         Parent root = loader.load();
 
-        // Cerrar la ventana de splash
         splashStage.close();
 
-        // Crear una nueva ventana para la aplicación principal
         Stage mainStage = new Stage();
         mainStage.setTitle("Premier Services - Eventos");
         mainStage.setScene(new Scene(root));
