@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1522.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.AdminDashboardController">
+<AnchorPane prefHeight="1522.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.AdminDashboardController">
     <children>
         <!-- Header -->
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">

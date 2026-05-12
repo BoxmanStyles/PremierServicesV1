@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.AdminPaginaPrincipalController">
+<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.AdminPaginaPrincipalController">
     <children>
         <!-- Cabecera fija -->
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
@@ -52,37 +52,39 @@
                             </children>
                         </Pane>
                         <Region prefHeight="65.0" prefWidth="87.0" />
-                        <Pane prefHeight="65.0" prefWidth="149.0">
+                        <Pane prefHeight="65.0" prefWidth="149.0" style="-fx-background-color: #142440; -fx-background-radius: 24;">
                             <children>
-                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="67.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
-                                <Button alignment="BOTTOM_LEFT" layoutX="6.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="149.0" style="-fx-background-color: transparent;" text="Account" textFill="WHITE">
+                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="67.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                                <Button alignment="TOP_LEFT" layoutX="6.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="114.0" style="-fx-background-color: transparent;" text="Admin" textFill="WHITE">
                                     <font><Font size="16.0" /></font>
+                                </Button>
+                                <!-- Botón Cerrar sesión -->
+                                <Button onAction="#cerrarSesion" layoutX="6.0" layoutY="34.0" style="-fx-background-color: transparent; -fx-text-fill: #ff6b6b; -fx-font-size: 10px; -fx-cursor: hand;" text="Cerrar sesión" />
+                            </children>
+                        </Pane>
+                        <Pane prefHeight="65.0" prefWidth="138.0">
+                            <children>
+                                <Button fx:id="btnAdminPanel" alignment="BOTTOM_CENTER" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" onAction="#AbrirAdminPanel" prefHeight="50.0" prefWidth="125.0" style="-fx-background-color: transparent;" text="Panel Admin" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="15.0" />
+                                    </font>
                                 </Button>
                             </children>
                         </Pane>
                         <Pane prefHeight="65.0" prefWidth="138.0">
                             <children>
-                                <Button fx:id="BandejaAbir" alignment="BOTTOM_CENTER" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" onAction="#BandejaAbrir" prefHeight="50.0" prefWidth="125.0" style="-fx-background-color: transparent;" text="Bandeja 📥" textFill="WHITE">
+                                <Button fx:id="btnNuevoServicio" alignment="BOTTOM_CENTER" layoutX="-12.0" layoutY="14.0" mnemonicParsing="false" onAction="#abrirNuevoServicio" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: transparent;" text="Nuevo Portafolio" textAlignment="CENTER" textFill="WHITE">
                                     <font>
-                                        <Font size="16.0" />
+                                        <Font name="System Bold" size="15.0" />
                                     </font>
                                 </Button>
                             </children>
                         </Pane>
-                  <Pane prefHeight="65.0" prefWidth="138.0">
-                     <children>
-                                <Button fx:id="btnNuevoServicio" alignment="BOTTOM_CENTER" layoutX="-12.0" layoutY="14.0" mnemonicParsing="false" onAction="#abrirNuevoServicio" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: transparent;" text="Nuevo Portafolio" textAlignment="CENTER" textFill="WHITE">
-                                    <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font>
-                                </Button>
-                     </children>
-                  </Pane>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" prefHeight="53.0" prefWidth="1288.0" spacing="20.0" style="-fx-padding: 20;">
                     <children>
-                  <Region prefHeight="25.0" prefWidth="75.0" />
+                        <Region prefHeight="25.0" prefWidth="75.0" />
                         <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Fotografia" textFill="WHITE" />
                         <Button onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Organización" textFill="WHITE" />
                         <Button layoutX="121.0" layoutY="30.0" onAction="#filtrarPorCategoria" style="-fx-background-color: transparent;" text="Catering" textFill="WHITE" />
@@ -147,12 +149,13 @@
             <font><Font size="18.0" /></font>
             <effect><DropShadow /></effect>
         </Button>
-      <HBox alignment="CENTER_LEFT" layoutY="667.0" prefHeight="26.0" prefWidth="1288.0" spacing="8" style="-fx-background-color:#0A1832; -fx-padding:5 16 5 16;">
-         <children>
-            <Label fx:id="labelStatus" style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="© 2026 Premier Services. Todos los derechos reservados." />
-            <Region HBox.hgrow="ALWAYS" />
-            <Label style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="Premier Services — Panel Principal" />
-         </children>
-      </HBox>
+
+        <HBox alignment="CENTER_LEFT" layoutY="667.0" prefHeight="26.0" prefWidth="1288.0" spacing="8" style="-fx-background-color:#0A1832; -fx-padding:5 16 5 16;">
+            <children>
+                <Label fx:id="labelStatus" style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="© 2026 Premier Services. Todos los derechos reservados." />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="Premier Services — Panel Principal" />
+            </children>
+        </HBox>
     </children>
 </AnchorPane>

@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.image.Image?>
-<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.PaginaPrincipalSesionController">
+<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Clientes.PaginaPrincipalSesionController">
     <children>
         <!-- Cabecera fija -->
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">

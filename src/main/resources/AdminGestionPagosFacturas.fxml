@@ -21,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1968.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.controllerGestionPagosFacturas">
+<AnchorPane prefHeight="1968.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.controllerGestionPagosFacturas">
     <children>
         <HBox alignment="CENTER_LEFT" layoutX="-1.0" prefHeight="110.0" prefWidth="1285.0" spacing="20.0" style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9); -fx-padding: 20;">
             <children>

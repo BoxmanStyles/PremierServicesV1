@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1302.0" prefWidth="1283.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.controllerGestionProveedor">
+<AnchorPane prefHeight="1302.0" prefWidth="1283.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.controllerGestionProveedor">
     <children>
         <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1269.0">
             <children>

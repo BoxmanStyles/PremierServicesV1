@@ -3,16 +3,29 @@ module com.example.premierservices {
     requires javafx.fxml;
     requires java.sql;
     requires java.desktop;
+    requires jbcrypt;
 
-    // Exportar paquetes necesarios
+    // Exportar paquetes necesarios (solo los que contienen clases)
     exports com.example.premierservices;
-    exports com.example.premierservices.Controllers;
     exports com.example.premierservices.Models;
-    exports com.example.premierservices.Applications;   // NUEVO
+    exports com.example.premierservices.Controllers.Admin;
+    exports com.example.premierservices.Controllers.GlobalController;
+    exports com.example.premierservices.Controllers.Clientes;
+    exports com.example.premierservices.Controllers.Proveedores;
+    exports com.example.premierservices.Applications.GlobalController;
+    exports com.example.premierservices.Applications.Admin;
+    exports com.example.premierservices.Applications.Cliente;
+    exports com.example.premierservices.Applications.Proveedor;
 
     // Abrir paquetes para reflexión (JavaFX)
     opens com.example.premierservices to javafx.fxml;
-    opens com.example.premierservices.Controllers to javafx.fxml;
+    opens com.example.premierservices.Controllers.Admin to javafx.fxml;
+    opens com.example.premierservices.Controllers.GlobalController to javafx.fxml;
+    opens com.example.premierservices.Controllers.Clientes to javafx.fxml;
+    opens com.example.premierservices.Controllers.Proveedores to javafx.fxml;
     opens com.example.premierservices.Models to javafx.base, javafx.fxml;
-    opens com.example.premierservices.Applications to javafx.graphics;   // NUEVO
+    opens com.example.premierservices.Applications.GlobalController to javafx.graphics;
+    opens com.example.premierservices.Applications.Admin to javafx.graphics;
+    opens com.example.premierservices.Applications.Cliente to javafx.graphics;
+    opens com.example.premierservices.Applications.Proveedor to javafx.graphics;
 }
