@@ -1,6 +1,7 @@
 package com.example.premierservices.Controllers.GlobalController;
 
 import com.example.premierservices.Servicio;
+import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,11 +10,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -38,7 +42,6 @@ public class controllerPaginaPrincipal {
     private List<Servicio> todosServicios;
     private String categoriaActiva = null;
 
-    // Método faltante que se llama desde el botón "Account"
     @FXML
     private void AbrirLoginPaquinaPrincipal(ActionEvent event) {
         try {
@@ -197,13 +200,41 @@ public class controllerPaginaPrincipal {
     private VBox crearTarjetaServicio(Servicio servicio) {
         VBox card = new VBox(15);
         card.setPrefWidth(350);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
         card.setPadding(new Insets(0));
-        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5); -fx-cursor: hand;"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);"));
+
+        // ========== EFECTO HOVER CON ESCALA (SCALE) + SOMBRA ==========
+        // Sombra base
+        DropShadow shadowBase = new DropShadow(5, Color.rgb(0, 0, 0, 0.1));
+        card.setEffect(shadowBase);
+
+        // Animación al entrar el mouse
+        card.setOnMouseEntered(e -> {
+            // Animación de escala
+            ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
+            scale.setToX(1.02);
+            scale.setToY(1.02);
+            scale.play();
+
+            // Sombra más pronunciada
+            DropShadow shadowHover = new DropShadow(20, Color.rgb(0, 0, 0, 0.2));
+            card.setEffect(shadowHover);
+
+            // Cambiar cursor
+            card.setCursor(javafx.scene.Cursor.HAND);
+        });
+
+        // Animación al salir el mouse
+        card.setOnMouseExited(e -> {
+            // Volver a tamaño normal
+            ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+            scale.play();
+
+            // Restaurar sombra original
+            card.setEffect(shadowBase);
+        });
 
         StackPane imagePane = new StackPane();
         imagePane.setPrefHeight(200);
@@ -289,7 +320,6 @@ public class controllerPaginaPrincipal {
         btnContactar.setStyle("-fx-background-color: #003566; -fx-text-fill: white; " +
                 "-fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 20; " +
                 "-fx-background-radius: 6; -fx-cursor: hand;");
-        // Redirigir al login
         btnContactar.setOnAction(e -> abrirLogin());
         footer.getChildren().add(btnContactar);
 
@@ -325,7 +355,7 @@ public class controllerPaginaPrincipal {
     public void initialize() {
         // Cargar imagen de perfil por defecto (ícono global)
         try {
-            File filePerfil = new File("C:/Users/jeanm/IdeaProjects/PremierServicesV1/IMG/Perfil 1 sin fondo.png");
+            File filePerfil = new File("IMG/Perfil 1 sin fondo.png");
             if (filePerfil.exists()) {
                 imagenPerfil.setImage(new Image(filePerfil.toURI().toString()));
             } else {
@@ -336,7 +366,7 @@ public class controllerPaginaPrincipal {
         }
 
         // Cargar logo
-        File fileLogo = new File("C:/Users/jeanm/IdeaProjects/PremierServicesV1/IMG/Logo.png");
+        File fileLogo = new File("IMG/Logo.png");
         if (fileLogo.exists()) {
             Logoimg.setImage(new Image(fileLogo.toURI().toString()));
         }

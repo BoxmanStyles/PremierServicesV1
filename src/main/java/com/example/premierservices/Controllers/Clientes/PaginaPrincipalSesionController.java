@@ -1,6 +1,7 @@
 package com.example.premierservices.Controllers.Clientes;
 
 import com.example.premierservices.Servicio;
+import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,11 +10,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -93,6 +97,11 @@ public class PaginaPrincipalSesionController {
 
     private void abrirPanelDetalle(Servicio servicio) {
         this.servicioActual = servicio;
+        System.out.println("=== ABRIENDO PANEL DETALLE ===");
+        System.out.println("Servicio ID: " + servicio.getIdServicio());
+        System.out.println("Suplidor ID: " + servicio.getIdSuplidor());
+        System.out.println("Nombre: " + servicio.getNombreServicio());
+
         cargarInfoPrincipal(servicio);
         cargarResenas(servicio.getIdSuplidor());
         cargarAlbumFotos(servicio.getIdServicio());
@@ -137,30 +146,32 @@ public class PaginaPrincipalSesionController {
 
     private void cargarResenas(int idSuplidor) {
         vboxResenas.getChildren().clear();
-        String sql = "SELECT r.comentario, r.puntuacion, u.nombre, r.fecha " +
-                "FROM tbl_reseñas r " +
-                "INNER JOIN tbl_usuarios u ON r.id_cliente = u.id_usuario " +
-                "WHERE r.id_suplidor = ? " +
-                "ORDER BY r.fecha DESC";
+        System.out.println("=== CARGANDO RESEÑAS PARA SUPILIDOR: " + idSuplidor + " ===");
+
+        String sql = "SELECT comentario, puntuacion, id_cliente, fecha FROM tbl_reseñas WHERE id_suplidor = ? ORDER BY fecha DESC";
         try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, idSuplidor);
             ResultSet rs = pst.executeQuery();
-            boolean hayResenas = false;
+            int count = 0;
             while (rs.next()) {
-                hayResenas = true;
-                vboxResenas.getChildren().add(crearTarjetaResena(
-                        rs.getString("nombre"),
-                        rs.getInt("puntuacion"),
-                        rs.getString("comentario"),
-                        rs.getString("fecha")
-                ));
+                count++;
+                String autor = "Cliente #" + rs.getInt("id_cliente");
+                int calificacion = rs.getInt("puntuacion");
+                String comentario = rs.getString("comentario");
+                String fecha = rs.getString("fecha");
+                System.out.println("Reseña #" + count + ": " + autor + " - " + calificacion + " estrellas - " + comentario);
+                vboxResenas.getChildren().add(crearTarjetaResena(autor, calificacion, comentario, fecha));
             }
-            if (!hayResenas) {
+            if (count == 0) {
+                System.out.println("No hay reseñas para este proveedor");
                 Label vacio = new Label("Aún no hay reseñas para este proveedor. ¡Sé el primero!");
                 vacio.setStyle("-fx-text-fill:#6b7280; -fx-font-size:13px; -fx-padding:20 0 0 0;");
                 vboxResenas.getChildren().add(vacio);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+            System.out.println("Total reseñas cargadas en UI: " + vboxResenas.getChildren().size());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private VBox crearTarjetaResena(String autor, int calificacion, String comentario, String fecha) {
@@ -323,13 +334,22 @@ public class PaginaPrincipalSesionController {
             mostrarAlerta("Error", "No hay un servicio seleccionado.");
             return;
         }
+
         String comentario = txtNuevaResena.getText().trim();
         if (comentario.isEmpty()) {
             mostrarAlerta("Campo vacío", "Por favor escribe un comentario antes de publicar.");
             return;
         }
+
+        System.out.println("=== PUBLICANDO RESEÑA ===");
+        System.out.println("ID Cliente: " + idCliente);
+        System.out.println("ID Suplidor: " + servicioActual.getIdSuplidor());
+        System.out.println("Calificación: " + calificacionSeleccionada);
+        System.out.println("Comentario: " + comentario);
+
         try (Connection con = conectar()) {
             con.setAutoCommit(false);
+
             String sqlInsert = "INSERT INTO tbl_reseñas (id_cliente, id_suplidor, puntuacion, comentario, fecha) VALUES (?, ?, ?, ?, GETDATE())";
             try (PreparedStatement pst = con.prepareStatement(sqlInsert)) {
                 pst.setInt(1, idCliente);
@@ -339,20 +359,28 @@ public class PaginaPrincipalSesionController {
                 int filas = pst.executeUpdate();
                 System.out.println("Reseña insertada, filas: " + filas);
             }
+
             String sqlProm = "UPDATE tbl_suplidores SET calificacion_promedio = (SELECT AVG(CAST(puntuacion AS DECIMAL(3,1))) FROM tbl_reseñas WHERE id_suplidor = ?) WHERE id_suplidor = ?";
             try (PreparedStatement pst = con.prepareStatement(sqlProm)) {
                 pst.setInt(1, servicioActual.getIdSuplidor());
                 pst.setInt(2, servicioActual.getIdSuplidor());
                 pst.executeUpdate();
             }
+
             con.commit();
+
             txtNuevaResena.clear();
             construirEstrellas();
+
+            System.out.println("Recargando reseñas para suplidor: " + servicioActual.getIdSuplidor());
             cargarResenas(servicioActual.getIdSuplidor());
+
             refrescarServicioActual();
             cargarServicios();
             aplicarFiltros();
+
             mostrarAlerta("Éxito", "Tu reseña ha sido publicada correctamente.");
+
         } catch (SQLException e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo guardar la reseña: " + e.getMessage());
@@ -383,9 +411,16 @@ public class PaginaPrincipalSesionController {
     @FXML
     private void handleEnviarSolicitud() {
         if (servicioActual == null) return;
+
+        if (servicioActual.getIdServicio() == 0) {
+            mostrarAlerta("Error", "El servicio no es válido. Intenta de nuevo.");
+            return;
+        }
+
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Nueva solicitud");
         dialog.setHeaderText("Solicitar servicio: " + servicioActual.getNombreServicio());
+
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("dd/MM/yyyy");
         datePicker.setValue(LocalDate.now().plusDays(7));
@@ -393,13 +428,34 @@ public class PaginaPrincipalSesionController {
         content.setPadding(new Insets(20));
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
         if (dialog.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             LocalDate fecha = datePicker.getValue();
             if (fecha == null) {
                 mostrarAlerta("Fecha requerida", "Selecciona una fecha para el evento.");
                 return;
             }
-            System.out.println("Insertando reserva - Cliente ID: " + idCliente + ", Servicio ID: " + servicioActual.getIdServicio());
+
+            System.out.println("=== INSERTANDO RESERVA ===");
+            System.out.println("ID Cliente: " + idCliente);
+            System.out.println("ID Servicio: " + servicioActual.getIdServicio());
+            System.out.println("ID Suplidor del servicio: " + servicioActual.getIdSuplidor());
+            System.out.println("Fecha: " + fecha);
+
+            String checkSql = "SELECT id_servicio FROM tbl_servicios WHERE id_servicio = ?";
+            try (Connection con = conectar(); PreparedStatement checkSt = con.prepareStatement(checkSql)) {
+                checkSt.setInt(1, servicioActual.getIdServicio());
+                ResultSet rs = checkSt.executeQuery();
+                if (!rs.next()) {
+                    mostrarAlerta("Error", "El servicio no existe en la base de datos.");
+                    return;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "Error verificando el servicio: " + e.getMessage());
+                return;
+            }
+
             String sql = "INSERT INTO tbl_reservas (id_cliente, id_servicio, fecha_evento, estado, total) VALUES (?, ?, ?, 'pendiente', 0)";
             try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
                 pst.setInt(1, idCliente);
@@ -407,6 +463,7 @@ public class PaginaPrincipalSesionController {
                 pst.setDate(3, Date.valueOf(fecha));
                 int filas = pst.executeUpdate();
                 System.out.println("Filas insertadas: " + filas);
+
                 if (filas > 0) {
                     mostrarAlerta("Solicitud enviada", "Tu solicitud ha sido registrada. El proveedor te responderá pronto.");
                     cargarSolicitudes();
@@ -420,11 +477,46 @@ public class PaginaPrincipalSesionController {
         }
     }
 
+    // ========== MÉTODO DE TARJETA CON EFECTO SCALE + SOMBRA ==========
     private VBox crearTarjetaServicio(Servicio servicio) {
         VBox card = new VBox(15);
         card.setPrefWidth(350);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
         card.setPadding(new Insets(0));
+
+        // ========== EFECTO HOVER CON ESCALA (SCALE) + SOMBRA ==========
+        // Sombra base
+        DropShadow shadowBase = new DropShadow(5, Color.rgb(0, 0, 0, 0.1));
+        card.setEffect(shadowBase);
+
+        // Animación al entrar el mouse
+        card.setOnMouseEntered(e -> {
+            // Animación de escala
+            ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
+            scale.setToX(1.02);
+            scale.setToY(1.02);
+            scale.play();
+
+            // Sombra más pronunciada
+            DropShadow shadowHover = new DropShadow(20, Color.rgb(0, 0, 0, 0.2));
+            card.setEffect(shadowHover);
+
+            // Cambiar cursor
+            card.setCursor(javafx.scene.Cursor.HAND);
+        });
+
+        // Animación al salir el mouse
+        card.setOnMouseExited(e -> {
+            // Volver a tamaño normal
+            ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+            scale.play();
+
+            // Restaurar sombra original
+            card.setEffect(shadowBase);
+        });
+
         StackPane imagePane = new StackPane();
         imagePane.setPrefHeight(200);
         imagePane.setStyle("-fx-background-color: linear-gradient(to right, #003566, #669bbc);");
@@ -439,6 +531,7 @@ public class PaginaPrincipalSesionController {
                 imagePane.getChildren().add(imgView);
             } else { imagePane.getChildren().add(makeIconLabel(servicio)); }
         } else { imagePane.getChildren().add(makeIconLabel(servicio)); }
+
         VBox content = new VBox(12);
         content.setPadding(new Insets(20));
         Label categoria = new Label(servicio.getCategoria().toUpperCase());
@@ -486,6 +579,7 @@ public class PaginaPrincipalSesionController {
 
     private Label makeIconLabel(Servicio s) { Label l = new Label(obtenerIconoCategoria(s.getCategoria())); l.setFont(Font.font(48)); return l; }
     private Label styledLabel(String text, String style) { Label l = new Label(text); l.setStyle(style); return l; }
+
     private String obtenerIconoCategoria(String cat) {
         if (cat == null) return "⭐";
         return switch (cat.toLowerCase()) {
@@ -528,7 +622,9 @@ public class PaginaPrincipalSesionController {
             flowServicios.getChildren().add(noResults);
             return;
         }
-        for (Servicio s : servicios) flowServicios.getChildren().add(crearTarjetaServicio(s));
+        for (Servicio s : servicios) {
+            flowServicios.getChildren().add(crearTarjetaServicio(s));
+        }
     }
 
     private void aplicarFiltros() {
@@ -581,6 +677,7 @@ public class PaginaPrincipalSesionController {
     @FXML public void SalirBandeja(ActionEvent e) { PanelBandeja.setVisible(false); }
     @FXML protected void filtrarPorCategoria(ActionEvent event) { categoriaActiva = ((Button) event.getSource()).getText(); aplicarFiltros(); BotonDeFiltros.setVisible(true); }
     @FXML public void AbirYCerrarFiltros(ActionEvent event) { categoriaActiva = null; txtBuscadorPrincipal.clear(); aplicarFiltros(); BotonDeFiltros.setVisible(false); }
+
     @FXML private void cerrarSesion(ActionEvent event) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setTitle("Cerrar sesión"); a.setHeaderText("¿Deseas cerrar sesión?"); a.setContentText("Serás redirigido a la pantalla de inicio.");

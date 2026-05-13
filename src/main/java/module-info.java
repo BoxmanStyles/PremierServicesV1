@@ -4,6 +4,7 @@ module com.example.premierservices {
     requires java.sql;
     requires java.desktop;
     requires jbcrypt;
+    requires jasperreports;
 
     // Exportar paquetes necesarios (solo los que contienen clases)
     exports com.example.premierservices;

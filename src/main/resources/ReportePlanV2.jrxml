@@ -1,0 +1,232 @@
+<!-- Created with Jaspersoft Studio version 7.0.6.final using JasperReports Library version 7.0.6-5d2a603fdc6b3db8f842a83383e594f41891534d  -->
+<jasperReport name="FacturaPlan" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dab0a509-fb25-4330-b633-5cf2443c0234">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PremierServices_JasperSoft"/>
+	<style name="TituloGrande" fontName="Arial" fontSize="28.0" bold="true"/>
+	<style name="TituloMediano" fontName="Arial" fontSize="16.0" bold="true" italic="true"/>
+	<style name="TituloPequeno" fontName="Arial" fontSize="11.0" bold="true"/>
+	<style name="TextoNormal" fontName="Arial" fontSize="9.0"/>
+	<style name="TextoNegrita" fontName="Arial" fontSize="9.0" bold="true"/>
+	<style name="TextoPequeno" fontName="Arial" fontSize="8.0"/>
+	<style name="TextoExtraPequeno" fontName="Arial" fontSize="7.0"/>
+	<style name="HeaderTabla" fontName="Arial" fontSize="10.0" bold="true"/>
+	<parameter name="id_suplidor" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(1039)]]></defaultValueExpression>
+	</parameter>
+	<query language="sql"><![CDATA[SELECT 
+			f.numero_factura,
+			f.comprobante,
+			CONVERT(VARCHAR, f.fecha, 103) AS fecha_factura,
+			f.subtotal,
+			ISNULL(f.itbis, 0) AS itbis,
+			ISNULL(f.descuento, 0) AS descuento,
+			f.total,
+			f.estado,
+			s.nombre_empresa,
+			s.telefono,
+			s.correo AS email,
+			s.ubicacion,
+			p.nombre_plan,
+			p.precio AS precio_plan,
+			p.beneficios,
+			p.limite_fotos,
+			p.prioridad_busqueda
+		FROM dbo.tbl_factura f
+		INNER JOIN dbo.tbl_suplidores s ON f.id_suplidor = s.id_suplidor
+		INNER JOIN dbo.tbl_planes p ON s.plan_id = p.id_plan
+		WHERE f.id_suplidor = $P{id_suplidor}
+		ORDER BY f.numero_factura DESC]]></query>
+	<field name="numero_factura" class="java.lang.Integer"/>
+	<field name="comprobante" class="java.lang.String"/>
+	<field name="fecha_factura" class="java.lang.String"/>
+	<field name="subtotal" class="java.math.BigDecimal"/>
+	<field name="itbis" class="java.math.BigDecimal"/>
+	<field name="descuento" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="nombre_empresa" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="ubicacion" class="java.lang.String"/>
+	<field name="nombre_plan" class="java.lang.String"/>
+	<field name="precio_plan" class="java.math.BigDecimal"/>
+	<field name="beneficios" class="java.lang.String"/>
+	<field name="limite_fotos" class="java.lang.Integer"/>
+	<field name="prioridad_busqueda" class="java.lang.Integer"/>
+	<title height="140">
+		<element kind="rectangle" uuid="7b49ea8e-f86f-488c-b7e8-e600e425ae83" x="20" y="15" width="140" height="55" backcolor="#0A1832" radius="10"/>
+		<element kind="staticText" uuid="ac4d5c96-fa33-41c9-af03-9aad555fb5e0" x="51" y="42" width="100" height="15" forecolor="#3B93FF" fontSize="13.0" italic="true" bold="true" style="TituloPequeno">
+			<text><![CDATA[remier Services]]></text>
+		</element>
+		<element kind="staticText" uuid="ed27bbac-bcf4-425c-8c41-578450d7bd10" x="220" y="30" width="150" height="35" style="TituloGrande">
+			<text><![CDATA[FACTURA]]></text>
+		</element>
+		<element kind="staticText" uuid="8c22666f-48d8-47bf-bae3-ad9d25b4f645" x="400" y="15" width="80" height="12" style="TextoNegrita">
+			<text><![CDATA[N° FACTURA:]]></text>
+		</element>
+		<element kind="textField" uuid="ed5a0701-a855-4f59-8152-3d2ef60e9b7b" x="480" y="15" width="100" height="12" style="TextoNormal">
+			<expression><![CDATA["FAC-" + $F{numero_factura}]]></expression>
+		</element>
+		<element kind="staticText" uuid="a67f7910-24c0-493e-a607-4c6599c1bcd7" x="400" y="30" width="80" height="12" style="TextoNegrita">
+			<text><![CDATA[COMPROBANTE:]]></text>
+		</element>
+		<element kind="textField" uuid="ada0181d-dd01-44fe-96e1-a42f2489cffd" x="480" y="30" width="100" height="12" style="TextoNormal">
+			<expression><![CDATA[$F{comprobante}]]></expression>
+		</element>
+		<element kind="staticText" uuid="56f359ae-b8c0-4d30-bdd1-0e9733bedc17" x="400" y="45" width="80" height="12" style="TextoNegrita">
+			<text><![CDATA[FECHA:]]></text>
+		</element>
+		<element kind="textField" uuid="6111ade9-10ca-41fc-9c29-4930a19961f3" x="480" y="45" width="100" height="12" style="TextoNormal">
+			<expression><![CDATA[$F{fecha_factura}]]></expression>
+		</element>
+		<element kind="staticText" uuid="7ab81852-2e43-4656-9ee4-49401ab9964f" x="400" y="60" width="80" height="12" style="TextoNegrita">
+			<text><![CDATA[ESTADO:]]></text>
+		</element>
+		<element kind="textField" uuid="819b8583-c3c5-41fe-937c-2c7c9ec96217" x="480" y="60" width="100" height="12" style="TextoNormal">
+			<expression><![CDATA[$F{estado}]]></expression>
+		</element>
+		<element kind="line" uuid="7f2ac4dc-08b1-4a69-b7d0-9f59b654f214" x="20" y="85" width="555" height="1"/>
+		<element kind="staticText" uuid="e94d1525-3414-4ef3-b1f8-43a1ffb29872" x="20" y="95" width="250" height="12" style="TituloPequeno">
+			<text><![CDATA[DATOS DE LA EMPRESA]]></text>
+		</element>
+		<element kind="staticText" uuid="65d4aac7-9092-4c8f-9c4f-37b7e9ac9a27" x="20" y="112" width="80" height="12" style="TextoNormal">
+			<text><![CDATA[Dirección:]]></text>
+		</element>
+		<element kind="staticText" uuid="a4055a42-f134-4433-9e24-e2c9c89c96af" x="100" y="112" width="200" height="12" style="TextoPequeno">
+			<text><![CDATA[Santiago, República Dominicana]]></text>
+		</element>
+		<element kind="staticText" uuid="bedac6af-c1a4-4f77-84e1-61622ba6fa09" x="300" y="112" width="60" height="12" style="TextoNormal">
+			<text><![CDATA[Teléfono:]]></text>
+		</element>
+		<element kind="staticText" uuid="aa790519-b7a9-4411-8043-72a2ed7547b4" x="360" y="112" width="120" height="12" style="TextoPequeno">
+			<text><![CDATA[849-424-0224]]></text>
+		</element>
+		<element kind="staticText" uuid="086c164b-455c-454e-bc34-7b93298373b1" x="20" y="126" width="80" height="12" style="TextoNormal">
+			<text><![CDATA[Email:]]></text>
+		</element>
+		<element kind="staticText" uuid="138d178f-7035-4f0f-a620-1912eae9006d" x="100" y="126" width="200" height="12" style="TextoPequeno">
+			<text><![CDATA[info@premierservices.do]]></text>
+		</element>
+		<element kind="image" uuid="a06dd955-3a18-47c7-aff3-8a956421658c" x="30" y="15" width="33" height="50">
+			<expression><![CDATA["Logo.png"]]></expression>
+		</element>
+	</title>
+	<pageHeader height="130">
+		<element kind="line" uuid="02f17ce2-441f-4572-b3bd-6d7358ca1c87" x="20" y="0" width="555" height="1"/>
+		<element kind="staticText" uuid="4cb7f07a-9ce1-45d8-9a3b-6f0e0268598c" x="20" y="10" width="250" height="14" style="TituloPequeno">
+			<text><![CDATA[DATOS DEL CLIENTE]]></text>
+		</element>
+		<element kind="staticText" uuid="d4c14d28-940c-4a5e-923a-d4e1af3926ad" x="20" y="28" width="80" height="12" style="TextoNormal">
+			<text><![CDATA[Empresa:]]></text>
+		</element>
+		<element kind="textField" uuid="040dc0bc-ec97-445f-951b-f60507e16156" x="100" y="28" width="250" height="12" style="TextoNegrita">
+			<expression><![CDATA[$F{nombre_empresa}]]></expression>
+		</element>
+		<element kind="staticText" uuid="afc29ac0-f95b-42cc-93ab-06a6507d41b5" x="20" y="44" width="80" height="12" style="TextoNormal">
+			<text><![CDATA[Teléfono:]]></text>
+		</element>
+		<element kind="textField" uuid="50166b4b-af03-450f-9e38-4c7c6721217a" x="100" y="44" width="150" height="12" style="TextoNormal">
+			<expression><![CDATA[$F{telefono}]]></expression>
+		</element>
+		<element kind="staticText" uuid="a6033e4b-fbfc-4927-8af7-794ad83cb391" x="300" y="44" width="60" height="12" style="TextoNormal">
+			<text><![CDATA[Email:]]></text>
+		</element>
+		<element kind="textField" uuid="ff743348-3845-4fc1-86a9-d30e4b8c7f2b" x="360" y="44" width="200" height="12" style="TextoNormal">
+			<expression><![CDATA[$F{email}]]></expression>
+		</element>
+		<element kind="staticText" uuid="8749749c-ee17-4273-93ff-9f001fbda302" x="20" y="60" width="80" height="12" style="TextoNormal">
+			<text><![CDATA[Dirección:]]></text>
+		</element>
+		<element kind="textField" uuid="d7282355-623b-4025-8f02-f22ad00da784" x="100" y="60" width="460" height="12" style="TextoPequeno">
+			<expression><![CDATA[$F{ubicacion}]]></expression>
+		</element>
+		<element kind="line" uuid="ada804ce-2867-4cf8-a74b-3e7602fdb0e6" x="20" y="85" width="555" height="1"/>
+		<element kind="rectangle" uuid="4aad08cd-d7f2-44f8-bf9d-2ba72e89ecef" x="20" y="95" width="555" height="25" backcolor="#0A1832" radius="5"/>
+		<element kind="staticText" uuid="b15bacbb-e0e2-4ca5-a1fc-9b5325178a34" x="30" y="100" width="200" height="15" forecolor="#FFFFFF" style="HeaderTabla">
+			<text><![CDATA[DESCRIPCIÓN DEL SERVICIO]]></text>
+		</element>
+		<element kind="staticText" uuid="155154d9-7d28-46ef-a946-1c949b7b0677" x="400" y="100" width="60" height="15" forecolor="#FFFFFF" style="HeaderTabla">
+			<text><![CDATA[CANTIDAD]]></text>
+		</element>
+		<element kind="staticText" uuid="31ac24b8-d164-497c-8977-0e3bbb7061eb" x="470" y="100" width="90" height="15" forecolor="#FFFFFF" style="HeaderTabla">
+			<text><![CDATA[PRECIO]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader/>
+	<detail>
+		<band height="75">
+			<element kind="line" uuid="96041bc6-9287-4ea5-be36-ef0f637d9490" x="20" y="0" width="555" height="1"/>
+			<element kind="staticText" uuid="a234fd5a-568c-44fc-9654-c8c500ad7862" x="30" y="8" width="250" height="12" style="TextoNormal">
+				<text><![CDATA[Suscripción al Plan]]></text>
+			</element>
+			<element kind="textField" uuid="fd2a8d0e-cb45-440e-9cda-85a77564041b" x="30" y="22" width="250" height="15" style="TextoNegrita">
+				<expression><![CDATA[$F{nombre_plan}]]></expression>
+			</element>
+			<element kind="staticText" uuid="8fc41165-a2d0-4b43-8e5d-74ae6c6827dd" x="30" y="40" width="80" height="12" style="TextoNormal">
+				<text><![CDATA[Beneficios:]]></text>
+			</element>
+			<element kind="textField" uuid="2a81469d-95e5-4a9c-9e08-02b6f5846860" x="110" y="40" width="350" height="12" textAdjust="StretchHeight" style="TextoPequeno">
+				<expression><![CDATA[$F{beneficios}]]></expression>
+			</element>
+			<element kind="staticText" uuid="65d0231d-7d45-49a7-8f36-e5be20c2b8a5" x="400" y="15" width="60" height="15" style="TextoNormal">
+				<text><![CDATA[1]]></text>
+			</element>
+			<element kind="textField" uuid="46789946-9342-4593-985f-bf4026acbd38" x="470" y="15" width="90" height="15" pattern="$ #,##0.00" style="TextoNormal">
+				<expression><![CDATA[$F{precio_plan}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="130">
+		<element kind="line" uuid="ef6c2a87-1fab-432e-adb6-4ebe288a247d" x="20" y="0" width="555" height="1"/>
+		<element kind="staticText" uuid="c65f4654-c729-4666-9d94-fabc9bf5c0d5" x="380" y="10" width="80" height="15" style="TextoNormal">
+			<text><![CDATA[SUBTOTAL:]]></text>
+		</element>
+		<element kind="textField" uuid="311529a2-4f40-43d3-920a-0be68500b61d" x="460" y="10" width="100" height="15" pattern="$ #,##0.00" style="TextoNormal">
+			<expression><![CDATA[$F{subtotal}]]></expression>
+		</element>
+		<element kind="staticText" uuid="f283e616-5b58-452e-813f-0a620d49aa6b" x="380" y="28" width="80" height="15" style="TextoNormal">
+			<text><![CDATA[ITBIS (18%):]]></text>
+		</element>
+		<element kind="textField" uuid="7d1ed03e-ad2d-42cb-9a20-6a9758596208" x="460" y="28" width="100" height="15" pattern="$ #,##0.00" style="TextoNormal">
+			<expression><![CDATA[$F{subtotal}.multiply(new java.math.BigDecimal("0.18"))]]></expression>
+		</element>
+		<element kind="staticText" uuid="5045bd1a-00e3-4cfe-94af-16049ef5f37d" x="380" y="46" width="80" height="15" style="TextoNormal">
+			<text><![CDATA[DESCUENTO:]]></text>
+		</element>
+		<element kind="textField" uuid="05cf171f-b6b8-42c3-8d15-ab6d50b6faa9" x="460" y="46" width="100" height="15" pattern="$ #,##0.00" style="TextoNormal">
+			<expression><![CDATA[$F{descuento} != null ? $F{descuento} : new java.math.BigDecimal("0")]]></expression>
+		</element>
+		<element kind="line" uuid="8ba97069-fd7f-4c50-8303-5b8c748ba938" x="380" y="65" width="180" height="1"/>
+		<element kind="staticText" uuid="b5ac1e23-32eb-4ff6-8d81-3fe617abfca1" x="380" y="70" width="80" height="18" style="TituloPequeno">
+			<text><![CDATA[TOTAL:]]></text>
+		</element>
+		<element kind="textField" uuid="9a35eaa7-f21e-42ad-8320-fd3174579088" x="460" y="70" width="100" height="18" pattern="$ #,##0.00" style="TituloPequeno">
+			<expression><![CDATA[$F{total}]]></expression>
+		</element>
+		<element kind="line" uuid="71b1e498-937d-46a3-9fbd-f8d397ea7ec8" x="20" y="100" width="555" height="1"/>
+		<element kind="staticText" uuid="dc83718a-4927-4011-b573-6d289e483fc3" x="20" y="108" width="120" height="12" style="TextoPequeno">
+			<text><![CDATA[Límite de fotos:]]></text>
+		</element>
+		<element kind="textField" uuid="83007bbf-1013-4a70-a3dd-717ce8961eaa" x="140" y="108" width="80" height="12" style="TextoPequeno">
+			<expression><![CDATA[$F{limite_fotos}]]></expression>
+		</element>
+		<element kind="staticText" uuid="52518ab3-102b-4bd4-8fe4-b4d7670a51c6" x="300" y="108" width="120" height="12" style="TextoPequeno">
+			<text><![CDATA[Prioridad búsqueda:]]></text>
+		</element>
+		<element kind="textField" uuid="3bc2c9d3-708f-4e9b-84b5-7d67251952c2" x="420" y="108" width="80" height="12" style="TextoPequeno">
+			<expression><![CDATA[$F{prioridad_busqueda}]]></expression>
+		</element>
+	</columnFooter>
+	<pageFooter height="40">
+		<element kind="line" uuid="af10326d-7797-42d1-ac5d-9c0e283c71d4" x="20" y="0" width="555" height="1"/>
+		<element kind="staticText" uuid="b55c926a-ec48-43ee-bcdd-e548b9f2eee0" x="20" y="10" width="400" height="15" style="TextoPequeno">
+			<text><![CDATA[Gracias por confiar en Premier Services]]></text>
+		</element>
+		<element kind="staticText" uuid="6a2425a6-9221-4b56-97a7-358efd3670b8" x="20" y="25" width="400" height="12" style="TextoExtraPequeno">
+			<text><![CDATA[Este documento es una factura de suscripción.]]></text>
+		</element>
+		<element kind="textField" uuid="8fdff62d-7b13-4540-bcad-683d8edb7661" x="480" y="10" width="100" height="15" style="TextoPequeno">
+			<expression><![CDATA["Página " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+	</pageFooter>
+</jasperReport>

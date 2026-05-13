@@ -327,30 +327,46 @@ public class ProveedorDashboardController {
     }
 
     private void actualizarLabelPortafolio() {
-        if (labelTotalServicios != null)
+        if (labelTotalServicios != null) {
             labelTotalServicios.setText(listaServicios.size() + " servicio" + (listaServicios.size() != 1 ? "s" : "") + " publicados");
+        }
     }
 
     // ========== SOLICITUDES CORREGIDAS ==========
     private void cargarSolicitudesReales() {
         todasSolicitudes.clear();
+
         String sql = "SELECT r.id_reserva, u.nombre, s.nombre_servicio, " +
                 "r.fecha_evento, r.estado " +
                 "FROM tbl_reservas r " +
                 "INNER JOIN tbl_usuarios u ON r.id_cliente = u.id_usuario " +
                 "INNER JOIN tbl_servicios s ON r.id_servicio = s.id_servicio " +
-                "WHERE s.id_suplidor = ? ORDER BY r.fecha_evento DESC";
+                "WHERE s.id_suplidor = ? " +
+                "ORDER BY r.id_reserva DESC";
+
         try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, idSuplidor);
             ResultSet rs = pst.executeQuery();
-            System.out.println("=== SOLICITUDES ENCONTRADAS ===");
+
+            System.out.println("=== SOLICITUDES ENCONTRADAS para proveedor " + idSuplidor + " ===");
+
             while (rs.next()) {
-                SolicitudReserva.Estado estado;
+                int idReserva = rs.getInt("id_reserva");
+                String nombreCliente = rs.getString("nombre");
+                String nombreServicio = rs.getString("nombre_servicio");
+                String fechaEvento = rs.getString("fecha_evento");
                 String estadoStr = rs.getString("estado");
+
+                System.out.println("Reserva #" + idReserva +
+                        " - Cliente: " + nombreCliente +
+                        " - Servicio: " + nombreServicio +
+                        " - Estado: " + estadoStr);
+
+                SolicitudReserva.Estado estado;
                 try {
                     estado = SolicitudReserva.Estado.valueOf(estadoStr.toUpperCase());
                 } catch (Exception e) {
-                    if (estadoStr.equalsIgnoreCase("confrmada") || estadoStr.equalsIgnoreCase("confirmada")) {
+                    if (estadoStr.equalsIgnoreCase("confirmada")) {
                         estado = SolicitudReserva.Estado.CONFIRMADO;
                     } else if (estadoStr.equalsIgnoreCase("completada")) {
                         estado = SolicitudReserva.Estado.COMPLETADO;
@@ -360,18 +376,21 @@ public class ProveedorDashboardController {
                         estado = SolicitudReserva.Estado.PENDIENTE;
                     }
                 }
+
                 todasSolicitudes.add(new SolicitudReserva(
-                        rs.getInt("id_reserva"),
-                        rs.getString("nombre"),
-                        rs.getString("nombre_servicio"),
-                        rs.getString("fecha_evento"),
+                        idReserva,
+                        nombreCliente,
+                        nombreServicio,
+                        fechaEvento,
                         estado));
-                System.out.println("Reserva #" + rs.getInt("id_reserva") + " - Cliente: " + rs.getString("nombre"));
             }
+
             System.out.println("Total solicitudes cargadas: " + todasSolicitudes.size());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         actualizarStats();
         actualizarLabelSolicitudes();
     }
@@ -477,9 +496,10 @@ public class ProveedorDashboardController {
     }
 
     private void actualizarLabelSolicitudes() {
-        if (labelTotalSolicitudes != null)
+        if (labelTotalSolicitudes != null) {
             labelTotalSolicitudes.setText(solicitudesFiltradas.size() +
                     (solicitudesFiltradas.size() == 1 ? " solicitud" : " solicitudes"));
+        }
     }
 
     private String estadoTexto(SolicitudReserva.Estado e) {
