@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="680.0" prefWidth="820.0"
+            style="-fx-background-color: #f0f3f8;"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.premierservices.Controllers.Proveedores.EditarPortafolioDetalladoController">
+    <children>
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="820.0"
+              style="-fx-background-color: linear-gradient(to right,#0A1832,#4A7FA9); -fx-padding:14 24 14 24;">
+            <Label style="-fx-text-fill:white; -fx-font-size:18px; -fx-font-weight:bold;"
+                   text="🗂  Editar Información Detallada del Portafolio" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblNombreServicio"
+                   style="-fx-text-fill:#a0c4e8; -fx-font-size:13px;" text="" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" layoutY="60.0"
+                    prefHeight="560.0" prefWidth="820.0"
+                    style="-fx-background-color:#f0f3f8;">
+            <content>
+                <VBox spacing="24" style="-fx-padding:28 36 28 36; -fx-background-color:#f0f3f8;">
+
+                    <!-- SECCIÓN 1: IMAGEN PRINCIPAL -->
+                    <VBox spacing="12"
+                          style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20 24 20 24; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                        <Label style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                               text="📸  Imagen Principal" />
+                        <Separator />
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                            <StackPane prefHeight="140.0" prefWidth="220.0"
+                                       style="-fx-background-color:#e5e7eb; -fx-background-radius:10;">
+                                <ImageView fx:id="prevImagenPrincipal" fitWidth="220" fitHeight="140"
+                                           preserveRatio="true" pickOnBounds="true" />
+                                <Label fx:id="lblPlaceholderImagen" style="-fx-font-size:36px; -fx-text-fill:#9ca3af;"
+                                       text="🖼" />
+                            </StackPane>
+                            <VBox spacing="10">
+                                <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;"
+                                       text="Ingresa la ruta local o URL de la imagen:" />
+                                <TextField fx:id="tfRutaImagenPrincipal" prefWidth="400"
+                                           promptText="C:/ruta/imagen.jpg  o  https://url.com/foto.jpg"
+                                           style="-fx-background-radius:8; -fx-border-radius:8; -fx-border-color:#e5e7eb; -fx-padding:7 12 7 12;" />
+                                <HBox spacing="10">
+                                    <Button onAction="#handleSeleccionarImagenPrincipal"
+                                            style="-fx-background-color:#4A7FA9; -fx-text-fill:white; -fx-background-radius:8; -fx-cursor:hand; -fx-padding:7 16 7 16; -fx-font-size:12px;"
+                                            text="📁 Explorar archivo" />
+                                    <Button onAction="#handlePreviewImagenPrincipal"
+                                            style="-fx-background-color:#e8f4fd; -fx-text-fill:#4A7FA9; -fx-background-radius:8; -fx-cursor:hand; -fx-padding:7 16 7 16; -fx-font-size:12px;"
+                                            text="👁 Vista previa" />
+                                </HBox>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- SECCIÓN 2: TIPO Y COSTO -->
+                    <VBox spacing="12"
+                          style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20 24 20 24; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                        <Label style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                               text="🏷  Tipo de Servicio y Costo" />
+                        <Separator />
+                        <HBox spacing="24" alignment="CENTER_LEFT">
+                            <VBox spacing="6">
+                                <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;" text="Tipo de servicio:" />
+                                <ComboBox fx:id="comboTipoServicio" prefWidth="220"
+                                          style="-fx-background-radius:8;" />
+                            </VBox>
+                            <VBox spacing="6">
+                                <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;" text="Costo base ($):" />
+                                <TextField fx:id="tfCosto" prefWidth="160" promptText="Ej: 25000"
+                                           style="-fx-background-radius:8; -fx-border-radius:8; -fx-border-color:#e5e7eb; -fx-padding:7 12 7 12;" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- SECCIÓN 3: ÁLBUM DE FOTOS -->
+                    <VBox spacing="12"
+                          style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20 24 20 24; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                        <Label style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                               text="🖼  Álbum de Fotos (máximo 6)" />
+                        <Separator />
+                        <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;"
+                               text="Ingresa la ruta o URL de cada foto junto con una descripción breve." />
+                        <GridPane fx:id="gridAlbumEditor" hgap="16" vgap="16" />
+                    </VBox>
+
+                    <!-- SECCIÓN 4: DISPONIBILIDAD -->
+                    <VBox spacing="12"
+                          style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20 24 20 24; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                        <Label style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                               text="📅  Disponibilidad por Día" />
+                        <Separator />
+                        <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;"
+                               text="Marca los días en que ofreces este servicio:" />
+                        <HBox spacing="16" alignment="CENTER_LEFT" style="-fx-padding:8 0 0 0;">
+                            <CheckBox fx:id="chkLunes"   text="Lunes"      style="-fx-font-size:13px;" />
+                            <CheckBox fx:id="chkMartes"  text="Martes"     style="-fx-font-size:13px;" />
+                            <CheckBox fx:id="chkMiercoles" text="Miércoles" style="-fx-font-size:13px;" />
+                            <CheckBox fx:id="chkJueves"  text="Jueves"     style="-fx-font-size:13px;" />
+                            <CheckBox fx:id="chkViernes" text="Viernes"    style="-fx-font-size:13px;" />
+                            <CheckBox fx:id="chkSabado"  text="Sábado"     style="-fx-font-size:13px;" />
+                            <CheckBox fx:id="chkDomingo" text="Domingo"    style="-fx-font-size:13px;" />
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <!-- BARRA INFERIOR -->
+        <HBox alignment="CENTER_RIGHT" layoutY="620.0" prefHeight="60.0" prefWidth="820.0" spacing="12"
+              style="-fx-background-color:white; -fx-padding:12 28 12 28; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),6,0,0,-2);">
+            <Label fx:id="lblMensaje" style="-fx-font-size:12px; -fx-text-fill:#059669;" text="" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#handleCancelar"
+                    style="-fx-background-color:#f3f4f6; -fx-text-fill:#374151; -fx-background-radius:8; -fx-cursor:hand; -fx-padding:9 22 9 22; -fx-font-size:13px;"
+                    text="Cancelar" />
+            <Button onAction="#handleGuardar"
+                    style="-fx-background-color:#0A1832; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:8; -fx-cursor:hand; -fx-padding:9 28 9 28; -fx-font-size:13px;"
+                    text="💾 Guardar cambios" />
+        </HBox>
+
+    </children>
+</AnchorPane>

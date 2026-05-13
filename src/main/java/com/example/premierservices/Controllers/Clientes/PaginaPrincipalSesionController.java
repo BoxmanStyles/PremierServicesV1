@@ -20,8 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PaginaPrincipalSesionController {
@@ -35,13 +39,48 @@ public class PaginaPrincipalSesionController {
     @FXML private ImageView Logoimg;
     @FXML private Button BotonDeFiltros;
     @FXML private Label lblNombreCliente;
-    @FXML private AnchorPane bandejaContent;   // Nuevo: el contenedor dentro de la bandeja
+    @FXML private AnchorPane bandejaContent;
+
+    @FXML private Pane overlay;
+    @FXML private Pane panelDetalle;
+    @FXML private ImageView detImagen;
+    @FXML private Label detIcono;
+    @FXML private Label detTipoServicio;
+    @FXML private Label detTitulo;
+    @FXML private Label detEmpresa;
+    @FXML private Label detCalificacion;
+    @FXML private Label detUbicacion;
+    @FXML private Label detCosto;
+    @FXML private TextArea detDescripcion;
+    @FXML private VBox vboxResenas;
+    @FXML private HBox hboxEstrellas;
+    @FXML private TextArea txtNuevaResena;
+    @FXML private Button btnPublicarResena;
+    @FXML private GridPane gridAlbum;
+    @FXML private VBox vboxDisponibilidad;
 
     private List<Servicio> todosServicios;
     private String categoriaActiva = null;
     private int idCliente;
     private String nombreCliente;
     private String rutaFotoPerfil;
+    private Servicio servicioActual;
+    private int calificacionSeleccionada = 5;
+
+    private static final String[] DIAS_SEMANA = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+
+    @FXML
+    public void initialize() {
+        File fileLogo = new File("IMG/Logo.png");
+        if (fileLogo.exists()) Logoimg.setImage(new Image(fileLogo.toURI().toString()));
+        btnBuscarPrincipal.setOnAction(e -> realizarBusqueda());
+        txtBuscadorPrincipal.setOnAction(e -> realizarBusqueda());
+        cargarServicios();
+        categoriaActiva = null;
+        aplicarFiltros();
+        BotonDeFiltros.setVisible(false);
+        construirEstrellas();
+    }
 
     public void setDatosCliente(int id, String nombre, String rutaFoto) {
         this.idCliente = id;
@@ -49,224 +88,343 @@ public class PaginaPrincipalSesionController {
         this.rutaFotoPerfil = rutaFoto;
         if (lblNombreCliente != null) lblNombreCliente.setText(nombreCliente);
         cargarFotoPerfil();
-        cargarSolicitudes();   // Al cargar los datos del cliente, cargamos sus solicitudes
-    }
-
-    private void cargarFotoPerfil() {
-        if (rutaFotoPerfil != null && !rutaFotoPerfil.isEmpty()) {
-            File file = new File(rutaFotoPerfil);
-            if (file.exists()) {
-                imagenPerfil.setImage(new Image(file.toURI().toString()));
-                return;
-            }
-        }
-        // Si no se pasó ruta o no existe, usar imagen por defecto
-        File defaultFile = new File("IMG/Perfil 1 sin fondo.png");
-        if (defaultFile.exists()) {
-            imagenPerfil.setImage(new Image(defaultFile.toURI().toString()));
-        } else {
-            System.err.println("No se encontró la imagen de perfil por defecto");
-        }
-    }
-
-    @FXML protected void Buscador(ActionEvent actionEvent) {
-        PanelBuscador.setVisible(true);
-        txtBuscadorPrincipal.requestFocus();
-    }
-
-    @FXML protected void SalirBuscar(ActionEvent actionEvent) {
-        PanelBuscador.setVisible(false);
-        txtBuscadorPrincipal.clear();
-        categoriaActiva = null;
-        aplicarFiltros();
-        BotonDeFiltros.setVisible(false);
-    }
-
-    @FXML protected void BandejaAbrir(ActionEvent actionEvent) {
-        PanelBandeja.setVisible(true);
-        // Recargar solicitudes cada vez que se abre la bandeja
         cargarSolicitudes();
     }
 
-    @FXML public void SalirBandeja(ActionEvent actionEvent) {
-        PanelBandeja.setVisible(false);
+    private void abrirPanelDetalle(Servicio servicio) {
+        this.servicioActual = servicio;
+        cargarInfoPrincipal(servicio);
+        cargarResenas(servicio.getIdSuplidor());
+        cargarAlbumFotos(servicio.getIdServicio());
+        cargarDisponibilidad(servicio.getIdSuplidor());
+
+        overlay.setVisible(true);
+        panelDetalle.setVisible(true);
+        panelDetalle.toFront();
     }
 
-    @FXML protected void filtrarPorCategoria(ActionEvent event) {
-        Button btn = (Button) event.getSource();
-        String categoria = btn.getText();
-        categoriaActiva = categoria;
-        aplicarFiltros();
-        BotonDeFiltros.setVisible(true);
+    @FXML
+    public void cerrarPanelDetalle() {
+        panelDetalle.setVisible(false);
+        overlay.setVisible(false);
+        servicioActual = null;
     }
 
-    @FXML public void AbirYCerrarFiltros(ActionEvent event) {
-        categoriaActiva = null;
-        txtBuscadorPrincipal.clear();
-        aplicarFiltros();
-        BotonDeFiltros.setVisible(false);
+    private void cargarInfoPrincipal(Servicio s) {
+        detTipoServicio.setText(s.getCategoria().toUpperCase());
+        detTitulo.setText(s.getNombreServicio());
+        detEmpresa.setText(s.getNombreSuplidor());
+        detCalificacion.setText(String.format("%.1f (%d reseñas)", s.getCalificacion(), s.getTotalResenas()));
+        detUbicacion.setText(s.getUbicacion());
+        detCosto.setText(String.format("$%.0f", s.getPrecio()));
+        detDescripcion.setText(s.getDescripcion());
+
+        String ruta = s.getRutaImagen();
+        if (ruta != null && !ruta.isEmpty()) {
+            File f = new File(ruta);
+            if (f.exists()) {
+                detImagen.setImage(new Image(f.toURI().toString()));
+                detImagen.setVisible(true);
+                detIcono.setVisible(false);
+                return;
+            }
+        }
+        detImagen.setImage(null);
+        detImagen.setVisible(false);
+        detIcono.setVisible(true);
+        detIcono.setText(obtenerIconoCategoria(s.getCategoria()));
     }
 
-    @FXML private void cerrarSesion(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Cerrar sesión");
-        alert.setHeaderText("¿Deseas cerrar sesión?");
-        alert.setContentText("Serás redirigido a la pantalla de inicio.");
-        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("/LoginGeneralV2.fxml"));
-                Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Iniciar Sesión");
-                stage.centerOnScreen();
-                stage.show();
-            } catch (IOException e) { e.printStackTrace(); }
+    private void cargarResenas(int idSuplidor) {
+        vboxResenas.getChildren().clear();
+        String sql = "SELECT r.comentario, r.puntuacion, u.nombre, r.fecha " +
+                "FROM tbl_reseñas r " +
+                "INNER JOIN tbl_usuarios u ON r.id_cliente = u.id_usuario " +
+                "WHERE r.id_suplidor = ? " +
+                "ORDER BY r.fecha DESC";
+        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, idSuplidor);
+            ResultSet rs = pst.executeQuery();
+            boolean hayResenas = false;
+            while (rs.next()) {
+                hayResenas = true;
+                vboxResenas.getChildren().add(crearTarjetaResena(
+                        rs.getString("nombre"),
+                        rs.getInt("puntuacion"),
+                        rs.getString("comentario"),
+                        rs.getString("fecha")
+                ));
+            }
+            if (!hayResenas) {
+                Label vacio = new Label("Aún no hay reseñas para este proveedor. ¡Sé el primero!");
+                vacio.setStyle("-fx-text-fill:#6b7280; -fx-font-size:13px; -fx-padding:20 0 0 0;");
+                vboxResenas.getChildren().add(vacio);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    private VBox crearTarjetaResena(String autor, int calificacion, String comentario, String fecha) {
+        VBox card = new VBox(6);
+        card.setStyle("-fx-background-color:#f7f9fc; -fx-background-radius:10; -fx-padding:12 16 12 16;");
+        HBox header = new HBox(8);
+        header.setAlignment(Pos.CENTER_LEFT);
+        Label lblAutor = new Label("👤 " + autor);
+        lblAutor.setStyle("-fx-font-weight:bold; -fx-font-size:13px; -fx-text-fill:#0A1832;");
+        Label lblFecha = new Label(fecha != null ? fecha : "");
+        lblFecha.setStyle("-fx-font-size:11px; -fx-text-fill:#9ca3af;");
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        header.getChildren().addAll(lblAutor, spacer, lblFecha);
+        StringBuilder estrellas = new StringBuilder();
+        for (int i = 1; i <= 5; i++) estrellas.append(i <= calificacion ? "★" : "☆");
+        Label lblEstrellas = new Label(estrellas.toString());
+        lblEstrellas.setStyle("-fx-text-fill:#f59e0b; -fx-font-size:15px;");
+        Label lblComentario = new Label(comentario);
+        lblComentario.setWrapText(true);
+        lblComentario.setStyle("-fx-font-size:13px; -fx-text-fill:#374151;");
+        card.getChildren().addAll(header, lblEstrellas, lblComentario);
+        return card;
+    }
+
+    private void cargarAlbumFotos(int idServicio) {
+        gridAlbum.getChildren().clear();
+        gridAlbum.getColumnConstraints().clear();
+        for (int c = 0; c < 2; c++) {
+            ColumnConstraints cc = new ColumnConstraints();
+            cc.setPrefWidth(340);
+            cc.setHgrow(Priority.ALWAYS);
+            gridAlbum.getColumnConstraints().add(cc);
+        }
+        String sql = "SELECT ruta_imagen, descripcion_foto FROM tbl_album_portafolio WHERE id_servicio = ? ORDER BY orden ASC";
+        List<String[]> fotos = new ArrayList<>();
+        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, idServicio);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                fotos.add(new String[]{rs.getString("ruta_imagen"), rs.getString("descripcion_foto")});
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        for (int i = 0; i < 6; i++) {
+            int col = i % 2;
+            int row = i / 2;
+            VBox celda = crearCeldaFoto(i < fotos.size() ? fotos.get(i) : null);
+            gridAlbum.add(celda, col, row);
         }
     }
 
-    // ========== CARGA DE SOLICITUDES DEL CLIENTE ==========
-    private void cargarSolicitudes() {
-        if (bandejaContent == null) return;
-        bandejaContent.getChildren().clear();
+    private VBox crearCeldaFoto(String[] foto) {
+        VBox cell = new VBox(6);
+        cell.setAlignment(Pos.CENTER);
+        cell.setPrefWidth(330);
+        cell.setStyle("-fx-background-color:#f0f3f8; -fx-background-radius:12; -fx-padding:8;");
+        StackPane imgContainer = new StackPane();
+        imgContainer.setPrefHeight(160);
+        imgContainer.setStyle("-fx-background-color:#e5e7eb; -fx-background-radius:10;");
+        if (foto != null && foto[0] != null && !foto[0].isEmpty()) {
+            File f = new File(foto[0]);
+            try {
+                Image img = f.exists() ? new Image(f.toURI().toString(), 330, 160, true, true) : new Image(foto[0], 330, 160, true, true);
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(330);
+                iv.setFitHeight(160);
+                iv.setPreserveRatio(true);
+                imgContainer.getChildren().add(iv);
+            } catch (Exception ex) { imgContainer.getChildren().add(fotoPlaceholder()); }
+        } else {
+            imgContainer.getChildren().add(fotoPlaceholder());
+        }
+        Label desc = new Label(foto != null && foto[1] != null ? foto[1] : "Sin descripción");
+        desc.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7280; -fx-wrap-text:true;");
+        desc.setWrapText(true);
+        desc.setMaxWidth(320);
+        cell.getChildren().addAll(imgContainer, desc);
+        return cell;
+    }
 
-        ListView<String> listView = new ListView<>();
-        listView.setStyle("-fx-background-color: transparent; -fx-font-size: 13px;");
-        String sql = "SELECT r.id_reserva, s.nombre_servicio, r.fecha_evento, r.estado " +
-                "FROM dbo.tbl_reservas r " +
-                "INNER JOIN dbo.tbl_servicios s ON r.id_servicio = s.id_servicio " +
-                "WHERE r.id_cliente = ? ORDER BY r.fecha_evento DESC";
+    private Label fotoPlaceholder() {
+        Label lbl = new Label("🖼");
+        lbl.setStyle("-fx-font-size:36px; -fx-text-fill:#9ca3af;");
+        return lbl;
+    }
 
+    private void cargarDisponibilidad(int idSuplidor) {
+        vboxDisponibilidad.getChildren().clear();
+        LocalDate hoy = LocalDate.now();
+        LocalDate[] proximosDias = new LocalDate[7];
+        for (int i = 0; i < 7; i++) proximosDias[i] = hoy.plusDays(i);
+        Map<LocalDate, Boolean> disponibilidadMap = new HashMap<>();
+        String sql = "SELECT fecha, disponible FROM tbl_disponibilidad WHERE id_suplidores = ? AND fecha >= ? ORDER BY fecha ASC";
         try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
-            pst.setInt(1, idCliente);
+            pst.setInt(1, idSuplidor);
+            pst.setDate(2, Date.valueOf(hoy));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                String nombreServicio = rs.getString("nombre_servicio");
-                String fecha = rs.getString("fecha_evento");
-                String estado = rs.getString("estado");
-                String icono = switch (estado.toLowerCase()) {
-                    case "pendiente" -> "⏳";
-                    case "confirmado" -> "✅";
-                    case "completado" -> "🏆";
-                    case "cancelado" -> "❌";
-                    default -> "📋";
-                };
-                String texto = String.format("%s %s - %s (%s)", icono, nombreServicio, fecha, estado);
-                listView.getItems().add(texto);
-            }
-            if (listView.getItems().isEmpty()) {
-                listView.getItems().add("📭 No tienes solicitudes aún.");
+                LocalDate fecha = rs.getDate("fecha").toLocalDate();
+                boolean disponible = rs.getBoolean("disponible");
+                disponibilidadMap.put(fecha, disponible);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            listView.getItems().add("❌ Error al cargar las solicitudes.");
-        }
-        bandejaContent.getChildren().add(listView);
-        AnchorPane.setTopAnchor(listView, 10.0);
-        AnchorPane.setLeftAnchor(listView, 10.0);
-        AnchorPane.setRightAnchor(listView, 10.0);
-        AnchorPane.setBottomAnchor(listView, 10.0);
-    }
-
-    // ========== LÓGICA DE SERVICIOS (copia de controllerPaginaPrincipal) ==========
-    private String normalizarTexto(String texto) {
-        if (texto == null) return "";
-        String normalized = Normalizer.normalize(texto, Normalizer.Form.NFD);
-        normalized = normalized.replaceAll("\\p{M}", "");
-        return normalized.toLowerCase();
-    }
-
-    private Connection conectar() {
-        try {
-            String url = "jdbc:sqlserver://26.228.126.202:1433;databaseName=PremierServicesV1;encrypt=true;trustServerCertificate=true";
-            return DriverManager.getConnection(url, "wilenny", "1234");
-        } catch (Exception e) {
-            mostrarAlerta("Error de conexión", e.getMessage());
-            return null;
-        }
-    }
-
-    private void aplicarFiltros() {
-        String textoBusquedaNormalizado = normalizarTexto(txtBuscadorPrincipal.getText());
-        List<Servicio> filtrados = new ArrayList<>(todosServicios);
-        if (categoriaActiva != null && !categoriaActiva.isEmpty()) {
-            String catActivaNormalizada = normalizarTexto(categoriaActiva);
-            filtrados = filtrados.stream()
-                    .filter(s -> normalizarTexto(s.getCategoria()).equals(catActivaNormalizada))
-                    .collect(Collectors.toList());
-        }
-        if (!textoBusquedaNormalizado.isEmpty()) {
-            filtrados = filtrados.stream()
-                    .filter(s -> normalizarTexto(s.getNombreSuplidor()).contains(textoBusquedaNormalizado) ||
-                            normalizarTexto(s.getNombreServicio()).contains(textoBusquedaNormalizado) ||
-                            normalizarTexto(s.getCategoria()).contains(textoBusquedaNormalizado) ||
-                            normalizarTexto(s.getDescripcion()).contains(textoBusquedaNormalizado))
-                    .collect(Collectors.toList());
-        }
-        mostrarServicios(filtrados);
-    }
-
-    private void realizarBusqueda() { aplicarFiltros(); }
-
-    private void cargarServicios() {
-        todosServicios = new ArrayList<>();
-        String sql = "SELECT s.id_servicio, s.id_suplidor, p.nombre_empresa, " +
-                "s.nombre_servicio, s.categoria, p.ubicacion, " +
-                "p.calificacion_promedio, s.descripcion, s.precio, " +
-                "p.plan_id, s.ruta_imagen " +
-                "FROM dbo.tbl_servicios s " +
-                "INNER JOIN dbo.tbl_suplidores p ON s.id_suplidor = p.id_suplidor " +
-                "WHERE s.estado = 'activo'";
-
-        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                String plan = switch (rs.getInt("plan_id")) {
-                    case 3 -> "prime";
-                    case 2 -> "elite";
-                    default -> "rookie";
-                };
-                String rutaImagen = rs.getString("ruta_imagen");
-                Servicio servicio = new Servicio(
-                        rs.getInt("id_servicio"),
-                        rs.getInt("id_suplidor"),
-                        rs.getString("nombre_empresa"),
-                        rs.getString("nombre_servicio"),
-                        rs.getString("categoria"),
-                        rs.getString("ubicacion"),
-                        rs.getDouble("calificacion_promedio"), 0,
-                        rs.getDouble("precio"),
-                        rs.getString("descripcion"), plan, true, rutaImagen);
-                todosServicios.add(servicio);
-            }
-        } catch (SQLException e) { mostrarAlerta("Error al cargar servicios", e.getMessage()); }
-    }
-
-    private void mostrarServicios(List<Servicio> servicios) {
-        flowServicios.getChildren().clear();
-        if (servicios == null || servicios.isEmpty()) {
-            VBox noResults = new VBox(10);
-            noResults.setAlignment(Pos.CENTER);
-            noResults.setPadding(new Insets(60));
-            Label lblEmpty = new Label("No hay servicios disponibles");
-            lblEmpty.setFont(Font.font("System", FontWeight.BOLD, 24));
-            lblEmpty.setStyle("-fx-text-fill: #7f8c8d;");
-            noResults.getChildren().add(lblEmpty);
-            flowServicios.getChildren().add(noResults);
+            Label errorLabel = new Label("Error al cargar disponibilidad: " + e.getMessage());
+            errorLabel.setStyle("-fx-text-fill:#dc2626; -fx-font-size:13px;");
+            vboxDisponibilidad.getChildren().add(errorLabel);
             return;
         }
-        for (Servicio s : servicios) flowServicios.getChildren().add(crearTarjetaServicio(s));
+        if (disponibilidadMap.isEmpty()) {
+            Label mensaje = new Label("El proveedor no ha establecido fechas de disponibilidad aún.");
+            mensaje.setStyle("-fx-text-fill:#6b7280; -fx-font-size:13px;");
+            vboxDisponibilidad.getChildren().add(mensaje);
+            return;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        for (LocalDate fecha : proximosDias) {
+            Boolean disponible = disponibilidadMap.get(fecha);
+            boolean estaDisponible = disponible != null && disponible;
+            HBox fila = new HBox(16);
+            fila.setAlignment(Pos.CENTER_LEFT);
+            fila.setPadding(new Insets(10, 16, 10, 16));
+            fila.setStyle("-fx-background-radius:10; -fx-background-color:" + (estaDisponible ? "#ecfdf5" : "#fef2f2") + ";");
+            Label lblFecha = new Label(fecha.format(formatter));
+            lblFecha.setStyle("-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#0A1832; -fx-min-width:120;");
+            Label lblEstado = new Label(estaDisponible ? "✅ Disponible" : "❌ No disponible");
+            lblEstado.setStyle("-fx-font-size:13px; -fx-text-fill:" + (estaDisponible ? "#059669" : "#dc2626") + ";");
+            fila.getChildren().addAll(lblFecha, lblEstado);
+            vboxDisponibilidad.getChildren().add(fila);
+        }
+    }
+
+    private void construirEstrellas() {
+        if (hboxEstrellas == null) return;
+        while (hboxEstrellas.getChildren().size() > 1) hboxEstrellas.getChildren().remove(1);
+        calificacionSeleccionada = 5;
+        for (int i = 1; i <= 5; i++) {
+            final int valor = i;
+            Label estrella = new Label("★");
+            estrella.setStyle("-fx-font-size:24px; -fx-text-fill:#f59e0b; -fx-cursor:hand;");
+            estrella.setOnMouseClicked(e -> {
+                calificacionSeleccionada = valor;
+                actualizarEstrellas(valor);
+            });
+            hboxEstrellas.getChildren().add(estrella);
+        }
+    }
+
+    private void actualizarEstrellas(int valor) {
+        var hijos = hboxEstrellas.getChildren();
+        for (int i = 1; i < hijos.size(); i++) {
+            Label l = (Label) hijos.get(i);
+            l.setStyle("-fx-font-size:24px; -fx-cursor:hand; -fx-text-fill:" + (i <= valor ? "#f59e0b" : "#d1d5db") + ";");
+        }
+    }
+
+    @FXML
+    private void handlePublicarResena() {
+        if (servicioActual == null) {
+            mostrarAlerta("Error", "No hay un servicio seleccionado.");
+            return;
+        }
+        String comentario = txtNuevaResena.getText().trim();
+        if (comentario.isEmpty()) {
+            mostrarAlerta("Campo vacío", "Por favor escribe un comentario antes de publicar.");
+            return;
+        }
+        try (Connection con = conectar()) {
+            con.setAutoCommit(false);
+            String sqlInsert = "INSERT INTO tbl_reseñas (id_cliente, id_suplidor, puntuacion, comentario, fecha) VALUES (?, ?, ?, ?, GETDATE())";
+            try (PreparedStatement pst = con.prepareStatement(sqlInsert)) {
+                pst.setInt(1, idCliente);
+                pst.setInt(2, servicioActual.getIdSuplidor());
+                pst.setInt(3, calificacionSeleccionada);
+                pst.setString(4, comentario);
+                int filas = pst.executeUpdate();
+                System.out.println("Reseña insertada, filas: " + filas);
+            }
+            String sqlProm = "UPDATE tbl_suplidores SET calificacion_promedio = (SELECT AVG(CAST(puntuacion AS DECIMAL(3,1))) FROM tbl_reseñas WHERE id_suplidor = ?) WHERE id_suplidor = ?";
+            try (PreparedStatement pst = con.prepareStatement(sqlProm)) {
+                pst.setInt(1, servicioActual.getIdSuplidor());
+                pst.setInt(2, servicioActual.getIdSuplidor());
+                pst.executeUpdate();
+            }
+            con.commit();
+            txtNuevaResena.clear();
+            construirEstrellas();
+            cargarResenas(servicioActual.getIdSuplidor());
+            refrescarServicioActual();
+            cargarServicios();
+            aplicarFiltros();
+            mostrarAlerta("Éxito", "Tu reseña ha sido publicada correctamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo guardar la reseña: " + e.getMessage());
+        }
+    }
+
+    private void refrescarServicioActual() {
+        String sql = "SELECT calificacion_promedio, (SELECT COUNT(*) FROM tbl_reseñas WHERE id_suplidor = ?) AS total_resenas FROM tbl_suplidores WHERE id_suplidor = ?";
+        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, servicioActual.getIdSuplidor());
+            pst.setInt(2, servicioActual.getIdSuplidor());
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                double promedio = rs.getDouble("calificacion_promedio");
+                int total = rs.getInt("total_resenas");
+                servicioActual.setCalificacion(promedio);
+                servicioActual.setTotalResenas(total);
+                detCalificacion.setText(String.format("%.1f (%d reseñas)", promedio, total));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    @FXML private void handleContactar() {
+        if (servicioActual == null) return;
+        mostrarAlerta("Contactar", "Función de chat con " + servicioActual.getNombreSuplidor() + " estará disponible próximamente.");
+    }
+
+    @FXML
+    private void handleEnviarSolicitud() {
+        if (servicioActual == null) return;
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Nueva solicitud");
+        dialog.setHeaderText("Solicitar servicio: " + servicioActual.getNombreServicio());
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("dd/MM/yyyy");
+        datePicker.setValue(LocalDate.now().plusDays(7));
+        VBox content = new VBox(10, new Label("Selecciona la fecha del evento:"), datePicker);
+        content.setPadding(new Insets(20));
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        if (dialog.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            LocalDate fecha = datePicker.getValue();
+            if (fecha == null) {
+                mostrarAlerta("Fecha requerida", "Selecciona una fecha para el evento.");
+                return;
+            }
+            System.out.println("Insertando reserva - Cliente ID: " + idCliente + ", Servicio ID: " + servicioActual.getIdServicio());
+            String sql = "INSERT INTO tbl_reservas (id_cliente, id_servicio, fecha_evento, estado, total) VALUES (?, ?, ?, 'pendiente', 0)";
+            try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setInt(1, idCliente);
+                pst.setInt(2, servicioActual.getIdServicio());
+                pst.setDate(3, Date.valueOf(fecha));
+                int filas = pst.executeUpdate();
+                System.out.println("Filas insertadas: " + filas);
+                if (filas > 0) {
+                    mostrarAlerta("Solicitud enviada", "Tu solicitud ha sido registrada. El proveedor te responderá pronto.");
+                    cargarSolicitudes();
+                } else {
+                    mostrarAlerta("Error", "No se pudo enviar la solicitud.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "No se pudo enviar la solicitud: " + e.getMessage());
+            }
+        }
     }
 
     private VBox crearTarjetaServicio(Servicio servicio) {
         VBox card = new VBox(15);
         card.setPrefWidth(350);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
         card.setPadding(new Insets(0));
-        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5); -fx-cursor: hand;"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);"));
-
         StackPane imagePane = new StackPane();
         imagePane.setPrefHeight(200);
         imagePane.setStyle("-fx-background-color: linear-gradient(to right, #003566, #669bbc);");
@@ -279,21 +437,10 @@ public class PaginaPrincipalSesionController {
                 imgView.setFitWidth(350);
                 imgView.setPreserveRatio(true);
                 imagePane.getChildren().add(imgView);
-            } else {
-                Label icon = new Label(servicio.getIcono());
-                icon.setFont(Font.font(48));
-                imagePane.getChildren().add(icon);
-            }
-        } else {
-            Label icon = new Label(servicio.getIcono());
-            icon.setFont(Font.font(48));
-            imagePane.getChildren().add(icon);
-        }
-
+            } else { imagePane.getChildren().add(makeIconLabel(servicio)); }
+        } else { imagePane.getChildren().add(makeIconLabel(servicio)); }
         VBox content = new VBox(12);
         content.setPadding(new Insets(20));
-
-        VBox leftHeader = new VBox(5);
         Label categoria = new Label(servicio.getCategoria().toUpperCase());
         categoria.setStyle("-fx-text-fill: #667eea; -fx-font-size: 12; -fx-font-weight: bold;");
         Label nombreServicio = new Label(servicio.getNombreServicio());
@@ -301,102 +448,175 @@ public class PaginaPrincipalSesionController {
         nombreServicio.setStyle("-fx-text-fill: #2c3e50;");
         Label nombreProveedor = new Label(servicio.getNombreSuplidor());
         nombreProveedor.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12;");
-        leftHeader.getChildren().addAll(categoria, nombreServicio, nombreProveedor);
-
+        VBox leftHeader = new VBox(5, categoria, nombreServicio, nombreProveedor);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
         HBox rating = new HBox(5);
         rating.setAlignment(Pos.CENTER_RIGHT);
-        Label star = new Label("⭐");
-        Label ratingText = new Label(String.format("%.1f (%d)", servicio.getCalificacion(), servicio.getTotalResenas()));
+        Label ratingText = new Label(String.format("⭐ %.1f (%d)", servicio.getCalificacion(), servicio.getTotalResenas()));
         ratingText.setStyle("-fx-text-fill: #555; -fx-font-size: 13;");
-        rating.getChildren().addAll(star, ratingText);
+        rating.getChildren().add(ratingText);
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
         header.getChildren().addAll(leftHeader, spacer, rating);
-
-        HBox ubicacion = new HBox(5);
+        HBox ubicacion = new HBox(5, new Label("📍"), styledLabel(servicio.getUbicacion(), "-fx-text-fill: #7f8c8d; -fx-font-size: 13;"));
         ubicacion.setAlignment(Pos.CENTER_LEFT);
-        Label iconUbicacion = new Label("📍");
-        Label textUbicacion = new Label(servicio.getUbicacion());
-        textUbicacion.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13;");
-        ubicacion.getChildren().addAll(iconUbicacion, textUbicacion);
-
         Label descripcion = new Label(servicio.getDescripcion());
         descripcion.setWrapText(true);
         descripcion.setMaxWidth(310);
         descripcion.setMaxHeight(45);
         descripcion.setStyle("-fx-text-fill: #555; -fx-font-size: 14;");
-
-        Separator separator = new Separator();
-
-        VBox priceBox = new VBox(2);
         Label precio = new Label(String.format("$%.0f", servicio.getPrecio()));
         precio.setFont(Font.font("System", FontWeight.BOLD, 20));
         precio.setStyle("-fx-text-fill: #27ae60;");
         Label desde = new Label("desde");
         desde.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13;");
-        priceBox.getChildren().addAll(precio, desde);
-        HBox priceRow = new HBox();
-        priceRow.setAlignment(Pos.CENTER_LEFT);
-        priceRow.getChildren().add(priceBox);
-        VBox.setMargin(priceRow, new Insets(0, 0, 10, 0));
-
+        VBox priceBox = new VBox(2, precio, desde);
         HBox footer = new HBox();
         footer.setAlignment(Pos.CENTER_RIGHT);
-        Button btnContactar = new Button("Contactar");
-        btnContactar.setStyle("-fx-background-color: #003566; -fx-text-fill: white; " +
-                "-fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 20; " +
-                "-fx-background-radius: 6; -fx-cursor: hand;");
-        btnContactar.setOnAction(e -> contactarSuplidor(servicio));
-        footer.getChildren().add(btnContactar);
-
-        content.getChildren().addAll(header, ubicacion, descripcion, separator, priceRow, footer);
+        Button btnVer = new Button("Ver portafolio");
+        btnVer.setStyle("-fx-background-color: #003566; -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 6; -fx-cursor: hand;");
+        btnVer.setOnAction(e -> abrirPanelDetalle(servicio));
+        footer.getChildren().add(btnVer);
+        content.getChildren().addAll(header, ubicacion, descripcion, new Separator(), priceBox, footer);
         card.getChildren().addAll(imagePane, content);
-        card.setOnMouseClicked(e -> mostrarDetalleServicio(servicio));
+        card.setOnMouseClicked(e -> abrirPanelDetalle(servicio));
         return card;
     }
 
-    private void mostrarDetalleServicio(Servicio servicio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(servicio.getNombreServicio());
-        alert.setHeaderText(servicio.getNombreSuplidor());
-        String contenido = String.format("Categoría: %s\nUbicación: %s\nCalificación: %.1f/5.0 (%d reseñas)\n" +
-                        "Precio desde: $%.2f\n\nDescripción:\n%s", servicio.getCategoria(), servicio.getUbicacion(),
-                servicio.getCalificacion(), servicio.getTotalResenas(), servicio.getPrecio(), servicio.getDescripcion());
-        alert.setContentText(contenido);
-        alert.showAndWait();
+    private Label makeIconLabel(Servicio s) { Label l = new Label(obtenerIconoCategoria(s.getCategoria())); l.setFont(Font.font(48)); return l; }
+    private Label styledLabel(String text, String style) { Label l = new Label(text); l.setStyle(style); return l; }
+    private String obtenerIconoCategoria(String cat) {
+        if (cat == null) return "⭐";
+        return switch (cat.toLowerCase()) {
+            case "fotografía", "fotografia" -> "📷"; case "videografía", "videografia", "video" -> "🎬";
+            case "catering", "banquetes" -> "🍽️"; case "música", "musica" -> "🎵";
+            case "decoración", "decoracion", "flores" -> "🌸"; case "audio" -> "🎧";
+            case "animación", "animacion", "entretenimiento" -> "🎭"; case "organización", "organizacion" -> "📋";
+            case "repostería", "reposteria" -> "🎂"; case "mobiliario" -> "🪑";
+            default -> "⭐";
+        };
     }
 
-    private void contactarSuplidor(Servicio servicio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Contactar Suplidor");
-        alert.setHeaderText("Iniciar una conversación con: " + servicio.getNombreSuplidor());
-        alert.setContentText("En la versión completa:\n- Chat en tiempo real\n" +
-                "- Preguntas guiadas según el servicio\n- Generación automática de cotización\n" +
-                "- Fecha en el calendario del proveedor");
-        alert.showAndWait();
+    private void cargarServicios() {
+        todosServicios = new ArrayList<>();
+        String sql = "SELECT s.id_servicio, s.id_suplidor, p.nombre_empresa, s.nombre_servicio, " +
+                "s.categoria, p.ubicacion, COALESCE(p.calificacion_promedio,0) AS calificacion_promedio, " +
+                "COALESCE((SELECT COUNT(*) FROM tbl_reseñas r WHERE r.id_suplidor = p.id_suplidor),0) AS total_resenas, " +
+                "s.precio, s.descripcion, s.ruta_imagen " +
+                "FROM tbl_servicios s INNER JOIN tbl_suplidores p ON s.id_suplidor = p.id_suplidor WHERE s.estado = 'activo'";
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                todosServicios.add(new Servicio(rs.getInt("id_servicio"), rs.getInt("id_suplidor"),
+                        rs.getString("nombre_empresa"), rs.getString("nombre_servicio"), rs.getString("categoria"),
+                        rs.getString("ubicacion"), rs.getDouble("calificacion_promedio"), rs.getInt("total_resenas"),
+                        rs.getDouble("precio"), rs.getString("descripcion"), "rookie", true, rs.getString("ruta_imagen")));
+            }
+        } catch (SQLException e) { mostrarAlerta("Error al cargar servicios", e.getMessage()); }
+    }
+
+    private void mostrarServicios(List<Servicio> servicios) {
+        flowServicios.getChildren().clear();
+        if (servicios == null || servicios.isEmpty()) {
+            VBox noResults = new VBox(10);
+            noResults.setAlignment(Pos.CENTER);
+            noResults.setPadding(new Insets(60));
+            Label lbl = new Label("No hay servicios disponibles");
+            lbl.setFont(Font.font("System", FontWeight.BOLD, 24));
+            lbl.setStyle("-fx-text-fill: #7f8c8d;");
+            noResults.getChildren().add(lbl);
+            flowServicios.getChildren().add(noResults);
+            return;
+        }
+        for (Servicio s : servicios) flowServicios.getChildren().add(crearTarjetaServicio(s));
+    }
+
+    private void aplicarFiltros() {
+        if (todosServicios == null) return;
+        String texto = normalizarTexto(txtBuscadorPrincipal.getText());
+        List<Servicio> filtrados = todosServicios.stream().filter(s -> {
+            boolean cat = categoriaActiva == null || normalizarTexto(s.getCategoria()).contains(normalizarTexto(categoriaActiva));
+            boolean txt = texto.isEmpty() || normalizarTexto(s.getNombreServicio()).contains(texto) ||
+                    normalizarTexto(s.getNombreSuplidor()).contains(texto) || normalizarTexto(s.getDescripcion()).contains(texto);
+            return cat && txt;
+        }).collect(Collectors.toList());
+        mostrarServicios(filtrados);
+    }
+
+    private void realizarBusqueda() { aplicarFiltros(); }
+
+    private void cargarSolicitudes() {
+        if (bandejaContent == null) return;
+        bandejaContent.getChildren().clear();
+        ListView<String> listView = new ListView<>();
+        listView.setStyle("-fx-background-color: transparent; -fx-font-size: 13px;");
+        String sql = "SELECT r.id_reserva, s.nombre_servicio, r.fecha_evento, r.estado " +
+                "FROM tbl_reservas r INNER JOIN tbl_servicios s ON r.id_servicio = s.id_servicio " +
+                "WHERE r.id_cliente = ? ORDER BY r.fecha_evento DESC";
+        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, idCliente);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                String estado = rs.getString("estado");
+                String icono = switch (estado.toLowerCase()) {
+                    case "pendiente" -> "⏳"; case "confirmada" -> "✅";
+                    case "completado" -> "🏆"; case "cancelado" -> "❌";
+                    default -> "📋";
+                };
+                listView.getItems().add(String.format("%s %s - %s (%s)", icono, rs.getString("nombre_servicio"), rs.getString("fecha_evento"), estado));
+            }
+            if (listView.getItems().isEmpty()) listView.getItems().add("📭 No tienes solicitudes aún.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            listView.getItems().add("❌ Error al cargar las solicitudes.");
+        }
+        bandejaContent.getChildren().add(listView);
+        AnchorPane.setTopAnchor(listView, 10.0); AnchorPane.setLeftAnchor(listView, 10.0);
+        AnchorPane.setRightAnchor(listView, 10.0); AnchorPane.setBottomAnchor(listView, 10.0);
+    }
+
+    @FXML protected void Buscador(ActionEvent e) { PanelBuscador.setVisible(true); txtBuscadorPrincipal.requestFocus(); }
+    @FXML protected void SalirBuscar(ActionEvent e) { PanelBuscador.setVisible(false); txtBuscadorPrincipal.clear(); categoriaActiva = null; aplicarFiltros(); BotonDeFiltros.setVisible(false); }
+    @FXML protected void BandejaAbrir(ActionEvent e) { PanelBandeja.setVisible(true); cargarSolicitudes(); }
+    @FXML public void SalirBandeja(ActionEvent e) { PanelBandeja.setVisible(false); }
+    @FXML protected void filtrarPorCategoria(ActionEvent event) { categoriaActiva = ((Button) event.getSource()).getText(); aplicarFiltros(); BotonDeFiltros.setVisible(true); }
+    @FXML public void AbirYCerrarFiltros(ActionEvent event) { categoriaActiva = null; txtBuscadorPrincipal.clear(); aplicarFiltros(); BotonDeFiltros.setVisible(false); }
+    @FXML private void cerrarSesion(ActionEvent event) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle("Cerrar sesión"); a.setHeaderText("¿Deseas cerrar sesión?"); a.setContentText("Serás redirigido a la pantalla de inicio.");
+        if (a.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/LoginGeneralV2.fxml"));
+                Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(root)); stage.setTitle("Iniciar Sesión");
+                stage.centerOnScreen(); stage.show();
+            } catch (IOException ex) { ex.printStackTrace(); }
+        }
+    }
+
+    private String normalizarTexto(String texto) {
+        if (texto == null) return "";
+        String n = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        return n.replaceAll("\\p{M}", "").toLowerCase();
+    }
+
+    private void cargarFotoPerfil() {
+        if (rutaFotoPerfil != null && !rutaFotoPerfil.isEmpty()) {
+            File file = new File(rutaFotoPerfil);
+            if (file.exists()) { imagenPerfil.setImage(new Image(file.toURI().toString())); return; }
+        }
+        File def = new File("IMG/Perfil 1 sin fondo.png");
+        if (def.exists()) imagenPerfil.setImage(new Image(def.toURI().toString()));
+    }
+
+    private Connection conectar() {
+        try {
+            return DriverManager.getConnection("jdbc:sqlserver://26.228.126.202:1433;databaseName=PremierServicesV1;encrypt=true;trustServerCertificate=true", "wilenny", "1234");
+        } catch (SQLException e) { e.printStackTrace(); return null; }
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle(titulo); a.setHeaderText(null); a.setContentText(mensaje); a.showAndWait();
     }
-
-    @FXML
-    public void initialize() {
-        File fileLogo = new File("C:/Users/jeanm/IdeaProjects/PremierServicesV1/IMG/Logo.png");
-        if (fileLogo.exists()) Logoimg.setImage(new Image(fileLogo.toURI().toString()));
-        btnBuscarPrincipal.setOnAction(e -> realizarBusqueda());
-        txtBuscadorPrincipal.setOnAction(e -> realizarBusqueda());
-        cargarServicios();
-        categoriaActiva = null;
-        aplicarFiltros();
-        BotonDeFiltros.setVisible(false);
-    }
-
 }

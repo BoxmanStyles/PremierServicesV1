@@ -8,16 +8,35 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class SeleccionPlanApplication extends Application {
-    @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/SeleccionPlan.fxml"));
-        Parent root = loader.load();
-        SeleccionPlanController controller = loader.getController();
-        controller.setIdSuplidor(1); // ID de prueba
-        stage.setScene(new Scene(root));
-        stage.setTitle("Premier Services — Selección de Plan");
-        stage.centerOnScreen();
-        stage.show();
+
+    private static int idSuplidor;
+
+    public static void setIdSuplidor(int id) {
+        idSuplidor = id;
     }
-    public static void main(String[] args) { launch(args); }
+
+    @Override
+    public void start(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SeleccionPlan.fxml"));
+            Parent root = loader.load();
+
+            // Obtener el controller y pasarle el idSuplidor
+            SeleccionPlanController controller = loader.getController();
+            controller.setIdSuplidor(idSuplidor);
+
+            primaryStage.setTitle("Seleccionar Plan - Premier Services");
+            primaryStage.setScene(new Scene(root, 500, 600));
+            primaryStage.setResizable(false);
+            primaryStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar el FXML: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

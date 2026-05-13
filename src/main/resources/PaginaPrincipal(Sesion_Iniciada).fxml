@@ -3,60 +3,80 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
-<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Clientes.PaginaPrincipalSesionController">
+<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.premierservices.Controllers.Clientes.PaginaPrincipalSesionController">
     <children>
-        <!-- Cabecera fija -->
+
+        <!-- ===== CABECERA FIJA ===== -->
         <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
             <children>
                 <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1270.0" spacing="20.0" style="-fx-padding: 20;">
                     <children>
-                        <Button alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#Buscador" prefHeight="24.0" prefWidth="125.0" style="-fx-background-color: transparent;" text="🔎 Buscar" textFill="WHITE">
+                        <Button alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false"
+                                onAction="#Buscador" prefHeight="24.0" prefWidth="125.0"
+                                style="-fx-background-color: transparent;" text="🔎 Buscar" textFill="WHITE">
                             <font><Font name="System Bold" size="17.0" /></font>
                         </Button>
                         <Region prefHeight="65.0" prefWidth="309.0" />
                         <Pane prefHeight="60.0" prefWidth="256.0">
                             <children>
-                                <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c" strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
+                                <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c"
+                                      strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
                                     <font><Font name="Elephant Italic" size="31.0" /></font>
                                     <effect><Glow level="0.37" /></effect>
                                 </Text>
-                                <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0" layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0"
+                                           layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
                                     <Image url="@../../../IMG/Logo.png" />
                                     <effect><Glow level="0.81" /></effect>
                                 </ImageView>
                             </children>
                         </Pane>
                         <Region prefHeight="65.0" prefWidth="168.0" />
-                        <Pane prefHeight="65.0" prefWidth="170.0" style="-fx-background-color: #142440; -fx-background-radius: 24;">
+                        <Pane prefHeight="65.0" prefWidth="170.0"
+                              style="-fx-background-color: #142440; -fx-background-radius: 24;">
                             <children>
-                                <!-- ImageView sin imagen fija, se cargará desde el controlador -->
-                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="88.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0"
+                                           layoutX="88.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
                                 <VBox layoutX="14.0" layoutY="13.0" spacing="4">
-                                    <Label fx:id="lblNombreCliente" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" text="Cliente" />
-                                    <Button onAction="#cerrarSesion" style="-fx-background-color: transparent; -fx-text-fill: #ff6b6b; -fx-font-size: 11px; -fx-cursor: hand; -fx-padding: 0;" text="Cerrar sesión" />
+                                    <Label fx:id="lblNombreCliente"
+                                           style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"
+                                           text="Cliente" />
+                                    <Button onAction="#cerrarSesion"
+                                            style="-fx-background-color: transparent; -fx-text-fill: #ff6b6b; -fx-font-size: 11px; -fx-cursor: hand; -fx-padding: 0;"
+                                            text="Cerrar sesión" />
                                 </VBox>
                             </children>
                         </Pane>
                         <Pane prefHeight="65.0" prefWidth="138.0">
                             <children>
-                                <Button fx:id="BandejaAbir" alignment="BOTTOM_CENTER" layoutX="8.0" layoutY="8.0" mnemonicParsing="false" onAction="#BandejaAbrir" prefHeight="50.0" prefWidth="123.0" style="-fx-background-color: transparent;" text="Bandeja 📥" textFill="WHITE">
+                                <Button fx:id="BandejaAbir" alignment="BOTTOM_CENTER" layoutX="8.0" layoutY="8.0"
+                                        mnemonicParsing="false" onAction="#BandejaAbrir"
+                                        prefHeight="50.0" prefWidth="123.0"
+                                        style="-fx-background-color: transparent;" text="Bandeja 📥" textFill="WHITE">
                                     <font><Font size="16.0" /></font>
                                 </Button>
                             </children>
@@ -84,60 +104,243 @@
             </children>
         </VBox>
 
-        <!-- Panel buscador desplegable -->
-        <Pane fx:id="PanelBuscador" prefHeight="170.0" prefWidth="1288.0" style="-fx-background-color: #0A1832;" visible="false">
+        <!-- ===== PANEL BUSCADOR ===== -->
+        <Pane fx:id="PanelBuscador" prefHeight="170.0" prefWidth="1288.0"
+              style="-fx-background-color: #0A1832;" visible="false">
             <children>
-                <TextField fx:id="txtBuscadorPrincipal" alignment="CENTER" layoutX="233.0" layoutY="61.0" prefHeight="65.0" prefWidth="729.0" promptText="Encuentra el evento que buscas" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;">
+                <TextField fx:id="txtBuscadorPrincipal" alignment="CENTER" layoutX="233.0" layoutY="61.0"
+                           prefHeight="65.0" prefWidth="729.0"
+                           promptText="Encuentra el evento que buscas"
+                           style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 25;">
                     <font><Font size="27.0" /></font>
                     <effect><Bloom threshold="0.21"><input><Reflection topOpacity="0.26" /></input></Bloom></effect>
                 </TextField>
-                <Button fx:id="btnBuscarPrincipal" layoutX="962.0" layoutY="58.0" mnemonicParsing="false" opacity="0.71" prefHeight="71.0" prefWidth="87.0" style="-fx-background-color: transparent;" text="🔎" textFill="WHITE">
+                <Button fx:id="btnBuscarPrincipal" layoutX="962.0" layoutY="58.0" mnemonicParsing="false"
+                        opacity="0.71" prefHeight="71.0" prefWidth="87.0"
+                        style="-fx-background-color: transparent;" text="🔎" textFill="WHITE">
                     <font><Font size="28.0" /></font>
                 </Button>
-                <Button layoutX="1135.0" layoutY="60.0" maxHeight="53.0" maxWidth="57.0" mnemonicParsing="false" onAction="#SalirBuscar" prefHeight="53.0" prefWidth="57.0" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: #778899; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
+                <Button layoutX="1135.0" layoutY="60.0" maxHeight="53.0" maxWidth="57.0"
+                        mnemonicParsing="false" onAction="#SalirBuscar" prefHeight="53.0" prefWidth="57.0"
+                        style="-fx-min-width:50px;-fx-min-height:50px;-fx-max-width:50px;-fx-max-height:50px;-fx-background-radius:25px;-fx-background-color:#778899;-fx-text-fill:white;-fx-font-size:18px;"
+                        text="X">
                     <font><Font size="14.0" /></font>
                     <effect><InnerShadow /></effect>
                 </Button>
             </children>
         </Pane>
 
-        <!-- ScrollPane central con las tarjetas -->
+        <!-- ===== SCROLLPANE CON TARJETAS ===== -->
         <ScrollPane fitToWidth="true" layoutY="170.0" prefHeight="497.0" prefWidth="1288.0">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="10000.0" prefWidth="1217.0">
-                    <FlowPane fx:id="flowServicios" hgap="20.0" layoutX="69.0" layoutY="28.0" prefHeight="10524.0" prefWidth="1148.0" prefWrapLength="1200.0" vgap="20.0" AnchorPane.bottomAnchor="-552.0" AnchorPane.leftAnchor="69.0" AnchorPane.rightAnchor="56.0" AnchorPane.topAnchor="28.0" />
+                    <FlowPane fx:id="flowServicios" hgap="20.0" layoutX="69.0" layoutY="28.0"
+                              prefHeight="10524.0" prefWidth="1148.0" prefWrapLength="1200.0" vgap="20.0"
+                              AnchorPane.bottomAnchor="-552.0" AnchorPane.leftAnchor="69.0"
+                              AnchorPane.rightAnchor="56.0" AnchorPane.topAnchor="28.0" />
                 </AnchorPane>
             </content>
         </ScrollPane>
 
-        <!-- Panel de bandeja lateral -->
-        <Pane fx:id="PanelBandeja" layoutX="983.0" layoutY="90.0" prefHeight="554.0" prefWidth="303.0" style="-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: black; -fx-border-radius: 25;" visible="false">
+        <!-- ===== PANEL BANDEJA LATERAL ===== -->
+        <Pane fx:id="PanelBandeja" layoutX="983.0" layoutY="90.0" prefHeight="554.0" prefWidth="303.0"
+              style="-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: black; -fx-border-radius: 25;"
+              visible="false">
             <children>
                 <ScrollPane layoutX="9.0" layoutY="13.0" prefHeight="526.0" prefWidth="286.0">
                     <content>
-                        <AnchorPane fx:id="bandejaContent" minHeight="0.0" minWidth="0.0" prefHeight="525.0" prefWidth="254.0" style="-fx-background-color: transparent;" />
+                        <AnchorPane fx:id="bandejaContent" minHeight="0.0" minWidth="0.0"
+                                    prefHeight="525.0" prefWidth="254.0"
+                                    style="-fx-background-color: transparent;" />
                     </content>
                 </ScrollPane>
-                <Button layoutX="-10.0" layoutY="-6.0" mnemonicParsing="false" onAction="#SalirBandeja" prefHeight="39.0" prefWidth="42.0" style="-fx-background-color: #778899; -fx-background-radius: 25; -fx-text-fill: white;" text="X" textFill="WHITE">
+                <Button layoutX="-10.0" layoutY="-6.0" mnemonicParsing="false" onAction="#SalirBandeja"
+                        prefHeight="39.0" prefWidth="42.0"
+                        style="-fx-background-color: #778899; -fx-background-radius: 25; -fx-text-fill: white;"
+                        text="X" textFill="WHITE">
                     <font><Font size="18.0" /></font>
                     <effect><DropShadow /></effect>
                 </Button>
             </children>
         </Pane>
 
-        <!-- Botón para limpiar filtros -->
-        <Button fx:id="BotonDeFiltros" layoutX="35.0" layoutY="108.0" mnemonicParsing="false" onAction="#AbirYCerrarFiltros" prefHeight="39.0" prefWidth="42.0" style="-fx-background-color: #778899; -fx-background-radius: 25; -fx-text-fill: white;" text="X" visible="false">
+        <!-- ===== BOTÓN LIMPIAR FILTROS ===== -->
+        <Button fx:id="BotonDeFiltros" layoutX="35.0" layoutY="108.0" mnemonicParsing="false"
+                onAction="#AbirYCerrarFiltros" prefHeight="39.0" prefWidth="42.0"
+                style="-fx-background-color: #778899; -fx-background-radius: 25; -fx-text-fill: white;"
+                text="X" visible="false">
             <font><Font size="18.0" /></font>
             <effect><DropShadow /></effect>
         </Button>
 
-        <!-- Barra de estado inferior -->
-        <HBox alignment="CENTER_LEFT" layoutY="667.0" prefHeight="26.0" prefWidth="1288.0" spacing="8" style="-fx-background-color:#0A1832; -fx-padding:5 16 5 16;">
+        <!-- ===== OVERLAY OSCURO ===== -->
+        <Pane fx:id="overlay" prefHeight="668.0" prefWidth="1288.0"
+              style="-fx-background-color: rgba(0,0,0,0.55);" visible="false"
+              onMouseClicked="#cerrarPanelDetalle" />
+
+        <!-- ===== PANEL FLOTANTE DE DETALLE (1189x572) ===== -->
+        <Pane fx:id="panelDetalle" prefWidth="1189.0" prefHeight="572.0"
+              layoutX="49.5" layoutY="48.0"
+              style="-fx-background-color: white; -fx-background-radius: 18; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.45),30,0,0,8);"
+              visible="false">
             <children>
-                <Label fx:id="labelStatus" style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="© 2026 Premier Services. Todos los derechos reservados." />
+
+                <!-- Botón cerrar -->
+                <Button fx:id="btnCerrarDetalle" layoutX="1143.0" layoutY="10.0"
+                        mnemonicParsing="false" onAction="#cerrarPanelDetalle"
+                        prefHeight="32.0" prefWidth="32.0"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"
+                        text="✕" />
+
+                <!-- ===== LADO IZQUIERDO (ancho 400px) ===== -->
+                <VBox layoutX="0.0" layoutY="0.0" prefWidth="400.0" prefHeight="572.0" spacing="0"
+                      style="-fx-background-color: #f7f9fc; -fx-background-radius: 18 0 0 18;">
+                    <children>
+
+                        <!-- Imagen principal -->
+                        <StackPane prefHeight="220.0" prefWidth="400.0"
+                                   style="-fx-background-color: linear-gradient(to right,#003566,#669bbc); -fx-background-radius: 18 0 0 0;">
+                            <ImageView fx:id="detImagen" fitWidth="400.0" fitHeight="220.0"
+                                       preserveRatio="true" pickOnBounds="true" />
+                            <Label fx:id="detIcono" style="-fx-font-size:64px;" />
+                        </StackPane>
+
+                        <VBox spacing="10" style="-fx-padding: 22 24 16 24;">
+                            <Label fx:id="detTipoServicio"
+                                   style="-fx-text-fill:#4A7FA9; -fx-font-size:12px; -fx-font-weight:bold; -fx-background-color:#e8f4fd; -fx-background-radius:6; -fx-padding:3 8 3 8;"
+                                   text="FOTOGRAFÍA" />
+                            <Label fx:id="detTitulo"
+                                   style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#0A1832; -fx-wrap-text:true;"
+                                   wrapText="true" maxWidth="355" text="Título del Portafolio" />
+                            <Label fx:id="detEmpresa"
+                                   style="-fx-font-size:13px; -fx-text-fill:#6b7280;" text="Nombre Empresa" />
+                            <HBox spacing="6" alignment="CENTER_LEFT">
+                                <Label style="-fx-font-size:13px;" text="⭐" />
+                                <Label fx:id="detCalificacion"
+                                       style="-fx-font-size:13px; -fx-text-fill:#555;" text="0.0 (0 reseñas)" />
+                                <Label style="-fx-font-size:13px;" text="  📍" />
+                                <Label fx:id="detUbicacion"
+                                       style="-fx-font-size:13px; -fx-text-fill:#555;" text="Ubicación" />
+                            </HBox>
+                            <Separator />
+                            <HBox alignment="CENTER_LEFT" spacing="4">
+                                <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;" text="Desde" />
+                                <Label fx:id="detCosto"
+                                       style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:#27ae60;"
+                                       text="\$0" />
+                            </HBox>
+                            <HBox spacing="12" style="-fx-padding: 8 0 0 0;">
+                                <Button fx:id="btnContactar" onAction="#handleContactar"
+                                        prefHeight="38.0" prefWidth="160.0"
+                                        style="-fx-background-color:#0A1832; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:8; -fx-cursor:hand; -fx-font-size:13px;"
+                                        text="💬 Contactar" />
+                                <Button fx:id="btnSolicitud" onAction="#handleEnviarSolicitud"
+                                        prefHeight="38.0" prefWidth="160.0"
+                                        style="-fx-background-color:#4A7FA9; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:8; -fx-cursor:hand; -fx-font-size:13px;"
+                                        text="📩 Request" />
+                            </HBox>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- ===== LADO DERECHO — TabPane ===== -->
+                <TabPane fx:id="tabDetalle" layoutX="400.0" layoutY="0.0"
+                         prefWidth="789.0" prefHeight="572.0"
+                         tabClosingPolicy="UNAVAILABLE"
+                         style="-fx-background-color:white; -fx-tab-min-width:130px;">
+                    <tabs>
+
+                        <!-- TAB 1: DESCRIPCIÓN -->
+                        <Tab text="📄 Descripción">
+                            <ScrollPane fitToWidth="true" style="-fx-background-color:white;">
+                                <content>
+                                    <VBox spacing="14" style="-fx-padding:28 32 28 32; -fx-background-color:white;">
+                                        <Label style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                                               text="Descripción del servicio" />
+                                        <Separator />
+                                        <TextArea fx:id="detDescripcion" wrapText="true" editable="false"
+                                                  prefHeight="380.0"
+                                                  style="-fx-background-color:transparent; -fx-border-color:transparent; -fx-font-size:14px; -fx-text-fill:#374151;" />
+                                    </VBox>
+                                </content>
+                            </ScrollPane>
+                        </Tab>
+
+                        <!-- TAB 2: RESEÑAS -->
+                        <Tab text="⭐ Reseñas">
+                            <VBox spacing="0" style="-fx-background-color:white;">
+                                <ScrollPane fitToWidth="true" prefHeight="360.0"
+                                            style="-fx-background-color:white;">
+                                    <content>
+                                        <VBox fx:id="vboxResenas" spacing="12"
+                                              style="-fx-padding:20 24 12 24; -fx-background-color:white;" />
+                                    </content>
+                                </ScrollPane>
+                                <Separator />
+                                <VBox spacing="10" style="-fx-padding:14 24 16 24; -fx-background-color:#f7f9fc;">
+                                    <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                                           text="Publicar una reseña" />
+                                    <HBox fx:id="hboxEstrellas" spacing="6" alignment="CENTER_LEFT">
+                                        <Label style="-fx-font-size:12px; -fx-text-fill:#6b7280;" text="Calificación:" />
+                                    </HBox>
+                                    <TextArea fx:id="txtNuevaResena" prefHeight="56.0" promptText="Escribe tu comentario..."
+                                              wrapText="true"
+                                              style="-fx-background-radius:8; -fx-border-radius:8; -fx-border-color:#e5e7eb; -fx-font-size:13px;" />
+                                    <Button fx:id="btnPublicarResena" onAction="#handlePublicarResena"
+                                            style="-fx-background-color:#4A7FA9; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:8; -fx-cursor:hand; -fx-padding:7 20 7 20; -fx-font-size:13px;"
+                                            text="Publicar reseña" />
+                                </VBox>
+                            </VBox>
+                        </Tab>
+
+                        <!-- TAB 3: ÁLBUM DE FOTOS -->
+                        <Tab text="🖼 Álbum">
+                            <ScrollPane fitToWidth="true" style="-fx-background-color:white;">
+                                <content>
+                                    <VBox spacing="14" style="-fx-padding:24 28 24 28; -fx-background-color:white;">
+                                        <Label style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                                               text="Galería de fotos" />
+                                        <Separator />
+                                        <GridPane fx:id="gridAlbum" hgap="16" vgap="16" />
+                                    </VBox>
+                                </content>
+                            </ScrollPane>
+                        </Tab>
+
+                        <!-- TAB 4: DISPONIBILIDAD -->
+                        <Tab text="📅 Disponibilidad">
+                            <ScrollPane fitToWidth="true" style="-fx-background-color:white;">
+                                <content>
+                                    <VBox spacing="16" style="-fx-padding:28 32 28 32; -fx-background-color:white;">
+                                        <Label style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#0A1832;"
+                                               text="Días de disponibilidad" />
+                                        <Separator />
+                                        <Label style="-fx-font-size:13px; -fx-text-fill:#6b7280;"
+                                               text="El proveedor ofrece este servicio los siguientes días:" />
+                                        <VBox fx:id="vboxDisponibilidad" spacing="10" />
+                                    </VBox>
+                                </content>
+                            </ScrollPane>
+                        </Tab>
+
+                    </tabs>
+                </TabPane>
+
+            </children>
+        </Pane>
+
+        <!-- ===== BARRA DE ESTADO INFERIOR ===== -->
+        <HBox alignment="CENTER_LEFT" layoutY="667.0" prefHeight="26.0" prefWidth="1288.0"
+              spacing="8" style="-fx-background-color:#0A1832; -fx-padding:5 16 5 16;">
+            <children>
+                <Label fx:id="labelStatus"
+                       style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;"
+                       text="© 2026 Premier Services. Todos los derechos reservados." />
                 <Region HBox.hgrow="ALWAYS" />
-                <Label style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;" text="Premier Services — Panel Cliente" />
+                <Label style="-fx-text-fill:#4A7FA9; -fx-font-size:11px;"
+                       text="Premier Services — Panel Cliente" />
             </children>
         </HBox>
+
     </children>
 </AnchorPane>

@@ -12,7 +12,7 @@ import java.sql.*;
 
 public class EditarPortafolioController {
 
-    @FXML private VBox proveedorIdBox;   // contenedor del campo ID (para ocultarlo)
+    @FXML private VBox proveedorIdBox;
     @FXML private TextField txtIdProveedor;
     @FXML private TextField txtNombreServicio;
     @FXML private ComboBox<String> cmbCategoria;
@@ -28,8 +28,40 @@ public class EditarPortafolioController {
     private int idSuplidorFijo = -1;
 
     /**
-     * Configura el editor para ser usado por un proveedor.
-     * Oculta el campo del ID del proveedor y guarda el ID para usarlo al guardar.
+     * Método principal para recibir el servicio y el ID del suplidor desde ProveedorDashboardController
+     */
+    public void setServicio(Servicio servicio, int idSuplidor) {
+        this.servicioEditando = servicio;
+        this.modoProveedor = true;
+        this.idSuplidorFijo = idSuplidor;
+
+        // Ocultar campo de ID del proveedor en modo proveedor
+        if (proveedorIdBox != null) {
+            proveedorIdBox.setVisible(false);
+            proveedorIdBox.setManaged(false);
+        }
+
+        // Cargar datos del servicio
+        if (servicio != null) {
+            txtNombreServicio.setText(servicio.getNombreServicio());
+            cmbCategoria.setValue(servicio.getCategoria());
+            cmbUbicacion.setValue(servicio.getUbicacion());
+            txtPrecio.setText(String.valueOf(servicio.getPrecio()));
+            txtDescripcion.setText(servicio.getDescripcion());
+            if (servicio.getRutaImagen() != null && !servicio.getRutaImagen().isEmpty()) {
+                txtRutaImagen.setText(servicio.getRutaImagen());
+            } else {
+                txtRutaImagen.clear();
+            }
+        } else {
+            // Nuevo servicio
+            limpiarCampos();
+        }
+        lblMensaje.setText("");
+    }
+
+    /**
+     * Configura el editor para ser usado por un proveedor (sin ID visible)
      */
     public void setModoProveedor(int idSuplidor) {
         this.modoProveedor = true;
@@ -43,7 +75,6 @@ public class EditarPortafolioController {
     public void setServicioEditando(Servicio servicio) {
         this.servicioEditando = servicio;
         if (servicio != null && servicio.getIdServicio() != 0) {
-            // Edición de servicio existente
             txtIdProveedor.setText(String.valueOf(servicio.getIdSuplidor()));
             txtNombreServicio.setText(servicio.getNombreServicio());
             cmbCategoria.setValue(servicio.getCategoria());
@@ -56,13 +87,7 @@ public class EditarPortafolioController {
                 txtRutaImagen.clear();
             }
         } else {
-            // Nuevo servicio: limpiamos campos y, si es modo proveedor, no mostramos el ID
-            txtNombreServicio.clear();
-            cmbCategoria.setValue(null);
-            cmbUbicacion.setValue(null);
-            txtPrecio.clear();
-            txtDescripcion.clear();
-            txtRutaImagen.clear();
+            limpiarCampos();
             if (!modoProveedor) {
                 txtIdProveedor.clear();
             }
@@ -135,20 +160,19 @@ public class EditarPortafolioController {
                     pst.setString(3, categoria);
                     pst.setString(4, descripcion);
                     pst.setDouble(5, precio);
-                    pst.setString(6, rutaImagen);
+                    pst.setString(6, rutaImagen.isEmpty() ? null : rutaImagen);
                     pst.executeUpdate();
                     mostrarMensaje("Servicio creado correctamente", true);
                 }
             } else {
-                String sql = "UPDATE tbl_servicios SET id_suplidor=?, nombre_servicio=?, categoria=?, descripcion=?, precio=?, ruta_imagen=? WHERE id_servicio=?";
+                String sql = "UPDATE tbl_servicios SET nombre_servicio=?, categoria=?, descripcion=?, precio=?, ruta_imagen=? WHERE id_servicio=?";
                 try (PreparedStatement pst = con.prepareStatement(sql)) {
-                    pst.setInt(1, idSuplidor);
-                    pst.setString(2, nombre);
-                    pst.setString(3, categoria);
-                    pst.setString(4, descripcion);
-                    pst.setDouble(5, precio);
-                    pst.setString(6, rutaImagen);
-                    pst.setInt(7, servicioEditando.getIdServicio());
+                    pst.setString(1, nombre);
+                    pst.setString(2, categoria);
+                    pst.setString(3, descripcion);
+                    pst.setDouble(4, precio);
+                    pst.setString(5, rutaImagen.isEmpty() ? null : rutaImagen);
+                    pst.setInt(6, servicioEditando.getIdServicio());
                     pst.executeUpdate();
                     mostrarMensaje("Servicio actualizado correctamente", true);
                 }
@@ -156,6 +180,7 @@ public class EditarPortafolioController {
             if (onGuardado != null) onGuardado.run();
             cerrarVentana();
         } catch (SQLException e) {
+            e.printStackTrace();
             mostrarMensaje("Error al guardar: " + e.getMessage());
         }
     }
@@ -163,6 +188,15 @@ public class EditarPortafolioController {
     @FXML
     private void cancelar() {
         cerrarVentana();
+    }
+
+    private void limpiarCampos() {
+        txtNombreServicio.clear();
+        cmbCategoria.setValue(null);
+        cmbUbicacion.setValue(null);
+        txtPrecio.clear();
+        txtDescripcion.clear();
+        txtRutaImagen.clear();
     }
 
     private boolean validarCampos() {

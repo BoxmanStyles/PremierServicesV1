@@ -29,4 +29,10 @@ public class Suplidor {
     public String getUbicacion() { return ubicacion; }
     public int getPlan_id() { return plan_id; }
     public double getCalificacion_promedio() { return calificacion_promedio; }
+
+    private int idSuplidor;
+
+    public int getIdSuplidor() {
+        return idSuplidor;
+    }
 }
