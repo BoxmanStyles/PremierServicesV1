@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -63,6 +65,14 @@ public class PaginaPrincipalSesionController {
     @FXML private GridPane gridAlbum;
     @FXML private VBox vboxDisponibilidad;
 
+    // ===== PANEL DE CONTACTO =====
+    @FXML private Pane panelContacto;
+    @FXML private Label contactoTelefono;
+    @FXML private Label contactoCorreo;
+    @FXML private Button btnCopiarTelefono;
+    @FXML private Button btnCopiarCorreo;
+    @FXML private Button btnCerrarContacto;
+
     private List<Servicio> todosServicios;
     private String categoriaActiva = null;
     private int idCliente;
@@ -93,6 +103,25 @@ public class PaginaPrincipalSesionController {
         if (lblNombreCliente != null) lblNombreCliente.setText(nombreCliente);
         cargarFotoPerfil();
         cargarSolicitudes();
+
+        try (Connection con = conectar();
+             PreparedStatement pst = con.prepareStatement("SELECT COUNT(*) FROM tbl_clientes WHERE id_cliente = ?")) {
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) {
+                String sqlInsert = "INSERT INTO tbl_clientes (id_cliente, nombre, email, contrasena, tipo_cliente) VALUES (?, ?, ?, ?, 'personal')";
+                try (PreparedStatement pst2 = con.prepareStatement(sqlInsert)) {
+                    pst2.setInt(1, id);
+                    pst2.setString(2, nombre);
+                    pst2.setString(3, "cliente" + id + "@premierservices.do");
+                    pst2.setString(4, "password");
+                    pst2.executeUpdate();
+                    System.out.println("Cliente #" + id + " insertado en tbl_clientes");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void abrirPanelDetalle(Servicio servicio) {
@@ -115,8 +144,113 @@ public class PaginaPrincipalSesionController {
     @FXML
     public void cerrarPanelDetalle() {
         panelDetalle.setVisible(false);
+        panelContacto.setVisible(false);
         overlay.setVisible(false);
         servicioActual = null;
+    }
+
+    // ===== CONTACTO =====
+    @FXML
+    private void handleContactar() {
+        if (servicioActual == null) {
+            mostrarAlerta("Error", "No hay un servicio seleccionado.");
+            return;
+        }
+
+        System.out.println("=== ABRIENDO PANEL DE CONTACTO ===");
+        System.out.println("Proveedor: " + servicioActual.getNombreSuplidor());
+        System.out.println("ID Suplidor: " + servicioActual.getIdSuplidor());
+
+        cargarDatosContacto(servicioActual.getIdSuplidor());
+
+        panelContacto.setVisible(true);
+        panelContacto.toFront();
+
+        if (overlay != null) {
+            overlay.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void cerrarPanelContacto() {
+        panelContacto.setVisible(false);
+        if (overlay != null && !panelDetalle.isVisible()) {
+            overlay.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void copiarTelefono() {
+        String telefono = contactoTelefono.getText();
+        if (telefono != null && !telefono.equals("No disponible") && !telefono.equals("Error al cargar")) {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(telefono);
+            clipboard.setContent(content);
+            mostrarAlertaRapida("📞 Teléfono copiado", "El número ha sido copiado al portapapeles.");
+        } else {
+            mostrarAlertaRapida("No disponible", "No hay número de teléfono registrado para este proveedor.");
+        }
+    }
+
+    @FXML
+    private void copiarCorreo() {
+        String correo = contactoCorreo.getText();
+        if (correo != null && !correo.equals("No disponible") && !correo.equals("Error al cargar")) {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(correo);
+            clipboard.setContent(content);
+            mostrarAlertaRapida("✉️ Correo copiado", "El correo ha sido copiado al portapapeles.");
+        } else {
+            mostrarAlertaRapida("No disponible", "No hay correo electrónico registrado para este proveedor.");
+        }
+    }
+
+    private void cargarDatosContacto(int idSuplidor) {
+        String sql = "SELECT p.telefono, u.email " +
+                "FROM tbl_suplidores p " +
+                "INNER JOIN tbl_usuarios u ON p.id_usuario = u.id_usuario " +
+                "WHERE p.id_suplidor = ?";
+
+        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, idSuplidor);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                String telefono = rs.getString("telefono");
+                String email = rs.getString("email");
+
+                contactoTelefono.setText(telefono != null && !telefono.isEmpty() ? telefono : "No disponible");
+                contactoCorreo.setText(email != null && !email.isEmpty() ? email : "No disponible");
+
+                System.out.println("Datos de contacto cargados:");
+                System.out.println("  Teléfono: " + contactoTelefono.getText());
+                System.out.println("  Correo: " + contactoCorreo.getText());
+            } else {
+                contactoTelefono.setText("No disponible");
+                contactoCorreo.setText("No disponible");
+                System.out.println("No se encontró el proveedor con ID: " + idSuplidor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            contactoTelefono.setText("Error al cargar");
+            contactoCorreo.setText("Error al cargar");
+            mostrarAlerta("Error", "No se pudieron cargar los datos de contacto: " + e.getMessage());
+        }
+    }
+
+    private void mostrarAlertaRapida(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.getDialogPane().setStyle("-fx-background-color: white; -fx-font-size: 13px;");
+
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(Duration.seconds(1.5), e -> alert.close())
+        );
+        timeline.play();
+        alert.show();
     }
 
     private void cargarInfoPrincipal(Servicio s) {
@@ -148,14 +282,18 @@ public class PaginaPrincipalSesionController {
         vboxResenas.getChildren().clear();
         System.out.println("=== CARGANDO RESEÑAS PARA SUPILIDOR: " + idSuplidor + " ===");
 
-        String sql = "SELECT comentario, puntuacion, id_cliente, fecha FROM tbl_reseñas WHERE id_suplidor = ? ORDER BY fecha DESC";
+        String sql = "SELECT r.comentario, r.puntuacion, c.nombre, r.fecha " +
+                "FROM tbl_reseñas r " +
+                "INNER JOIN tbl_clientes c ON r.id_cliente = c.id_cliente " +
+                "WHERE r.id_suplidor = ? " +
+                "ORDER BY r.fecha DESC";
         try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, idSuplidor);
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
                 count++;
-                String autor = "Cliente #" + rs.getInt("id_cliente");
+                String autor = rs.getString("nombre");
                 int calificacion = rs.getInt("puntuacion");
                 String comentario = rs.getString("comentario");
                 String fecha = rs.getString("fecha");
@@ -403,11 +541,6 @@ public class PaginaPrincipalSesionController {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    @FXML private void handleContactar() {
-        if (servicioActual == null) return;
-        mostrarAlerta("Contactar", "Función de chat con " + servicioActual.getNombreSuplidor() + " estará disponible próximamente.");
-    }
-
     @FXML
     private void handleEnviarSolicitud() {
         if (servicioActual == null) return;
@@ -477,43 +610,30 @@ public class PaginaPrincipalSesionController {
         }
     }
 
-    // ========== MÉTODO DE TARJETA CON EFECTO SCALE + SOMBRA ==========
     private VBox crearTarjetaServicio(Servicio servicio) {
         VBox card = new VBox(15);
         card.setPrefWidth(350);
         card.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
         card.setPadding(new Insets(0));
 
-        // ========== EFECTO HOVER CON ESCALA (SCALE) + SOMBRA ==========
-        // Sombra base
         DropShadow shadowBase = new DropShadow(5, Color.rgb(0, 0, 0, 0.1));
         card.setEffect(shadowBase);
 
-        // Animación al entrar el mouse
         card.setOnMouseEntered(e -> {
-            // Animación de escala
             ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
             scale.setToX(1.02);
             scale.setToY(1.02);
             scale.play();
-
-            // Sombra más pronunciada
             DropShadow shadowHover = new DropShadow(20, Color.rgb(0, 0, 0, 0.2));
             card.setEffect(shadowHover);
-
-            // Cambiar cursor
             card.setCursor(javafx.scene.Cursor.HAND);
         });
 
-        // Animación al salir el mouse
         card.setOnMouseExited(e -> {
-            // Volver a tamaño normal
             ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
             scale.setToX(1.0);
             scale.setToY(1.0);
             scale.play();
-
-            // Restaurar sombra original
             card.setEffect(shadowBase);
         });
 
@@ -606,7 +726,10 @@ public class PaginaPrincipalSesionController {
                         rs.getString("ubicacion"), rs.getDouble("calificacion_promedio"), rs.getInt("total_resenas"),
                         rs.getDouble("precio"), rs.getString("descripcion"), "rookie", true, rs.getString("ruta_imagen")));
             }
-        } catch (SQLException e) { mostrarAlerta("Error al cargar servicios", e.getMessage()); }
+        } catch (SQLException e) {
+            mostrarAlerta("Error al cargar servicios", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void mostrarServicios(List<Servicio> servicios) {

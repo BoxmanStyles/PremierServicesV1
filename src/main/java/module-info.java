@@ -5,8 +5,9 @@ module com.example.premierservices {
     requires java.desktop;
     requires jbcrypt;
     requires jasperreports;
+    requires java.mail;
+    requires org.apache.pdfbox;  // Sin comillas funciona en Java 9+
 
-    // Exportar paquetes necesarios (solo los que contienen clases)
     exports com.example.premierservices;
     exports com.example.premierservices.Models;
     exports com.example.premierservices.Controllers.Admin;
@@ -18,7 +19,6 @@ module com.example.premierservices {
     exports com.example.premierservices.Applications.Cliente;
     exports com.example.premierservices.Applications.Proveedor;
 
-    // Abrir paquetes para reflexión (JavaFX)
     opens com.example.premierservices to javafx.fxml;
     opens com.example.premierservices.Controllers.Admin to javafx.fxml;
     opens com.example.premierservices.Controllers.GlobalController to javafx.fxml;
