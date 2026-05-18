@@ -1,5 +1,6 @@
 package com.example.premierservices.Controllers.GlobalController;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,19 +11,16 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.view.JasperViewer;
 
+import javax.swing.SwingUtilities;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class SeleccionPlanController {
 
@@ -128,15 +126,15 @@ public class SeleccionPlanController {
             if (planSeleccionado.equals("Elite") || planSeleccionado.equals("Prime")) {
                 int numeroFactura = crearFacturaEnBD(planSeleccionado);
                 if (numeroFactura > 0) {
-                    generarFacturaPDF(idSuplidor, numeroFactura);
-                    mostrarAlerta("Éxito", "Plan " + planSeleccionado + " activado correctamente.\nSe ha generado la factura correspondiente.", Alert.AlertType.INFORMATION);
+                    generarYMostrarFactura(idSuplidor, numeroFactura, event);
                 } else {
                     mostrarAlerta("Error", "No se pudo generar la factura.", Alert.AlertType.ERROR);
+                    irALogin(event);
                 }
             } else {
                 mostrarAlerta("Éxito", "Plan " + planSeleccionado + " activado correctamente.", Alert.AlertType.INFORMATION);
+                irALogin(event);
             }
-            irALogin(event);
         } else {
             mostrarAlerta("Error", "No se pudo guardar el plan seleccionado.", Alert.AlertType.ERROR);
         }
@@ -197,14 +195,19 @@ public class SeleccionPlanController {
         }
     }
 
-    private void generarFacturaPDF(int idSuplidor, int numeroFactura) {
+    /**
+     * Genera la factura PDF y la muestra en el visor de JasperReports (Swing)
+     * El usuario puede imprimir, guardar o exportar desde el visor
+     */
+    private void generarYMostrarFactura(int idSuplidor, int numeroFactura, ActionEvent event) {
         try {
-            // Usar la ruta correcta del archivo (ReportePlanV2.jrxml)
             String reportPath = "src/main/resources/ReportePlanV2.jrxml";
             File reportFile = new File(reportPath);
 
             if (!reportFile.exists()) {
                 System.err.println("No se encuentra el archivo del reporte: " + reportPath);
+                mostrarAlerta("Error", "No se encuentra el archivo del reporte.", Alert.AlertType.ERROR);
+                irALogin(event);
                 return;
             }
 
@@ -228,19 +231,43 @@ public class SeleccionPlanController {
                 dir.mkdir();
             }
 
-            // Exportar a PDF
+            // Guardar PDF en carpeta
             String pdfPath = facturasDir + "/Factura_Proveedor_" + idSuplidor + "_Nro_" + numeroFactura + ".pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
-
-            System.out.println("Factura PDF generada en: " + pdfPath);
+            System.out.println("Factura PDF guardada en: " + pdfPath);
 
             con.close();
 
-        } catch (JRException e) {
+            // Mostrar el visor de JasperReports (Swing) en un hilo separado
+            // El visor tiene botones para: Guardar, Imprimir, Exportar, Zoom, etc.
+            SwingUtilities.invokeLater(() -> {
+                JasperViewer viewer = new JasperViewer(jasperPrint, false);
+                viewer.setTitle("Factura - Plan " + planSeleccionado);
+                viewer.setVisible(true);
+            });
+
+            // Preguntar si quiere ir al login o quedarse viendo la factura
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Factura generada");
+            alert.setHeaderText("La factura se generó correctamente");
+            alert.setContentText("¿Desea continuar al inicio de sesión?\n\nPuede cerrar la ventana de la factura cuando termine de imprimir o guardar.");
+
+            ButtonType btnSi = new ButtonType("Sí, ir al login");
+            ButtonType btnNo = new ButtonType("Ver factura primero", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(btnSi, btnNo);
+
+            Optional<ButtonType> resultado = alert.showAndWait();
+            if (resultado.isPresent() && resultado.get() == btnSi) {
+                irALogin(event);
+            }
+            // Si elige "Ver factura primero", la ventana de la factura ya está abierta
+            // y se queda en la pantalla actual
+
+        } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error al generar PDF: " + e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error al generar factura: " + e.getMessage());
+            mostrarAlerta("Error", "No se pudo generar la factura: " + e.getMessage(), Alert.AlertType.ERROR);
+            irALogin(event);
         }
     }
 
