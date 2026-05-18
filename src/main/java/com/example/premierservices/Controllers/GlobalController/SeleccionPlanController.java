@@ -211,7 +211,7 @@ public class SeleccionPlanController {
                 return;
             }
 
-            // Compilar el reporte
+            // Compilar el reporte desde el archivo
             JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
 
             // Parámetros
