@@ -14,10 +14,10 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -122,18 +122,14 @@ public class SeleccionPlanController {
         System.out.println("Plan seleccionado: " + planSeleccionado);
         System.out.println("ID Suplidor: " + idSuplidor);
 
-        // Guardar el plan en la base de datos
         boolean guardadoExitoso = guardarPlanEnBaseDatos(planSeleccionado);
 
         if (guardadoExitoso) {
-            // Generar factura si es Elite o Prime (planes pagos)
             if (planSeleccionado.equals("Elite") || planSeleccionado.equals("Prime")) {
-                // Primero crear la factura en la base de datos
                 int numeroFactura = crearFacturaEnBD(planSeleccionado);
                 if (numeroFactura > 0) {
-                    // Luego generar el PDF en la carpeta Facturas
                     generarFacturaPDF(idSuplidor, numeroFactura);
-                    mostrarAlerta("Éxito", "Plan " + planSeleccionado + " activado correctamente.\nSe ha generado la factura en la carpeta Facturas.", Alert.AlertType.INFORMATION);
+                    mostrarAlerta("Éxito", "Plan " + planSeleccionado + " activado correctamente.\nSe ha generado la factura correspondiente.", Alert.AlertType.INFORMATION);
                 } else {
                     mostrarAlerta("Error", "No se pudo generar la factura.", Alert.AlertType.ERROR);
                 }
@@ -172,7 +168,6 @@ public class SeleccionPlanController {
         double monto = plan.equals("Elite") ? 29.00 : 79.00;
         String comprobante = "FACT-PLAN-" + idSuplidor + "-" + System.currentTimeMillis();
 
-        // Obtener el próximo número de factura
         int numeroFactura = 1;
         String sqlMax = "SELECT ISNULL(MAX(numero_factura), 0) + 1 AS next_num FROM dbo.tbl_factura";
         try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sqlMax)) {
@@ -204,7 +199,7 @@ public class SeleccionPlanController {
 
     private void generarFacturaPDF(int idSuplidor, int numeroFactura) {
         try {
-            // Cargar el reporte Jasper desde resources
+            // Usar la ruta correcta del archivo (ReportePlanV2.jrxml)
             String reportPath = "src/main/resources/ReportePlanV2.jrxml";
             File reportFile = new File(reportPath);
 
@@ -213,7 +208,7 @@ public class SeleccionPlanController {
                 return;
             }
 
-            // Compilar el reporte
+            // Compilar el reporte desde el archivo
             JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
 
             // Parámetros
@@ -226,29 +221,20 @@ public class SeleccionPlanController {
             // Llenar reporte
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con);
 
-            // Usar la carpeta Facturas en la raíz del proyecto
+            // Crear carpeta Facturas si no existe
             String facturasDir = "Facturas";
             File dir = new File(facturasDir);
             if (!dir.exists()) {
                 dir.mkdir();
-                System.out.println("Carpeta Facturas creada en: " + dir.getAbsolutePath());
             }
 
-            // Exportar a PDF dentro de la carpeta Facturas
+            // Exportar a PDF
             String pdfPath = facturasDir + "/Factura_Proveedor_" + idSuplidor + "_Nro_" + numeroFactura + ".pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
 
             System.out.println("Factura PDF generada en: " + pdfPath);
-            System.out.println("Ruta completa: " + new File(pdfPath).getAbsolutePath());
 
             con.close();
-
-            // Opcional: Abrir el PDF automáticamente
-            try {
-                java.awt.Desktop.getDesktop().open(new File(pdfPath));
-            } catch (IOException e) {
-                System.out.println("No se pudo abrir el PDF automáticamente: " + e.getMessage());
-            }
 
         } catch (JRException e) {
             e.printStackTrace();

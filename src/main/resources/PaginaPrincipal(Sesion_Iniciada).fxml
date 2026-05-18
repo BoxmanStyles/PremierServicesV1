@@ -329,6 +329,59 @@
             </children>
         </Pane>
 
+        <!-- ===== PANEL DE CONTACTO (Flotante) ===== -->
+        <Pane fx:id="panelContacto" layoutX="444.5" layoutY="156.0" prefWidth="400.0" prefHeight="280.0"
+              style="-fx-background-color: white; -fx-background-radius: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 25, 0, 0, 8);"
+              visible="false">
+            <children>
+                <!-- Botón cerrar X -->
+                <Button fx:id="btnCerrarContacto" layoutX="360.0" layoutY="10.0"
+                        mnemonicParsing="false" onAction="#cerrarPanelContacto"
+                        prefHeight="28.0" prefWidth="28.0"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 14; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand;"
+                        text="✕" />
+
+                <!-- Contenido del panel -->
+                <VBox spacing="20" layoutX="20.0" layoutY="20.0" prefWidth="360.0" prefHeight="240.0">
+                    <children>
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0A1832;"
+                               text="📞 Contactar al proveedor" />
+
+                        <Separator />
+
+                        <!-- Teléfono -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" text="📱 Teléfono" />
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label fx:id="contactoTelefono" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+                                       text="No disponible" />
+                                <Button fx:id="btnCopiarTelefono" onAction="#copiarTelefono"
+                                        style="-fx-background-color: #4A7FA9; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 11px; -fx-padding: 5 12 5 12;"
+                                        text="📋 Copiar" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- Correo -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" text="✉️ Correo electrónico" />
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label fx:id="contactoCorreo" style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;"
+                                       text="No disponible" />
+                                <Button fx:id="btnCopiarCorreo" onAction="#copiarCorreo"
+                                        style="-fx-background-color: #4A7FA9; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 11px; -fx-padding: 5 12 5 12;"
+                                        text="📋 Copiar" />
+                            </HBox>
+                        </VBox>
+
+                        <Separator />
+
+                        <Label style="-fx-font-size: 12px; -fx-text-fill: #9ca3af; -fx-wrap-text: true;"
+                               text="💡 Puedes contactar al proveedor directamente por teléfono o correo para consultar disponibilidad y detalles." />
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+
         <!-- ===== BARRA DE ESTADO INFERIOR ===== -->
         <HBox alignment="CENTER_LEFT" layoutY="667.0" prefHeight="26.0" prefWidth="1288.0"
               spacing="8" style="-fx-background-color:#0A1832; -fx-padding:5 16 5 16;">

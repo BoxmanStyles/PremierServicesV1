@@ -56,7 +56,7 @@ public class RegistrateClienteController {
             con = conectar();
             con.setAutoCommit(false);
 
-            // Insertar usuario con contraseña hasheada
+            // 1. Insertar usuario con contraseña hasheada
             String sqlUser = "INSERT INTO tbl_usuarios (nombre, email, contraseña, tipo_usuario, fecha_registro, estado) VALUES (?, ?, ?, 'cliente', GETDATE(), 'activo')";
             int idUsuario;
             try (PreparedStatement pst = con.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS)) {
@@ -65,19 +65,29 @@ public class RegistrateClienteController {
                 pst.setString(3, hashedPassword);
                 pst.executeUpdate();
                 ResultSet rs = pst.getGeneratedKeys();
-                rs.next();
-                idUsuario = rs.getInt(1);
+                if (rs.next()) {
+                    idUsuario = rs.getInt(1);
+                } else {
+                    throw new SQLException("No se pudo obtener el ID del usuario");
+                }
             }
 
-            // Insertar cliente
-            String sqlCliente = "INSERT INTO tbl_clientes (id_usuario, tipo_cliente) VALUES (?, 'personal')";
+            // 2. Insertar cliente con TODOS los datos
+            String sqlCliente = "INSERT INTO tbl_clientes (id_usuario, nombre, apellido, email, telefono, direccion, contrasena, tipo_cliente) VALUES (?, ?, ?, ?, ?, ?, ?, 'personal')";
             try (PreparedStatement pst = con.prepareStatement(sqlCliente)) {
                 pst.setInt(1, idUsuario);
+                pst.setString(2, nombre);
+                pst.setString(3, ""); // Apellido vacío por defecto (puedes agregar un campo en el formulario)
+                pst.setString(4, email);
+                pst.setString(5, ""); // Teléfono - puedes agregar un campo en el formulario
+                pst.setString(6, ""); // Dirección - puedes agregar un campo en el formulario
+                pst.setString(7, hashedPassword);
                 pst.executeUpdate();
             }
 
             con.commit();
             mostrarMensaje("Registro exitoso. Ahora inicia sesión.", "exito");
+
             // Redirigir al login después de 2 segundos
             new java.util.Timer().schedule(new java.util.TimerTask() {
                 @Override
@@ -90,7 +100,12 @@ public class RegistrateClienteController {
             if (con != null) {
                 try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             }
-            mostrarMensaje("Error al registrar: " + e.getMessage(), "error");
+            // Mostrar mensaje de error más amigable
+            if (e.getMessage().contains("duplicate") || e.getMessage().contains("UNIQUE")) {
+                mostrarMensaje("El correo electrónico ya está registrado", "error");
+            } else {
+                mostrarMensaje("Error al registrar: " + e.getMessage(), "error");
+            }
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -145,10 +160,11 @@ public class RegistrateClienteController {
     private void mostrarMensaje(String msg, String tipo) {
         lblMensaje.setText(msg);
         lblMensaje.setVisible(true);
-        if ("error".equals(tipo))
+        if ("error".equals(tipo)) {
             lblMensaje.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
-        else
+        } else {
             lblMensaje.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+        }
     }
 
     private Connection conectar() {
