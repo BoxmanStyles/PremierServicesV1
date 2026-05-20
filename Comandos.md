@@ -29,6 +29,6 @@ git push origin feature/clientes
 # Rama feature/admin-reportes
 git checkout feature/admin-reportes
 git add .
-git commit -m "Arreglo en diseno admin panel"
+git commit -m "Arreglo en diseno admin panel 2"
 git push origin feature/admin-reportes
 
