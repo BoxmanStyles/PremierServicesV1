@@ -29,6 +29,9 @@ git push origin feature/clientes
 # Rama feature/admin-reportes
 git checkout feature/admin-reportes
 git add .
-git commit -m "Arreglo en diseno admin panel 2"
+git commit -m "Arreglo en diseno admin panel 3"
 git push origin feature/admin-reportes
 
+# Para forzar un commit
+
+git push origin "nombre del commit" --force
