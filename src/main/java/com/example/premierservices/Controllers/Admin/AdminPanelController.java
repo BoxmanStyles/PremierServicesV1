@@ -7,7 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class AdminPanelController {
 
@@ -17,6 +21,44 @@ public class AdminPanelController {
     @FXML private Button btnGestionReservas;
     @FXML private Button btnGestionPortafolios;
     @FXML private Button btnDashboard;
+    @FXML private ImageView Logoimg;
+
+    @FXML
+    public void initialize() {
+        cargarLogo();
+    }
+
+    private void cargarLogo() {
+        try {
+            // Intento 1: Desde archivo en carpeta IMG (raíz del proyecto)
+            File logoFile = new File("IMG/Logo.png");
+            if (logoFile.exists()) {
+                Logoimg.setImage(new Image(logoFile.toURI().toString()));
+                System.out.println("✅ Logo cargado desde archivo: " + logoFile.getAbsolutePath());
+                return;
+            }
+
+            // Intento 2: Desde classpath
+            java.io.InputStream stream = getClass().getResourceAsStream("/IMG/Logo.png");
+            if (stream != null) {
+                Logoimg.setImage(new Image(stream));
+                System.out.println("✅ Logo cargado desde classpath");
+                return;
+            }
+
+            // Intento 3: Desde src/main/resources/IMG
+            File srcLogo = new File("src/main/resources/IMG/Logo.png");
+            if (srcLogo.exists()) {
+                Logoimg.setImage(new Image(srcLogo.toURI().toString()));
+                System.out.println("✅ Logo cargado desde src: " + srcLogo.getAbsolutePath());
+                return;
+            }
+
+            System.err.println("⚠️ No se pudo cargar el logo");
+        } catch (Exception e) {
+            System.err.println("Error cargando logo: " + e.getMessage());
+        }
+    }
 
     // Botón "X" - Regresa a la pantalla principal de administración
     @FXML
@@ -49,7 +91,6 @@ public class AdminPanelController {
             stage.setScene(new Scene(root));
             stage.setMaximized(true);
             stage.show();
-            // No cerramos la ventana actual para permitir regresar fácilmente
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo abrir la ventana: " + e.getMessage(), Alert.AlertType.ERROR);
