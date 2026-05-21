@@ -10,8 +10,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Bloom?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -26,6 +25,34 @@
 
 <AnchorPane prefHeight="1302.0" prefWidth="1283.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.controllerGestionProveedor">
     <children>
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1269.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Region prefHeight="65.0" prefWidth="455.0" HBox.hgrow="ALWAYS" />
+                        <Pane prefHeight="60.0" prefWidth="256.0">
+                            <children>
+                                <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c" strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
+                                    <font>
+                                        <Font name="Elephant Italic" size="31.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow level="0.37" />
+                                    </effect>
+                                </Text>
+                                <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0" layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                                    <effect>
+                                        <Glow level="0.81" />
+                                    </effect>
+                                </ImageView>
+                            </children>
+                        </Pane>
+                        <Region prefHeight="65.0" prefWidth="486.0" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
         <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1269.0">
             <children>
                 <Text layoutX="21.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Perfil de Proveedor" wrappingWidth="450.0">
@@ -46,27 +73,7 @@
                 </Button>
             </children>
         </Pane>
-        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
-            <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1269.0" spacing="20.0" style="-fx-padding: 20;">
-                    <children>
-                        <ImageView fitHeight="65.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../IMG/Logo.png" />
-                     </image></ImageView>
-                        <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Premier Services - Panel Admin">
-                            <font>
-                                <Font name="System Bold" size="24.0" />
-                            </font>
-                            <effect>
-                                <Bloom />
-                            </effect>
-                        </Label>
-                        <Region HBox.hgrow="ALWAYS" />
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
+
         <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="210.0" prefHeight="480.0" prefWidth="1269.0" style="-fx-background-color: #f5f5f5;">
             <content>
                 <VBox alignment="TOP_CENTER" prefHeight="1053.0" prefWidth="1254.0" spacing="20.0" style="-fx-background-color: #f5f5f5;">
@@ -105,7 +112,7 @@
                                 </VBox>
                                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
                                     <children>
-                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Email *">
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Email">
                                             <font>
                                                 <Font size="12.0" />
                                             </font>
@@ -146,7 +153,7 @@
                                 </VBox>
                                 <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                     <children>
-                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Descripción del Negocio *">
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Descripción del Negocio">
                                             <font>
                                                 <Font size="12.0" />
                                             </font>
@@ -156,33 +163,36 @@
                                 </VBox>
                                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                     <children>
-                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Calificacion_Promedio">
+                                        <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold;" text="Calificación Promedio">
                                             <font>
                                                 <Font size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtTelefono1" prefWidth="400.0" promptText="1-5" style="-fx-font-size: 14; -fx-padding: 10;" />
+                                        <TextField fx:id="txtCalificacion" prefWidth="400.0" promptText="1-5" style="-fx-font-size: 14; -fx-padding: 10;" />
                                     </children>
                                 </VBox>
                             </children>
                         </GridPane>
+
                         <TableView fx:id="tablaProveedores" prefHeight="410.0" prefWidth="1154.0">
                             <columns>
-                                <TableColumn fx:id="colIdUsuario" prefWidth="103.33" text="Id_Usuario" />
-                                <TableColumn fx:id="colIdSuplidor" prefWidth="112.66" text="Id_Suplidor" />
-                                <TableColumn fx:id="colNombreEmpresa" prefWidth="241.33" text="Nombre_Empresa" />
-                                <TableColumn fx:id="colTelefono" prefWidth="178.0" text="Telefono" />
-                                <TableColumn fx:id="colUbicacion" prefWidth="210.0" text="Ubicacion" />
-                                <TableColumn fx:id="colPlanId" prefWidth="116.0" text="Plan_id" />
-                                <TableColumn fx:id="colCalificacion" prefWidth="194.0" text="Calificacion_promedio" />
+                                <TableColumn fx:id="colIdUsuario" prefWidth="80.0" text="ID Usuario" />
+                                <TableColumn fx:id="colIdSuplidor" prefWidth="80.0" text="ID Suplidor" />
+                                <TableColumn fx:id="colNombreEmpresa" prefWidth="200.0" text="Nombre Empresa" />
+                                <TableColumn fx:id="colTelefono" prefWidth="120.0" text="Teléfono" />
+                                <TableColumn fx:id="colEmail" prefWidth="180.0" text="Email" />
+                                <TableColumn fx:id="colUbicacion" prefWidth="120.0" text="Ubicación" />
+                                <TableColumn fx:id="colPlanId" prefWidth="80.0" text="Plan ID" />
+                                <TableColumn fx:id="colCalificacion" prefWidth="120.0" text="Calificación" />
                             </columns>
                         </TableView>
+
                         <Pane prefHeight="83.0" prefWidth="1154.0">
                             <children>
-                                <Button fx:id="cancelarButton" layoutX="411.0" layoutY="34.0" onAction="#onCancelarClick" prefWidth="160.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;                                        -fx-font-size: 16; -fx-font-weight: bold;                                        -fx-padding: 12; -fx-background-radius: 5;                                        -fx-cursor: hand;" text="Limpiar" />
-                                <Button fx:id="registrarButton" defaultButton="true" layoutX="226.0" layoutY="34.0" onAction="#onRegistrarClick" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white;                                        -fx-font-size: 16; -fx-font-weight: bold;                                        -fx-padding: 12; -fx-background-radius: 5;                                        -fx-cursor: hand;" text="Guardar" />
-                                <Button fx:id="editarButton" defaultButton="true" layoutX="593.0" layoutY="34.0" onAction="#onEditarClick" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Editar" />
-                        <Button fx:id="eliminarButton" layoutX="769.0" layoutY="34.0" onAction="#OnEliminarClick" prefWidth="160.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;                                        -fx-font-size: 16; -fx-font-weight: bold;                                        -fx-padding: 12; -fx-background-radius: 5;                                        -fx-cursor: hand;" text="Eliminar" />
+                                <Button fx:id="cancelarButton" layoutX="411.0" layoutY="34.0" onAction="#onCancelarClick" prefWidth="160.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Limpiar" />
+                                <Button fx:id="registrarButton" defaultButton="true" layoutX="226.0" layoutY="34.0" onAction="#onRegistrarClick" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Guardar" />
+                                <Button fx:id="editarButton" layoutX="593.0" layoutY="34.0" onAction="#onEditarClick" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Editar" />
+                                <Button fx:id="eliminarButton" layoutX="769.0" layoutY="34.0" onAction="#onEliminarClick" prefWidth="160.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="Eliminar" />
                             </children>
                         </Pane>
                     </children>

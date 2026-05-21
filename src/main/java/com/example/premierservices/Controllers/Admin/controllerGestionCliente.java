@@ -4,7 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.File;
 import java.sql.*;
 import java.util.Optional;
 
@@ -17,6 +27,7 @@ public class controllerGestionCliente {
     @FXML private TextField txtDireccion;
     @FXML private PasswordField txtContrasena;
     @FXML private PasswordField txtConfirmarContrasena;
+
     @FXML private TableView<ObservableList<String>> tablaClientes;
     @FXML private TableColumn<ObservableList<String>, String> colIdCliente;
     @FXML private TableColumn<ObservableList<String>, String> colIdUsuario;
@@ -26,47 +37,57 @@ public class controllerGestionCliente {
     @FXML private TableColumn<ObservableList<String>, String> colTelefono;
     @FXML private TableColumn<ObservableList<String>, String> colDireccion;
 
+    @FXML private ImageView Logoimg;
+
     private int idClienteSeleccionado = 0;
+    private int idUsuarioSeleccionado = 0;
 
     @FXML
     public void initialize() {
+        cargarLogo();
         cargarTabla();
 
-        // Listener para selección de la tabla
-        tablaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
+        // Listener para selección de tabla
+        tablaClientes.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
                 try {
-                    if (newSelection.size() > 0) {
-                        idClienteSeleccionado = Integer.parseInt(newSelection.get(0));
-                        cargarDatosCliente(newSelection);
-                    }
+                    idClienteSeleccionado = Integer.parseInt(newVal.get(0));
+                    idUsuarioSeleccionado = Integer.parseInt(newVal.get(1));
+                    cargarDatosCliente(newVal);
                 } catch (NumberFormatException e) {
-                    mostrarAlerta("Error", "Error al obtener el ID del cliente", Alert.AlertType.ERROR);
+                    mostrarAlerta("Error", "Error al obtener ID del cliente", Alert.AlertType.ERROR);
                 }
             }
         });
     }
 
-    private void cargarDatosCliente(ObservableList<String> cliente) {
+    private void cargarLogo() {
         try {
-            if (cliente == null || cliente.size() < 7) {
-                mostrarAlerta("Error", "Datos del cliente incompletos", Alert.AlertType.ERROR);
+            File logoFile = new File("IMG/Logo.png");
+            if (logoFile.exists()) {
+                Logoimg.setImage(new Image(logoFile.toURI().toString()));
+                System.out.println("✅ Logo cargado desde archivo");
                 return;
             }
+            java.io.InputStream stream = getClass().getResourceAsStream("/IMG/Logo.png");
+            if (stream != null) {
+                Logoimg.setImage(new Image(stream));
+                System.out.println("✅ Logo cargado desde classpath");
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando logo: " + e.getMessage());
+        }
+    }
 
-            txtNombre.setText(cliente.get(2) != null ? cliente.get(2) : "");
-            txtApellido.setText(cliente.get(3) != null ? cliente.get(3) : "");
-            txtEmail.setText(cliente.get(4) != null ? cliente.get(4) : "");
-            txtTelefono.setText(cliente.get(5) != null ? cliente.get(5) : "");
-            txtDireccion.setText(cliente.get(6) != null ? cliente.get(6) : "");
-
-            // Limpiar campos de contraseña por seguridad
+    private void cargarDatosCliente(ObservableList<String> cliente) {
+        if (cliente.size() >= 7) {
+            txtNombre.setText(cliente.get(2));
+            txtApellido.setText(cliente.get(3));
+            txtEmail.setText(cliente.get(4));
+            txtTelefono.setText(cliente.get(5));
+            txtDireccion.setText(cliente.get(6));
             txtContrasena.clear();
             txtConfirmarContrasena.clear();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "Error al cargar datos del cliente: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -82,21 +103,6 @@ public class controllerGestionCliente {
         }
     }
 
-    private int obtenerCantidadResenas(int idCliente) {
-        int cantidad = 0;
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM dbo.tbl_reseñas WHERE id_cliente = ?")) {
-            ps.setInt(1, idCliente);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                cantidad = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al contar reseñas: " + e.getMessage());
-        }
-        return cantidad;
-    }
-
     @FXML
     void onRegistrarClick(ActionEvent event) {
         if (idClienteSeleccionado != 0) {
@@ -104,56 +110,56 @@ public class controllerGestionCliente {
             return;
         }
 
-        // Validaciones - Todos los campos obligatorios según la estructura de la tabla
         if (txtNombre.getText().isEmpty() || txtApellido.getText().isEmpty() ||
-                txtEmail.getText().isEmpty() || txtContrasena.getText().isEmpty()) {
-            mostrarAlerta("Campos incompletos", "Por favor completa los campos obligatorios: Nombre, Apellido, Email y Contraseña.", Alert.AlertType.WARNING);
+                txtEmail.getText().isEmpty() || txtTelefono.getText().isEmpty() ||
+                txtDireccion.getText().isEmpty() || txtContrasena.getText().isEmpty()) {
+            mostrarAlerta("Campos incompletos", "Por favor completa todos los campos.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Validar contraseñas
         if (!txtContrasena.getText().equals(txtConfirmarContrasena.getText())) {
-            mostrarAlerta("Error de contraseña", "Las contraseñas no coinciden.", Alert.AlertType.WARNING);
+            mostrarAlerta("Error", "Las contraseñas no coinciden.", Alert.AlertType.ERROR);
             return;
         }
 
-        // INSERT incluyendo tipo_cliente con valor por defecto 'empresa'
-        String sql = "INSERT INTO dbo.tbl_clientes (id_usuario, nombre, apellido, email, telefono, direccion, contrasena, tipo_cliente) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String hashedPassword = BCrypt.hashpw(txtContrasena.getText(), BCrypt.gensalt());
 
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = conectar()) {
+            con.setAutoCommit(false);
 
-            ps.setInt(1, 1); // id_usuario por defecto
-            ps.setString(2, txtNombre.getText());
-            ps.setString(3, txtApellido.getText());
-            ps.setString(4, txtEmail.getText());
+            // Insertar en tbl_usuarios
+            String sqlUsuario = "INSERT INTO tbl_usuarios (nombre, email, contraseña, tipo_usuario, estado, fecha_registro) VALUES (?, ?, ?, 'cliente', 'activo', GETDATE())";
+            int idUsuario = -1;
+            try (PreparedStatement ps = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, txtNombre.getText());
+                ps.setString(2, txtEmail.getText());
+                ps.setString(3, hashedPassword);
+                ps.executeUpdate();
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    idUsuario = rs.getInt(1);
+                }
+            }
 
-            // Teléfono puede ser NULL según la estructura
-            if (txtTelefono.getText().isEmpty()) {
-                ps.setNull(5, Types.VARCHAR);
-            } else {
+            // Insertar en tbl_clientes
+            String sqlCliente = "INSERT INTO tbl_clientes (id_usuario, nombre, apellido, email, telefono, direccion, tipo_cliente) VALUES (?, ?, ?, ?, ?, ?, 'personal')";
+            try (PreparedStatement ps = con.prepareStatement(sqlCliente)) {
+                ps.setInt(1, idUsuario);
+                ps.setString(2, txtNombre.getText());
+                ps.setString(3, txtApellido.getText());
+                ps.setString(4, txtEmail.getText());
                 ps.setString(5, txtTelefono.getText());
-            }
-
-            // Dirección puede ser NULL según la estructura
-            if (txtDireccion.getText().isEmpty()) {
-                ps.setNull(6, Types.VARCHAR);
-            } else {
                 ps.setString(6, txtDireccion.getText());
+                ps.executeUpdate();
             }
 
-            ps.setString(7, txtContrasena.getText());
-            ps.setString(8, "empresa"); // Valor por defecto para tipo_cliente
-
-            ps.executeUpdate();
-
-            mostrarInfo("Éxito", "Cliente guardado correctamente.");
+            con.commit();
+            mostrarInfo("Éxito", "Cliente registrado correctamente.");
             limpiarCampos();
             cargarTabla();
 
         } catch (SQLException e) {
-            mostrarAlerta("Error al guardar", "Error: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Error al registrar: " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
@@ -161,129 +167,108 @@ public class controllerGestionCliente {
     @FXML
     void onEditarClick(ActionEvent event) {
         if (idClienteSeleccionado == 0) {
-            mostrarAlerta("Advertencia", "Seleccione un cliente de la tabla para editar", Alert.AlertType.WARNING);
+            mostrarAlerta("Advertencia", "Seleccione un cliente de la tabla.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Validaciones
         if (txtNombre.getText().isEmpty() || txtApellido.getText().isEmpty() ||
-                txtEmail.getText().isEmpty()) {
-            mostrarAlerta("Campos incompletos", "Por favor completa los campos obligatorios: Nombre, Apellido y Email.", Alert.AlertType.WARNING);
+                txtEmail.getText().isEmpty() || txtTelefono.getText().isEmpty() ||
+                txtDireccion.getText().isEmpty()) {
+            mostrarAlerta("Campos incompletos", "Por favor completa todos los campos.", Alert.AlertType.WARNING);
             return;
         }
 
-        StringBuilder sql = new StringBuilder("UPDATE dbo.tbl_clientes SET nombre=?, apellido=?, email=?, telefono=?, direccion=?");
+        try (Connection con = conectar()) {
+            con.setAutoCommit(false);
 
-        // Si se proporcionó nueva contraseña, actualizarla
-        if (!txtContrasena.getText().isEmpty()) {
-            if (!txtContrasena.getText().equals(txtConfirmarContrasena.getText())) {
-                mostrarAlerta("Error de contraseña", "Las contraseñas no coinciden.", Alert.AlertType.WARNING);
-                return;
-            }
-            sql.append(", contrasena=?");
-        }
-
-        sql.append(" WHERE id_cliente=?");
-
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql.toString())) {
-
-            int paramIndex = 1;
-            ps.setString(paramIndex++, txtNombre.getText());
-            ps.setString(paramIndex++, txtApellido.getText());
-            ps.setString(paramIndex++, txtEmail.getText());
-
-            // Teléfono puede ser NULL
-            if (txtTelefono.getText().isEmpty()) {
-                ps.setNull(paramIndex++, Types.VARCHAR);
-            } else {
-                ps.setString(paramIndex++, txtTelefono.getText());
+            // Actualizar tbl_usuarios
+            String sqlUsuario = "UPDATE tbl_usuarios SET nombre=?, email=? WHERE id_usuario=?";
+            try (PreparedStatement ps = con.prepareStatement(sqlUsuario)) {
+                ps.setString(1, txtNombre.getText());
+                ps.setString(2, txtEmail.getText());
+                ps.setInt(3, idUsuarioSeleccionado);
+                ps.executeUpdate();
             }
 
-            // Dirección puede ser NULL
-            if (txtDireccion.getText().isEmpty()) {
-                ps.setNull(paramIndex++, Types.VARCHAR);
-            } else {
-                ps.setString(paramIndex++, txtDireccion.getText());
+            // Actualizar tbl_clientes
+            String sqlCliente = "UPDATE tbl_clientes SET nombre=?, apellido=?, email=?, telefono=?, direccion=? WHERE id_cliente=?";
+            try (PreparedStatement ps = con.prepareStatement(sqlCliente)) {
+                ps.setString(1, txtNombre.getText());
+                ps.setString(2, txtApellido.getText());
+                ps.setString(3, txtEmail.getText());
+                ps.setString(4, txtTelefono.getText());
+                ps.setString(5, txtDireccion.getText());
+                ps.setInt(6, idClienteSeleccionado);
+                ps.executeUpdate();
             }
 
+            // Actualizar contraseña si se proporcionó
             if (!txtContrasena.getText().isEmpty()) {
-                ps.setString(paramIndex++, txtContrasena.getText());
+                if (!txtContrasena.getText().equals(txtConfirmarContrasena.getText())) {
+                    mostrarAlerta("Error", "Las contraseñas no coinciden.", Alert.AlertType.ERROR);
+                    return;
+                }
+                String hashedPassword = BCrypt.hashpw(txtContrasena.getText(), BCrypt.gensalt());
+                String sqlPassword = "UPDATE tbl_usuarios SET contraseña=? WHERE id_usuario=?";
+                try (PreparedStatement ps = con.prepareStatement(sqlPassword)) {
+                    ps.setString(1, hashedPassword);
+                    ps.setInt(2, idUsuarioSeleccionado);
+                    ps.executeUpdate();
+                }
             }
 
-            ps.setInt(paramIndex, idClienteSeleccionado);
-
-            int filasAfectadas = ps.executeUpdate();
-
-            if (filasAfectadas > 0) {
-                mostrarInfo("Éxito", "Cliente actualizado correctamente.");
-                limpiarCampos();
-                cargarTabla();
-                idClienteSeleccionado = 0;
-            } else {
-                mostrarAlerta("Error", "No se pudo actualizar el cliente", Alert.AlertType.ERROR);
-            }
+            con.commit();
+            mostrarInfo("Éxito", "Cliente actualizado correctamente.");
+            limpiarCampos();
+            cargarTabla();
+            idClienteSeleccionado = 0;
+            idUsuarioSeleccionado = 0;
 
         } catch (SQLException e) {
-            mostrarAlerta("Error al actualizar", "Error: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Error al actualizar: " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
 
     @FXML
-    void OnEliminarClick(ActionEvent actionEvent) {
+    void OnEliminarClick(ActionEvent event) {
         if (idClienteSeleccionado == 0) {
-            mostrarAlerta("Advertencia", "Seleccione un cliente de la tabla", Alert.AlertType.WARNING);
+            mostrarAlerta("Advertencia", "Seleccione un cliente de la tabla.", Alert.AlertType.WARNING);
             return;
         }
-
-        // Verificar cuántas reseñas tiene el cliente
-        int cantidadResenas = obtenerCantidadResenas(idClienteSeleccionado);
-
-        String mensaje = "Esta acción no se puede deshacer. ";
-        if (cantidadResenas > 0) {
-            mensaje += "El cliente tiene " + cantidadResenas + " reseña(s) asociada(s) que también se eliminarán. ";
-        }
-        mensaje += "¿Está seguro de eliminar este cliente?";
 
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar");
         confirmacion.setHeaderText("¿Eliminar cliente?");
-        confirmacion.setContentText(mensaje);
+        confirmacion.setContentText("Esta acción no se puede deshacer. ¿Está seguro?");
 
-        Optional<ButtonType> result = confirmacion.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if (confirmacion.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try (Connection con = conectar()) {
+                con.setAutoCommit(false);
 
-                // Primero eliminar las reseñas asociadas (si las hay)
-                if (cantidadResenas > 0) {
-                    String sqlDeleteResenas = "DELETE FROM dbo.tbl_reseñas WHERE id_cliente = ?";
-                    try (PreparedStatement ps = con.prepareStatement(sqlDeleteResenas)) {
-                        ps.setInt(1, idClienteSeleccionado);
-                        int resenasEliminadas = ps.executeUpdate();
-                        System.out.println("Reseñas eliminadas: " + resenasEliminadas);
-                    }
-                }
-
-                // Luego eliminar el cliente
-                String sqlDeleteCliente = "DELETE FROM dbo.tbl_clientes WHERE id_cliente = ?";
-                try (PreparedStatement ps = con.prepareStatement(sqlDeleteCliente)) {
+                // Eliminar de tbl_clientes
+                String sqlCliente = "DELETE FROM tbl_clientes WHERE id_cliente=?";
+                try (PreparedStatement ps = con.prepareStatement(sqlCliente)) {
                     ps.setInt(1, idClienteSeleccionado);
-                    int filasAfectadas = ps.executeUpdate();
-
-                    if (filasAfectadas > 0) {
-                        mostrarInfo("Éxito", "Cliente eliminado correctamente" +
-                                (cantidadResenas > 0 ? " Se eliminaron " + cantidadResenas + " reseña(s)." : ""));
-                        limpiarCampos();
-                        cargarTabla();
-                        idClienteSeleccionado = 0;
-                    } else {
-                        mostrarAlerta("Error", "No se pudo eliminar el cliente", Alert.AlertType.ERROR);
-                    }
+                    ps.executeUpdate();
                 }
+
+                // Eliminar de tbl_usuarios
+                String sqlUsuario = "DELETE FROM tbl_usuarios WHERE id_usuario=?";
+                try (PreparedStatement ps = con.prepareStatement(sqlUsuario)) {
+                    ps.setInt(1, idUsuarioSeleccionado);
+                    ps.executeUpdate();
+                }
+
+                con.commit();
+                mostrarInfo("Éxito", "Cliente eliminado correctamente.");
+                limpiarCampos();
+                cargarTabla();
+                idClienteSeleccionado = 0;
+                idUsuarioSeleccionado = 0;
 
             } catch (SQLException e) {
-                mostrarAlerta("Error", "Error al eliminar cliente: " + e.getMessage(), Alert.AlertType.ERROR);
+                mostrarAlerta("Error", "Error al eliminar: " + e.getMessage(), Alert.AlertType.ERROR);
                 e.printStackTrace();
             }
         }
@@ -293,17 +278,24 @@ public class controllerGestionCliente {
     void onCancelarClick(ActionEvent event) {
         limpiarCampos();
         idClienteSeleccionado = 0;
+        idUsuarioSeleccionado = 0;
         tablaClientes.getSelectionModel().clearSelection();
     }
 
     @FXML
     void onVolverClick(ActionEvent event) {
-        System.out.println("Volver a lista");
-    }
-
-    @FXML
-    void onCerrarSesionClick(ActionEvent event) {
-        System.out.println("Cerrar sesión");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminPanel.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Panel Admin - Premier Services");
+            stage.setMaximized(true);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo regresar al panel: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void limpiarCampos() {
@@ -314,6 +306,39 @@ public class controllerGestionCliente {
         txtDireccion.clear();
         txtContrasena.clear();
         txtConfirmarContrasena.clear();
+    }
+
+    private void cargarTabla() {
+        ObservableList<ObservableList<String>> datos = FXCollections.observableArrayList();
+
+        colIdCliente.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(0)));
+        colIdUsuario.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(1)));
+        colNombre.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(2)));
+        colApellido.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(3)));
+        colEmail.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(4)));
+        colTelefono.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(5)));
+        colDireccion.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(6)));
+
+        String sql = "SELECT c.id_cliente, c.id_usuario, c.nombre, c.apellido, c.email, c.telefono, c.direccion " +
+                "FROM tbl_clientes c ORDER BY c.id_cliente DESC";
+
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                ObservableList<String> fila = FXCollections.observableArrayList();
+                fila.add(rs.getString("id_cliente"));
+                fila.add(rs.getString("id_usuario"));
+                fila.add(rs.getString("nombre"));
+                fila.add(rs.getString("apellido"));
+                fila.add(rs.getString("email"));
+                fila.add(rs.getString("telefono"));
+                fila.add(rs.getString("direccion"));
+                datos.add(fila);
+            }
+            tablaClientes.setItems(datos);
+        } catch (SQLException e) {
+            mostrarAlerta("Error", "Error al cargar clientes: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
@@ -330,40 +355,5 @@ public class controllerGestionCliente {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    private void cargarTabla() {
-        ObservableList<ObservableList<String>> datos = FXCollections.observableArrayList();
-
-        colIdCliente.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(0)));
-        colIdUsuario.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(1)));
-        colNombre.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(2)));
-        colApellido.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(3)));
-        colEmail.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(4)));
-        colTelefono.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(5)));
-        colDireccion.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(6)));
-
-        try (Connection con = conectar();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery("SELECT id_cliente, id_usuario, nombre, apellido, email, telefono, direccion FROM dbo.tbl_clientes")) {
-
-            while (rs.next()) {
-                ObservableList<String> fila = FXCollections.observableArrayList();
-                fila.add(rs.getString("id_cliente"));
-                fila.add(rs.getString("id_usuario"));
-                fila.add(rs.getString("nombre"));
-                fila.add(rs.getString("apellido"));
-                fila.add(rs.getString("email"));
-                fila.add(rs.getString("telefono") != null ? rs.getString("telefono") : "");
-                fila.add(rs.getString("direccion") != null ? rs.getString("direccion") : "");
-                datos.add(fila);
-            }
-
-            tablaClientes.setItems(datos);
-
-        } catch (SQLException e) {
-            mostrarAlerta("Error al cargar tabla", e.getMessage(), Alert.AlertType.ERROR);
-            e.printStackTrace();
-        }
     }
 }

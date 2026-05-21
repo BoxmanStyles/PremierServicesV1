@@ -110,7 +110,7 @@ public class AdminPanelController {
     }
 
     @FXML void onGestionReservasClick(ActionEvent event) {
-        mostrarAlerta("En desarrollo", "La pantalla de Gestión de Reservas está en desarrollo.", Alert.AlertType.INFORMATION);
+        abrirVentana("/AdminGestionReservas.fxml", "Gestión de Reservas - Premier Services");
     }
 
     @FXML void onGestionPortafoliosClick(ActionEvent event) {
