@@ -8,48 +8,136 @@ import java.util.Properties;
 public class EmailSender {
 
     private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final String SMTP_PORT = "465";  // Cambiado a 465 para SSL
+    private static final String SMTP_PORT = "465";
     private static final String EMAIL_FROM = "jeanmichael0025@gmail.com";
     private static final String EMAIL_PASSWORD = "nqqo cswo eoyv ayad";
 
-    public static void enviarCorreoConfirmacion(String emailCliente, String nombreCliente,
-                                                String nombreServicio, String fechaEvento,
-                                                String nombreProveedor, String telefonoProveedor,
-                                                String emailProveedor) {
-        String asunto = "Tu reserva ha sido confirmada - Premier Services";
+    // ─────────────────────────────────────────────────────────────────────────
+    //  ACEPTACIÓN — Primer paso: el proveedor aceptó la solicitud
+    // ─────────────────────────────────────────────────────────────────────────
+    public static void enviarCorreoAceptacion(String emailCliente, String nombreCliente,
+                                              String nombreServicio, String fechaEvento,
+                                              String direccion, String nombreProveedor,
+                                              String telefonoProveedor, String emailProveedor) {
+        String asunto = "✅ Tu solicitud ha sido aceptada - Premier Services";
 
         String cuerpo = String.format(
                 "<html>" +
-                        "<body style='font-family: Arial, sans-serif;'>" +
-                        "<div style='max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;'>" +
-                        "<div style='background-color: #0A1832; padding: 20px; text-align: center;'>" +
-                        "<h2 style='color: white;'>Premier Services</h2>" +
-                        "</div>" +
-                        "<div style='background-color: white; padding: 20px;'>" +
-                        "<h3>¡Hola %s!</h3>" +
-                        "<p>Tu reserva para el servicio <strong>%s</strong> ha sido <strong style='color: #27ae60;'>CONFIRMADA</strong>.</p>" +
-                        "<p><strong> Fecha del evento:</strong> %s</p>" +
-                        "<p>Ponga se en contacto con el proveedor través de:</p>" +
-                        "<ul>" +
-                        "<li><strong>📞 Numero de Teléfono:</strong> %s</li>" +
-                        "<li><strong>📧 Correo electrónico:</strong> %s</li>" +
-                        "</ul>" +
-                        "<p><strong>Proveedor:</strong> %s</p>" +
-                        "<p>Gracias por confiar en <strong>Premier Services</strong>.</p>" +
-                        "<p>¡Disfruta de tu evento!</p>" +
-                        "</div>" +
-                        "<div style='background-color: #0A1832; padding: 10px; text-align: center;'>" +
-                        "<p style='color: white; font-size: 12px;'>© 2026 Premier Services - Todos los derechos reservados</p>" +
-                        "</div>" +
-                        "</div>" +
-                        "</body>" +
-                        "</html>",
-                nombreCliente, nombreServicio, fechaEvento, telefonoProveedor, emailProveedor, nombreProveedor
+                "<body style='font-family: Arial, sans-serif; margin:0; padding:0;'>" +
+                "<div style='max-width: 620px; margin: 0 auto; background-color: #f5f5f5;'>" +
+                "<div style='background: linear-gradient(to right, #0A1832, #4A7FA9); padding: 25px; text-align: center;'>" +
+                "<h2 style='color: white; margin: 0; letter-spacing: 1px;'>Premier Services</h2>" +
+                "<p style='color: #cfe0f0; margin: 5px 0 0 0; font-size: 13px;'>Tu plataforma de servicios para eventos</p>" +
+                "</div>" +
+                "<div style='background-color: white; padding: 30px;'>" +
+                "<h3 style='color: #0A1832;'>¡Hola %s!</h3>" +
+                "<p style='font-size: 15px; color: #333;'>Tu solicitud para el servicio <strong>%s</strong> ha sido <strong style='color: #007cff;'>ACEPTADA</strong> por el proveedor.</p>" +
+                "<div style='background-color: #f0f7ff; border-left: 4px solid #007cff; padding: 15px 18px; border-radius: 6px; margin: 20px 0;'>" +
+                "<p style='margin: 0; color: #0A1832; font-size: 14px; line-height: 1.6;'>" +
+                "El proveedor <strong>%s</strong> preparará tu pedido para ser entregado en " +
+                "<strong>%s</strong> el <strong>%s</strong>." +
+                "</p>" +
+                "</div>" +
+                "<p style='font-size: 14px; color: #555;'>Aún falta que el proveedor confirme la disponibilidad final. Te llegará otro correo cuando esté confirmado.</p>" +
+                "<h4 style='color: #0A1832; margin-top: 25px;'>📞 Contacto del proveedor</h4>" +
+                "<ul style='font-size: 14px; color: #444;'>" +
+                "<li><strong>Teléfono:</strong> %s</li>" +
+                "<li><strong>Correo:</strong> %s</li>" +
+                "</ul>" +
+                "<p style='font-size: 14px; color: #555; margin-top: 25px;'>Gracias por confiar en <strong>Premier Services</strong>.</p>" +
+                "</div>" +
+                "<div style='background-color: #0A1832; padding: 12px; text-align: center;'>" +
+                "<p style='color: white; font-size: 12px; margin: 0;'>© 2026 Premier Services — Todos los derechos reservados</p>" +
+                "</div>" +
+                "</div>" +
+                "</body></html>",
+                nombreCliente, nombreServicio, nombreProveedor, direccion, fechaEvento, telefonoProveedor, emailProveedor
         );
 
         enviarCorreo(emailCliente, asunto, cuerpo);
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    //  CONFIRMACIÓN — Segundo paso: el pedido fue confirmado en firme
+    // ─────────────────────────────────────────────────────────────────────────
+    public static void enviarCorreoConfirmacion(String emailCliente, String nombreCliente,
+                                                String nombreServicio, String fechaEvento,
+                                                String direccion, String nombreProveedor,
+                                                String telefonoProveedor, String emailProveedor) {
+        String asunto = "🎉 Tu reserva ha sido confirmada - Premier Services";
+
+        String cuerpo = String.format(
+                "<html>" +
+                "<body style='font-family: Arial, sans-serif; margin:0; padding:0;'>" +
+                "<div style='max-width: 620px; margin: 0 auto; background-color: #f5f5f5;'>" +
+                "<div style='background: linear-gradient(to right, #0A1832, #4A7FA9); padding: 25px; text-align: center;'>" +
+                "<h2 style='color: white; margin: 0; letter-spacing: 1px;'>Premier Services</h2>" +
+                "<p style='color: #cfe0f0; margin: 5px 0 0 0; font-size: 13px;'>Tu plataforma de servicios para eventos</p>" +
+                "</div>" +
+                "<div style='background-color: white; padding: 30px;'>" +
+                "<h3 style='color: #0A1832;'>¡Hola %s!</h3>" +
+                "<p style='font-size: 15px; color: #333;'>Tu reserva para el servicio <strong>%s</strong> ha sido <strong style='color: #27ae60;'>CONFIRMADA</strong> en firme.</p>" +
+                "<div style='background-color: #ecfdf5; border-left: 4px solid #27ae60; padding: 15px 18px; border-radius: 6px; margin: 20px 0;'>" +
+                "<p style='margin: 0; color: #0A1832; font-size: 14px; line-height: 1.6;'>" +
+                "Tu pedido del servicio <strong>%s</strong> será llevado a <strong>%s</strong> el <strong>%s</strong>. " +
+                "El proveedor <strong>%s</strong> ya tiene todo preparado para tu evento." +
+                "</p>" +
+                "</div>" +
+                "<h4 style='color: #0A1832; margin-top: 25px;'>📞 Contacto del proveedor</h4>" +
+                "<ul style='font-size: 14px; color: #444;'>" +
+                "<li><strong>Teléfono:</strong> %s</li>" +
+                "<li><strong>Correo:</strong> %s</li>" +
+                "</ul>" +
+                "<p style='font-size: 14px; color: #555; margin-top: 25px;'>Si tienes alguna duda contacta directamente al proveedor por los medios anteriores.</p>" +
+                "<p style='font-size: 14px; color: #555;'>¡Disfruta de tu evento!</p>" +
+                "</div>" +
+                "<div style='background-color: #0A1832; padding: 12px; text-align: center;'>" +
+                "<p style='color: white; font-size: 12px; margin: 0;'>© 2026 Premier Services — Todos los derechos reservados</p>" +
+                "</div>" +
+                "</div>" +
+                "</body></html>",
+                nombreCliente, nombreServicio, nombreServicio, direccion, fechaEvento, nombreProveedor, telefonoProveedor, emailProveedor
+        );
+
+        enviarCorreo(emailCliente, asunto, cuerpo);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    //  CANCELACIÓN
+    // ─────────────────────────────────────────────────────────────────────────
+    public static void enviarCorreoCancelacion(String emailCliente, String nombreCliente,
+                                               String nombreServicio, String fechaEvento) {
+        String asunto = "❌ Tu reserva ha sido cancelada - Premier Services";
+
+        String cuerpo = String.format(
+                "<html>" +
+                "<body style='font-family: Arial, sans-serif; margin:0; padding:0;'>" +
+                "<div style='max-width: 620px; margin: 0 auto; background-color: #f5f5f5;'>" +
+                "<div style='background: linear-gradient(to right, #0A1832, #4A7FA9); padding: 25px; text-align: center;'>" +
+                "<h2 style='color: white; margin: 0; letter-spacing: 1px;'>Premier Services</h2>" +
+                "</div>" +
+                "<div style='background-color: white; padding: 30px;'>" +
+                "<h3 style='color: #0A1832;'>¡Hola %s!</h3>" +
+                "<p style='font-size: 15px; color: #333;'>Lamentamos informarte que tu reserva para el servicio <strong>%s</strong> ha sido <strong style='color: #dc2626;'>CANCELADA</strong>.</p>" +
+                "<div style='background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 15px 18px; border-radius: 6px; margin: 20px 0;'>" +
+                "<p style='margin: 0; color: #0A1832; font-size: 14px;'>Fecha original del evento: <strong>%s</strong></p>" +
+                "</div>" +
+                "<p style='font-size: 14px; color: #555;'>Puedes intentar reservar otro proveedor desde la plataforma. Sentimos los inconvenientes.</p>" +
+                "</div>" +
+                "<div style='background-color: #0A1832; padding: 12px; text-align: center;'>" +
+                "<p style='color: white; font-size: 12px; margin: 0;'>© 2026 Premier Services — Todos los derechos reservados</p>" +
+                "</div>" +
+                "</div>" +
+                "</body></html>",
+                nombreCliente, nombreServicio, fechaEvento
+        );
+
+        enviarCorreo(emailCliente, asunto, cuerpo);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    //  Envío SMTP real
+    // ─────────────────────────────────────────────────────────────────────────
     private static void enviarCorreo(String destinatario, String asunto, String cuerpoHtml) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -68,8 +156,6 @@ public class EmailSender {
             }
         });
 
-        // session.setDebug(true); // Descomenta para ver logs detallados
-
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL_FROM));
@@ -85,36 +171,4 @@ public class EmailSender {
             e.printStackTrace();
         }
     }
-
-    public static void enviarCorreoCancelacion(String emailCliente, String nombreCliente,
-                                               String nombreServicio, String fechaEvento) {
-        String asunto = "❌ Tu reserva ha sido cancelada - Premier Services";
-
-        String cuerpo = String.format(
-                "<html>" +
-                        "<body style='font-family: Arial, sans-serif;'>" +
-                        "<div style='max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;'>" +
-                        "<div style='background-color: #0A1832; padding: 20px; text-align: center;'>" +
-                        "<h2 style='color: white;'>Premier Services</h2>" +
-                        "</div>" +
-                        "<div style='background-color: white; padding: 20px;'>" +
-                        "<h3>¡Hola %s!</h3>" +
-                        "<p>Lamentamos informarte que tu reserva para el servicio <strong>%s</strong> ha sido <strong style='color: #dc2626;'>CANCELADA</strong>.</p>" +
-                        "<p><strong> Fecha del evento:</strong> %s</p>" +
-                        "<p>Si tienes alguna duda o deseas reagendar, por favor contacta al proveedor directamente a través de la plataforma.</p>" +
-                        "<p>Sentimos los inconvenientes que esto pueda causarte.</p>" +
-                        "<p>Quedamos atentos para ayudarte con nuevas reservas.</p>" +
-                        "</div>" +
-                        "<div style='background-color: #0A1832; padding: 10px; text-align: center;'>" +
-                        "<p style='color: white; font-size: 12px;'>© 2026 Premier Services - Todos los derechos reservados</p>" +
-                        "</div>" +
-                        "</div>" +
-                        "</body>" +
-                        "</html>",
-                nombreCliente, nombreServicio, fechaEvento
-        );
-
-        enviarCorreo(emailCliente, asunto, cuerpo);
-    }
-
 }

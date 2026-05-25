@@ -553,27 +553,46 @@ public class PaginaPrincipalSesionController {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Nueva solicitud");
         dialog.setHeaderText("Solicitar servicio: " + servicioActual.getNombreServicio());
+        dialog.getDialogPane().setStyle("-fx-background-color: white;");
 
+        // Fecha
+        Label lblFecha = new Label("📅 Fecha del evento:");
+        lblFecha.setStyle("-fx-font-weight: bold; -fx-text-fill: #0A1832; -fx-font-size: 13px;");
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("dd/MM/yyyy");
         datePicker.setValue(LocalDate.now().plusDays(7));
-        VBox content = new VBox(10, new Label("Selecciona la fecha del evento:"), datePicker);
+        datePicker.setPrefWidth(420);
+
+        // Dirección
+        Label lblDireccion = new Label("📍 Dirección donde quieres recibir el servicio:");
+        lblDireccion.setStyle("-fx-font-weight: bold; -fx-text-fill: #0A1832; -fx-font-size: 13px;");
+        TextArea txtDireccion = new TextArea();
+        txtDireccion.setPromptText("Ej: Av. 27 de Febrero #150, Sector Naco, Santo Domingo");
+        txtDireccion.setPrefRowCount(3);
+        txtDireccion.setWrapText(true);
+        txtDireccion.setPrefWidth(420);
+
+        Label lblNota = new Label("ℹ️ Esta dirección será enviada al proveedor junto con tu solicitud.");
+        lblNota.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px;");
+        lblNota.setWrapText(true);
+
+        VBox content = new VBox(8, lblFecha, datePicker, lblDireccion, txtDireccion, lblNota);
         content.setPadding(new Insets(20));
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         if (dialog.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             LocalDate fecha = datePicker.getValue();
+            String direccion = txtDireccion.getText() == null ? "" : txtDireccion.getText().trim();
+
             if (fecha == null) {
                 mostrarAlerta("Fecha requerida", "Selecciona una fecha para el evento.");
                 return;
             }
-
-            System.out.println("=== INSERTANDO RESERVA ===");
-            System.out.println("ID Cliente: " + idCliente);
-            System.out.println("ID Servicio: " + servicioActual.getIdServicio());
-            System.out.println("ID Suplidor del servicio: " + servicioActual.getIdSuplidor());
-            System.out.println("Fecha: " + fecha);
+            if (direccion.isEmpty()) {
+                mostrarAlerta("Dirección requerida", "Debes indicar dónde quieres recibir el servicio.");
+                return;
+            }
 
             String checkSql = "SELECT id_servicio FROM tbl_servicios WHERE id_servicio = ?";
             try (Connection con = conectar(); PreparedStatement checkSt = con.prepareStatement(checkSql)) {
@@ -589,16 +608,17 @@ public class PaginaPrincipalSesionController {
                 return;
             }
 
-            String sql = "INSERT INTO tbl_reservas (id_cliente, id_servicio, fecha_evento, estado, total) VALUES (?, ?, ?, 'pendiente', 0)";
+            String sql = "INSERT INTO tbl_reservas (id_cliente, id_servicio, fecha_evento, estado, total, direccion_entrega) " +
+                    "VALUES (?, ?, ?, 'pendiente', 0, ?)";
             try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
                 pst.setInt(1, idCliente);
                 pst.setInt(2, servicioActual.getIdServicio());
                 pst.setDate(3, Date.valueOf(fecha));
+                pst.setString(4, direccion);
                 int filas = pst.executeUpdate();
-                System.out.println("Filas insertadas: " + filas);
 
                 if (filas > 0) {
-                    mostrarAlerta("Solicitud enviada", "Tu solicitud ha sido registrada. El proveedor te responderá pronto.");
+                    mostrarAlerta("Solicitud enviada", "Tu solicitud ha sido registrada.\n\nEl proveedor revisará tu pedido y te llegará un correo cuando responda.");
                     cargarSolicitudes();
                 } else {
                     mostrarAlerta("Error", "No se pudo enviar la solicitud.");
@@ -767,31 +787,157 @@ public class PaginaPrincipalSesionController {
     private void cargarSolicitudes() {
         if (bandejaContent == null) return;
         bandejaContent.getChildren().clear();
-        ListView<String> listView = new ListView<>();
-        listView.setStyle("-fx-background-color: transparent; -fx-font-size: 13px;");
-        String sql = "SELECT r.id_reserva, s.nombre_servicio, r.fecha_evento, r.estado " +
-                "FROM tbl_reservas r INNER JOIN tbl_servicios s ON r.id_servicio = s.id_servicio " +
-                "WHERE r.id_cliente = ? ORDER BY r.fecha_evento DESC";
+
+        // Contenedor principal con scroll
+        VBox listaReservas = new VBox(12);
+        listaReservas.setPadding(new Insets(15));
+        listaReservas.setStyle("-fx-background-color: #f7f9fc;");
+
+        // Header del panel
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(0, 0, 5, 5));
+        Label tituloHeader = new Label("📬 Mis Solicitudes");
+        tituloHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0A1832;");
+        Region sp = new Region();
+        HBox.setHgrow(sp, Priority.ALWAYS);
+        Label contador = new Label();
+        contador.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d; -fx-padding: 4 10 4 10; " +
+                "-fx-background-color: #e0e7ef; -fx-background-radius: 12;");
+        header.getChildren().addAll(tituloHeader, sp, contador);
+        listaReservas.getChildren().add(header);
+        listaReservas.getChildren().add(new Separator());
+
+        String sql = "SELECT r.id_reserva, s.nombre_servicio, p.nombre_empresa, " +
+                "r.fecha_evento, r.estado, r.direccion_entrega " +
+                "FROM tbl_reservas r " +
+                "INNER JOIN tbl_servicios s ON r.id_servicio = s.id_servicio " +
+                "INNER JOIN tbl_suplidores p ON s.id_suplidor = p.id_suplidor " +
+                "WHERE r.id_cliente = ? ORDER BY r.id_reserva DESC";
+
+        int total = 0;
         try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, idCliente);
             ResultSet rs = pst.executeQuery();
+
             while (rs.next()) {
-                String estado = rs.getString("estado");
-                String icono = switch (estado.toLowerCase()) {
-                    case "pendiente" -> "⏳"; case "confirmada" -> "✅";
-                    case "completado" -> "🏆"; case "cancelado" -> "❌";
-                    default -> "📋";
-                };
-                listView.getItems().add(String.format("%s %s - %s (%s)", icono, rs.getString("nombre_servicio"), rs.getString("fecha_evento"), estado));
+                String nombreServicio = rs.getString("nombre_servicio");
+                String empresa        = rs.getString("nombre_empresa");
+                String fechaEvento    = rs.getString("fecha_evento");
+                String estado         = rs.getString("estado");
+                String direccion      = rs.getString("direccion_entrega");
+                listaReservas.getChildren().add(crearTarjetaReserva(nombreServicio, empresa, fechaEvento, estado, direccion));
+                total++;
             }
-            if (listView.getItems().isEmpty()) listView.getItems().add("📭 No tienes solicitudes aún.");
         } catch (SQLException e) {
             e.printStackTrace();
-            listView.getItems().add("❌ Error al cargar las solicitudes.");
+            Label err = new Label("❌ Error al cargar las solicitudes.");
+            err.setStyle("-fx-text-fill: #dc2626; -fx-padding: 20;");
+            listaReservas.getChildren().add(err);
         }
-        bandejaContent.getChildren().add(listView);
-        AnchorPane.setTopAnchor(listView, 10.0); AnchorPane.setLeftAnchor(listView, 10.0);
-        AnchorPane.setRightAnchor(listView, 10.0); AnchorPane.setBottomAnchor(listView, 10.0);
+
+        if (total == 0) {
+            VBox vacio = new VBox(10);
+            vacio.setAlignment(Pos.CENTER);
+            vacio.setPadding(new Insets(40, 20, 40, 20));
+            Label icon = new Label("📭");
+            icon.setStyle("-fx-font-size: 48px;");
+            Label texto = new Label("No tienes solicitudes aún");
+            texto.setStyle("-fx-font-size: 15px; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;");
+            Label hint = new Label("Cuando reserves un servicio aparecerá aquí.");
+            hint.setStyle("-fx-font-size: 12px; -fx-text-fill: #95a5a6;");
+            vacio.getChildren().addAll(icon, texto, hint);
+            listaReservas.getChildren().add(vacio);
+        }
+
+        contador.setText(total + (total == 1 ? " solicitud" : " solicitudes"));
+
+        ScrollPane scroll = new ScrollPane(listaReservas);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background: #f7f9fc; -fx-background-color: #f7f9fc; -fx-border-color: transparent;");
+
+        bandejaContent.getChildren().add(scroll);
+        AnchorPane.setTopAnchor(scroll, 0.0); AnchorPane.setLeftAnchor(scroll, 0.0);
+        AnchorPane.setRightAnchor(scroll, 0.0); AnchorPane.setBottomAnchor(scroll, 0.0);
+    }
+
+    /** Tarjeta visual para cada reserva en la bandeja. */
+    private VBox crearTarjetaReserva(String nombreServicio, String empresa, String fechaEvento, String estado, String direccion) {
+        // Configuración por estado
+        String est = estado == null ? "" : estado.toLowerCase();
+        String icono, etiqueta, colorBadge, colorTextoBadge, colorBorde;
+        switch (est) {
+            case "pendiente" -> {
+                icono = "⏳"; etiqueta = "Pendiente";
+                colorBadge = "#fff7ed"; colorTextoBadge = "#d97706"; colorBorde = "#fed7aa";
+            }
+            case "aceptada" -> {
+                icono = "✅"; etiqueta = "Aceptada";
+                colorBadge = "#dbeafe"; colorTextoBadge = "#007cff"; colorBorde = "#93c5fd";
+            }
+            case "confirmada" -> {
+                icono = "🎉"; etiqueta = "Confirmada";
+                colorBadge = "#ecfdf5"; colorTextoBadge = "#059669"; colorBorde = "#86efac";
+            }
+            case "cancelada" -> {
+                icono = "❌"; etiqueta = "Cancelada";
+                colorBadge = "#fef2f2"; colorTextoBadge = "#dc2626"; colorBorde = "#fca5a5";
+            }
+            case "completada" -> {
+                icono = "🏆"; etiqueta = "Completada";
+                colorBadge = "#eff6ff"; colorTextoBadge = "#2563eb"; colorBorde = "#bfdbfe";
+            }
+            default -> {
+                icono = "📋"; etiqueta = estado;
+                colorBadge = "#f3f4f6"; colorTextoBadge = "#374151"; colorBorde = "#d1d5db";
+            }
+        }
+
+        VBox card = new VBox(8);
+        card.setPadding(new Insets(14, 16, 14, 16));
+        card.setStyle(
+                "-fx-background-color: white; " +
+                "-fx-background-radius: 10; " +
+                "-fx-border-color: " + colorBorde + "; " +
+                "-fx-border-radius: 10; " +
+                "-fx-border-width: 1;"
+        );
+        DropShadow shadow = new DropShadow(6, Color.rgb(0, 0, 0, 0.08));
+        card.setEffect(shadow);
+
+        // Fila 1: nombre servicio + badge de estado
+        HBox fila1 = new HBox(10);
+        fila1.setAlignment(Pos.CENTER_LEFT);
+        Label lblServicio = new Label(nombreServicio);
+        lblServicio.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #0A1832;");
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Label badge = new Label(icono + " " + etiqueta);
+        badge.setStyle(
+                "-fx-background-color: " + colorBadge + "; " +
+                "-fx-text-fill: " + colorTextoBadge + "; " +
+                "-fx-font-size: 11px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 4 10 4 10; " +
+                "-fx-background-radius: 12;"
+        );
+        fila1.getChildren().addAll(lblServicio, spacer, badge);
+
+        // Proveedor
+        Label lblProveedor = new Label("🏢 " + (empresa != null ? empresa : "—"));
+        lblProveedor.setStyle("-fx-font-size: 12px; -fx-text-fill: #4A7FA9;");
+
+        // Fecha
+        Label lblFecha = new Label("📅 Fecha del evento: " + (fechaEvento != null ? fechaEvento : "—"));
+        lblFecha.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
+
+        // Dirección
+        Label lblDireccion = new Label("📍 " + (direccion != null && !direccion.isBlank() ? direccion : "Sin dirección especificada"));
+        lblDireccion.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
+        lblDireccion.setWrapText(true);
+
+        card.getChildren().addAll(fila1, lblProveedor, lblFecha, lblDireccion);
+        return card;
     }
 
     @FXML protected void Buscador(ActionEvent e) { PanelBuscador.setVisible(true); txtBuscadorPrincipal.requestFocus(); }

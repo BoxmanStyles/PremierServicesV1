@@ -339,7 +339,7 @@ public class ProveedorDashboardController {
         todasSolicitudes.clear();
 
         String sql = "SELECT r.id_reserva, c.nombre, c.apellido, s.nombre_servicio, " +
-                "r.fecha_evento, r.estado " +
+                "r.fecha_evento, r.estado, r.direccion_entrega " +
                 "FROM tbl_reservas r " +
                 "INNER JOIN tbl_clientes c ON r.id_cliente = c.id_cliente " +
                 "INNER JOIN tbl_servicios s ON r.id_servicio = s.id_servicio " +
@@ -360,14 +360,15 @@ public class ProveedorDashboardController {
                 String nombreServicio = rs.getString("nombre_servicio");
                 String fechaEvento = rs.getString("fecha_evento");
                 String estadoStr = rs.getString("estado");
-
-                System.out.println("Reserva #" + idReserva + " - Cliente: " + nombreCompleto + " - Servicio: " + nombreServicio);
+                String direccion = rs.getString("direccion_entrega");
 
                 SolicitudReserva.Estado estado;
                 try {
                     estado = SolicitudReserva.Estado.valueOf(estadoStr.toUpperCase());
                 } catch (Exception e) {
-                    if (estadoStr.equalsIgnoreCase("confirmada") || estadoStr.equalsIgnoreCase("confirado")) {
+                    if (estadoStr.equalsIgnoreCase("aceptada")) {
+                        estado = SolicitudReserva.Estado.ACEPTADA;
+                    } else if (estadoStr.equalsIgnoreCase("confirmada") || estadoStr.equalsIgnoreCase("confirado")) {
                         estado = SolicitudReserva.Estado.CONFIRMADO;
                     } else if (estadoStr.equalsIgnoreCase("completada")) {
                         estado = SolicitudReserva.Estado.COMPLETADO;
@@ -378,7 +379,7 @@ public class ProveedorDashboardController {
                     }
                 }
 
-                todasSolicitudes.add(new SolicitudReserva(idReserva, nombreCompleto, nombreServicio, fechaEvento, estado));
+                todasSolicitudes.add(new SolicitudReserva(idReserva, nombreCompleto, nombreServicio, fechaEvento, direccion, estado));
             }
 
             System.out.println("Total solicitudes cargadas: " + todasSolicitudes.size());
@@ -412,12 +413,14 @@ public class ProveedorDashboardController {
 
         if (colAccion != null) {
             colAccion.setCellFactory(col -> new TableCell<>() {
-                private final Button btnConfirmar = new Button("✓ Confirmar");
+                private final Button btnAceptar  = new Button("✓ Aceptar");
+                private final Button btnConfirmar = new Button("✔ Confirmar");
                 private final Button btnCancelar = new Button("✗ Cancelar");
                 private final Button btnCompletar = new Button("🏆 Completar");
-                private final Button btnDetalle = new Button("👁 Ver");
+                private final Button btnDetalle = new Button("👁 Ver más");
 
                 {
+                    btnAceptar.setStyle("-fx-background-color:#007cff; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
                     btnConfirmar.setStyle("-fx-background-color:#059669; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
                     btnCancelar.setStyle("-fx-background-color:#dc2626; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
                     btnCompletar.setStyle("-fx-background-color:#3498db; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
@@ -428,20 +431,18 @@ public class ProveedorDashboardController {
                     super.updateItem(item, empty);
                     if (empty) { setGraphic(null); return; }
                     SolicitudReserva s = getTableView().getItems().get(getIndex());
-                    boolean pendiente = s.getEstado() == SolicitudReserva.Estado.PENDIENTE;
+                    boolean pendiente  = s.getEstado() == SolicitudReserva.Estado.PENDIENTE;
+                    boolean aceptada   = s.getEstado() == SolicitudReserva.Estado.ACEPTADA;
                     boolean confirmado = s.getEstado() == SolicitudReserva.Estado.CONFIRMADO;
                     boolean completado = s.getEstado() == SolicitudReserva.Estado.COMPLETADO;
 
-                    btnConfirmar.setVisible(pendiente);
-                    btnCancelar.setVisible(pendiente);
+                    btnAceptar.setVisible(pendiente);
+                    btnConfirmar.setVisible(aceptada);
+                    btnCancelar.setVisible(pendiente || aceptada);
                     btnCompletar.setVisible(confirmado && !completado);
 
-                    // Deshabilitar botón Completar si ya está completado
-                    if (completado) {
-                        btnCompletar.setVisible(false);
-                    }
-
-                    HBox buttons = new HBox(5, btnConfirmar, btnCancelar, btnCompletar, btnDetalle);
+                    HBox buttons = new HBox(5, btnAceptar, btnConfirmar, btnCancelar, btnCompletar, btnDetalle);
+                    btnAceptar.setOnAction(e -> aceptarReserva(s));
                     btnConfirmar.setOnAction(e -> confirmarReserva(s));
                     btnCancelar.setOnAction(e -> cancelarReserva(s));
                     btnCompletar.setOnAction(e -> completarReserva(s));
@@ -453,7 +454,7 @@ public class ProveedorDashboardController {
 
         if (tablaSolicitudes != null) tablaSolicitudes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         if (comboEstadoFiltro != null) {
-            comboEstadoFiltro.setItems(FXCollections.observableArrayList("Todos","PENDIENTE","CONFIRMADO","CANCELADO","COMPLETADO"));
+            comboEstadoFiltro.setItems(FXCollections.observableArrayList("Todos","PENDIENTE","ACEPTADA","CONFIRMADO","CANCELADO","COMPLETADO"));
             comboEstadoFiltro.getSelectionModel().selectFirst();
         }
         solicitudesFiltradas = new FilteredList<>(todasSolicitudes, p -> true);
@@ -470,12 +471,52 @@ public class ProveedorDashboardController {
 
     // ========== MÉTODOS PARA RESERVAS ==========
 
+    private void aceptarReserva(SolicitudReserva solicitud) {
+        String direccion = solicitud.getDireccion() == null || solicitud.getDireccion().isBlank()
+                ? "(sin dirección especificada)" : solicitud.getDireccion();
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Aceptar solicitud");
+        confirm.setHeaderText("¿Aceptar realmente esta reserva?");
+        confirm.setContentText(
+                "Reserva #" + solicitud.getIdReserva() +
+                "\n\n👤 Cliente: " + solicitud.getCliente() +
+                "\n📦 Servicio: " + solicitud.getServicio() +
+                "\n📅 Fecha del evento: " + solicitud.getFechaEvento() +
+                "\n📍 Dirección de entrega: " + direccion +
+                "\n\nSe enviará un correo al cliente notificando la aceptación.");
+        estilizarAlerta(confirm);
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try (Connection con = conectar();
+                 PreparedStatement pst = con.prepareStatement("UPDATE tbl_reservas SET estado='aceptada' WHERE id_reserva=?")) {
+                pst.setInt(1, solicitud.getIdReserva());
+                pst.executeUpdate();
+
+                enviarNotificacionesAceptacion(solicitud);
+
+                cargarSolicitudesReales();
+                mostrarDialogoSimulado("Éxito", "Solicitud aceptada.\nSe ha notificado al cliente.\n\nAhora puedes confirmar el pedido cuando estés listo.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                mostrarDialogoSimulado("Error", "No se pudo aceptar la solicitud: " + e.getMessage());
+            }
+        }
+    }
+
     private void confirmarReserva(SolicitudReserva solicitud) {
+        String direccion = solicitud.getDireccion() == null || solicitud.getDireccion().isBlank()
+                ? "(sin dirección especificada)" : solicitud.getDireccion();
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmar reserva");
-        confirm.setHeaderText("¿Confirmar la reserva #" + solicitud.getIdReserva() + "?");
-        confirm.setContentText("Cliente: " + solicitud.getCliente() + "\nServicio: " + solicitud.getServicio() +
-                "\nFecha: " + solicitud.getFechaEvento() + "\n\nSe enviará notificación al cliente.");
+        confirm.setHeaderText("¿Confirmar definitivamente la reserva #" + solicitud.getIdReserva() + "?");
+        confirm.setContentText(
+                "👤 Cliente: " + solicitud.getCliente() +
+                "\n📦 Servicio: " + solicitud.getServicio() +
+                "\n📅 Fecha del evento: " + solicitud.getFechaEvento() +
+                "\n📍 Dirección de entrega: " + direccion +
+                "\n\nSe enviará un correo final al cliente confirmando el pedido.");
         estilizarAlerta(confirm);
 
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
@@ -496,11 +537,18 @@ public class ProveedorDashboardController {
     }
 
     private void cancelarReserva(SolicitudReserva solicitud) {
+        String direccion = solicitud.getDireccion() == null || solicitud.getDireccion().isBlank()
+                ? "(sin dirección especificada)" : solicitud.getDireccion();
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Cancelar reserva");
-        confirm.setHeaderText("¿Cancelar la reserva #" + solicitud.getIdReserva() + "?");
-        confirm.setContentText("Cliente: " + solicitud.getCliente() + "\nServicio: " + solicitud.getServicio() +
-                "\nFecha: " + solicitud.getFechaEvento() + "\n\nSe enviará notificación al cliente.");
+        confirm.setHeaderText("¿Cancelar realmente la reserva #" + solicitud.getIdReserva() + "?");
+        confirm.setContentText(
+                "👤 Cliente: " + solicitud.getCliente() +
+                "\n📦 Servicio: " + solicitud.getServicio() +
+                "\n📅 Fecha del evento: " + solicitud.getFechaEvento() +
+                "\n📍 Dirección de entrega: " + direccion +
+                "\n\nSe enviará un correo al cliente notificando la cancelación.");
         estilizarAlerta(confirm);
 
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
@@ -543,12 +591,48 @@ public class ProveedorDashboardController {
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    //  Detalle: muestra info del cliente (no privada) + dirección + fecha
+    // ─────────────────────────────────────────────────────────────────────
     private void mostrarDetalleReserva(SolicitudReserva solicitud) {
-        mostrarDialogoSimulado("Detalle de Reserva",
-                "Cliente: " + solicitud.getCliente() +
-                        "\nServicio: " + solicitud.getServicio() +
-                        "\nFecha del Evento: " + solicitud.getFechaEvento() +
-                        "\nEstado: " + estadoTexto(solicitud.getEstado()));
+        // Cargar info pública del cliente desde la BD
+        String emailCliente = "(no disponible)";
+        String telefonoCliente = "(no disponible)";
+
+        String sql = "SELECT c.email, c.telefono FROM tbl_reservas r " +
+                "INNER JOIN tbl_clientes c ON r.id_cliente = c.id_cliente " +
+                "WHERE r.id_reserva = ?";
+
+        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, solicitud.getIdReserva());
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                emailCliente = rs.getString("email") != null ? rs.getString("email") : emailCliente;
+                telefonoCliente = rs.getString("telefono") != null ? rs.getString("telefono") : telefonoCliente;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String direccion = solicitud.getDireccion() == null || solicitud.getDireccion().isBlank()
+                ? "(sin dirección especificada)" : solicitud.getDireccion();
+
+        Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setTitle("Detalle de Reserva #" + solicitud.getIdReserva());
+        info.setHeaderText("Información del pedido");
+        info.setContentText(
+                "👤 INFORMACIÓN DEL CLIENTE\n" +
+                "Nombre: " + solicitud.getCliente() + "\n" +
+                "Email: " + emailCliente + "\n" +
+                "Teléfono: " + telefonoCliente + "\n" +
+                "\n📦 INFORMACIÓN DEL PEDIDO\n" +
+                "Servicio: " + solicitud.getServicio() + "\n" +
+                "Fecha del evento: " + solicitud.getFechaEvento() + "\n" +
+                "Dirección de entrega: " + direccion + "\n" +
+                "Estado actual: " + estadoTexto(solicitud.getEstado())
+        );
+        estilizarAlerta(info);
+        info.showAndWait();
     }
 
     // ========== NOTIFICACIONES ==========
@@ -570,90 +654,88 @@ public class ProveedorDashboardController {
         }
     }
 
-    private void enviarNotificacionesConfirmacion(SolicitudReserva solicitud) {
+    /** Datos de cliente+proveedor+servicio que necesitan los correos */
+    private static class DatosReserva {
+        int idUsuario = -1;
+        String nombreCliente = "", emailCliente = "";
+        String nombreServicio = "", fechaEvento = "", direccion = "";
+        String nombreProveedor = "", telefonoProveedor = "No disponible", emailProveedor = "No disponible";
+    }
+
+    private DatosReserva cargarDatosReserva(int idReserva) {
+        DatosReserva d = new DatosReserva();
         try (Connection con = conectar()) {
-            String sqlCliente = "SELECT id_cliente FROM tbl_reservas WHERE id_reserva = ?";
-            int idCliente = -1;
-            try (PreparedStatement pst = con.prepareStatement(sqlCliente)) {
-                pst.setInt(1, solicitud.getIdReserva());
-                ResultSet rs = pst.executeQuery();
-                if (rs.next()) {
-                    idCliente = rs.getInt("id_cliente");
-                }
-            }
-
-            String sqlDatosCliente = "SELECT u.id_usuario, u.nombre, c.email " +
-                    "FROM tbl_usuarios u " +
-                    "INNER JOIN tbl_clientes c ON u.id_usuario = c.id_usuario " +
-                    "WHERE c.id_cliente = ?";
-            int idUsuario = -1;
-            String nombreCliente = "";
-            String emailCliente = "";
-            try (PreparedStatement pst = con.prepareStatement(sqlDatosCliente)) {
-                pst.setInt(1, idCliente);
-                ResultSet rs = pst.executeQuery();
-                if (rs.next()) {
-                    idUsuario = rs.getInt("id_usuario");
-                    nombreCliente = rs.getString("nombre");
-                    emailCliente = rs.getString("email");
-                    System.out.println("✅ Cliente encontrado: " + nombreCliente + " - Email: " + emailCliente);
-                }
-            }
-
-            String sqlServicio = "SELECT s.nombre_servicio, r.fecha_evento, " +
-                    "p.nombre_empresa, p.telefono, u.email AS correo_proveedor " +
-                    "FROM tbl_servicios s " +
-                    "INNER JOIN tbl_reservas r ON r.id_servicio = s.id_servicio " +
+            String sql = "SELECT u.id_usuario, u.nombre AS nombre_cliente, c.email AS email_cliente, " +
+                    "s.nombre_servicio, r.fecha_evento, r.direccion_entrega, " +
+                    "p.nombre_empresa, p.telefono AS tel_prov, up.email AS email_prov " +
+                    "FROM tbl_reservas r " +
+                    "INNER JOIN tbl_clientes c ON r.id_cliente = c.id_cliente " +
+                    "INNER JOIN tbl_usuarios u ON c.id_usuario = u.id_usuario " +
+                    "INNER JOIN tbl_servicios s ON r.id_servicio = s.id_servicio " +
                     "INNER JOIN tbl_suplidores p ON s.id_suplidor = p.id_suplidor " +
-                    "INNER JOIN tbl_usuarios u ON p.id_usuario = u.id_usuario " +
+                    "INNER JOIN tbl_usuarios up ON p.id_usuario = up.id_usuario " +
                     "WHERE r.id_reserva = ?";
-
-            String nombreServicio = "";
-            String fechaEvento = "";
-            String nombreProveedor = "";
-            String telefonoProveedor = "No disponible";
-            String emailProveedor = "No disponible";
-
-            try (PreparedStatement pst = con.prepareStatement(sqlServicio)) {
-                pst.setInt(1, solicitud.getIdReserva());
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setInt(1, idReserva);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
-                    nombreServicio = rs.getString("nombre_servicio");
-                    fechaEvento = rs.getString("fecha_evento");
-                    nombreProveedor = rs.getString("nombre_empresa");
-                    telefonoProveedor = rs.getString("telefono") != null ? rs.getString("telefono") : "No disponible";
-                    emailProveedor = rs.getString("correo_proveedor") != null ? rs.getString("correo_proveedor") : "No disponible";
+                    d.idUsuario         = rs.getInt("id_usuario");
+                    d.nombreCliente     = nz(rs.getString("nombre_cliente"));
+                    d.emailCliente      = nz(rs.getString("email_cliente"));
+                    d.nombreServicio    = nz(rs.getString("nombre_servicio"));
+                    d.fechaEvento       = nz(rs.getString("fecha_evento"));
+                    d.direccion         = rs.getString("direccion_entrega") != null && !rs.getString("direccion_entrega").isBlank()
+                                          ? rs.getString("direccion_entrega") : "(sin dirección especificada)";
+                    d.nombreProveedor   = nz(rs.getString("nombre_empresa"));
+                    d.telefonoProveedor = rs.getString("tel_prov") != null ? rs.getString("tel_prov") : "No disponible";
+                    d.emailProveedor    = rs.getString("email_prov") != null ? rs.getString("email_prov") : "No disponible";
                 }
             }
-
-            if (idUsuario != -1) {
-                String titulo = "✅ Reserva Confirmada";
-                String contenido = "Tu reserva para \"" + nombreServicio + "\" (Fecha: " + fechaEvento +
-                        ") ha sido confirmada. El proveedor se contactará contigo.";
-                String urlAccion = "/reservas/" + solicitud.getIdReserva();
-                crearNotificacionCliente(idUsuario, titulo, contenido, "reserva_confirmada", urlAccion);
-            }
-
-            if (emailCliente != null && !emailCliente.isEmpty()) {
-                try {
-                    EmailSender.enviarCorreoConfirmacion(
-                            emailCliente,
-                            nombreCliente,
-                            nombreServicio,
-                            fechaEvento,
-                            nombreProveedor,
-                            telefonoProveedor,
-                            emailProveedor
-                    );
-                    System.out.println("✅ Correo enviado a: " + emailCliente);
-                } catch (Exception e) {
-                    System.err.println("❌ Error al enviar correo: " + e.getMessage());
-                }
-            }
-
         } catch (SQLException e) {
-            System.err.println("❌ Error en enviarNotificacionesConfirmacion: " + e.getMessage());
             e.printStackTrace();
+        }
+        return d;
+    }
+
+    private static String nz(String s) { return s == null ? "" : s; }
+
+    private void enviarNotificacionesAceptacion(SolicitudReserva solicitud) {
+        DatosReserva d = cargarDatosReserva(solicitud.getIdReserva());
+
+        if (d.idUsuario != -1) {
+            String titulo = "✅ Solicitud aceptada";
+            String contenido = "Tu solicitud para \"" + d.nombreServicio + "\" fue aceptada. Será entregada en " +
+                    d.direccion + " el " + d.fechaEvento + ".";
+            crearNotificacionCliente(d.idUsuario, titulo, contenido, "reserva_aceptada", "/reservas/" + solicitud.getIdReserva());
+        }
+        if (!d.emailCliente.isEmpty()) {
+            try {
+                EmailSender.enviarCorreoAceptacion(
+                        d.emailCliente, d.nombreCliente, d.nombreServicio, d.fechaEvento,
+                        d.direccion, d.nombreProveedor, d.telefonoProveedor, d.emailProveedor);
+            } catch (Exception e) {
+                System.err.println("Error correo aceptación: " + e.getMessage());
+            }
+        }
+    }
+
+    private void enviarNotificacionesConfirmacion(SolicitudReserva solicitud) {
+        DatosReserva d = cargarDatosReserva(solicitud.getIdReserva());
+
+        if (d.idUsuario != -1) {
+            String titulo = "🎉 Reserva confirmada";
+            String contenido = "Tu pedido de \"" + d.nombreServicio + "\" fue confirmado. Se llevará a " +
+                    d.direccion + " el " + d.fechaEvento + ".";
+            crearNotificacionCliente(d.idUsuario, titulo, contenido, "reserva_confirmada", "/reservas/" + solicitud.getIdReserva());
+        }
+        if (!d.emailCliente.isEmpty()) {
+            try {
+                EmailSender.enviarCorreoConfirmacion(
+                        d.emailCliente, d.nombreCliente, d.nombreServicio, d.fechaEvento,
+                        d.direccion, d.nombreProveedor, d.telefonoProveedor, d.emailProveedor);
+            } catch (Exception e) {
+                System.err.println("Error correo confirmación: " + e.getMessage());
+            }
         }
     }
 
@@ -737,10 +819,12 @@ public class ProveedorDashboardController {
 
     private void actualizarStats() {
         long p = todasSolicitudes.stream().filter(s -> s.getEstado() == SolicitudReserva.Estado.PENDIENTE).count();
+        long a = todasSolicitudes.stream().filter(s -> s.getEstado() == SolicitudReserva.Estado.ACEPTADA).count();
         long c = todasSolicitudes.stream().filter(s -> s.getEstado() == SolicitudReserva.Estado.CONFIRMADO).count();
         long cp = todasSolicitudes.stream().filter(s -> s.getEstado() == SolicitudReserva.Estado.COMPLETADO).count();
         long ca = todasSolicitudes.stream().filter(s -> s.getEstado() == SolicitudReserva.Estado.CANCELADO).count();
-        if (statPendiente != null) statPendiente.setText(String.valueOf(p));
+        // Pendiente + Aceptada se cuentan juntos en el contador "Pendiente" del dashboard
+        if (statPendiente != null) statPendiente.setText(String.valueOf(p + a));
         if (statConfirmado != null) statConfirmado.setText(String.valueOf(c));
         if (statCompletado != null) statCompletado.setText(String.valueOf(cp));
         if (statCancelado != null) statCancelado.setText(String.valueOf(ca));
@@ -755,20 +839,29 @@ public class ProveedorDashboardController {
 
     private String estadoTexto(SolicitudReserva.Estado e) {
         return switch (e) {
-            case PENDIENTE -> "⏳ Pendiente"; case CONFIRMADO -> "✅ Confirmado";
-            case CANCELADO -> "❌ Cancelado"; case COMPLETADO -> "🏆 Completado";
+            case PENDIENTE -> "⏳ Pendiente";
+            case ACEPTADA  -> "✅ Aceptada";
+            case CONFIRMADO -> "🎉 Confirmado";
+            case CANCELADO -> "❌ Cancelado";
+            case COMPLETADO -> "🏆 Completado";
         };
     }
     private String estadoColor(SolicitudReserva.Estado e) {
         return switch (e) {
-            case PENDIENTE -> "#fff7ed"; case CONFIRMADO -> "#ecfdf5";
-            case CANCELADO -> "#fef2f2"; case COMPLETADO -> "#eff6ff";
+            case PENDIENTE -> "#fff7ed";
+            case ACEPTADA  -> "#dbeafe";
+            case CONFIRMADO -> "#ecfdf5";
+            case CANCELADO -> "#fef2f2";
+            case COMPLETADO -> "#eff6ff";
         };
     }
     private String estadoColorTexto(SolicitudReserva.Estado e) {
         return switch (e) {
-            case PENDIENTE -> "#d97706"; case CONFIRMADO -> "#059669";
-            case CANCELADO -> "#dc2626"; case COMPLETADO -> "#2563eb";
+            case PENDIENTE -> "#d97706";
+            case ACEPTADA  -> "#007cff";
+            case CONFIRMADO -> "#059669";
+            case CANCELADO -> "#dc2626";
+            case COMPLETADO -> "#2563eb";
         };
     }
 
