@@ -4,6 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.BarChart;
@@ -14,9 +18,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminDashboardController {
 
@@ -25,42 +33,44 @@ public class AdminDashboardController {
     @FXML private Label lblTotalProveedores;
     @FXML private Label lblTotalReservas;
     @FXML private Label lblTotalIngresos;
-    @FXML private Label lblClientesMes;
-    @FXML private Label lblProveedoresMes;
-    @FXML private Label lblReservasMes;
-    @FXML private Label lblIngresosMes;
+    @FXML private Label lblReservasPendientes;
+    @FXML private Label lblReservasConfirmadas;
+    @FXML private Label lblReservasCompletadas;
 
     @FXML private BarChart<String, Number> barChartIngresos;
     @FXML private PieChart pieChartServicios;
 
     @FXML private Pane canvasClientesContainer;
-    @FXML private Pane canvasPagosContainer;
+    @FXML private Pane canvasReservasContainer;
 
-    @FXML private TableView<ObservableList<String>> tablaUltimosPagos;
-    @FXML private TableColumn<ObservableList<String>, String> colIdPago;
+    @FXML private TableView<ObservableList<String>> tablaUltimasReservas;
     @FXML private TableColumn<ObservableList<String>, String> colIdReserva;
+    @FXML private TableColumn<ObservableList<String>, String> colCliente;
+    @FXML private TableColumn<ObservableList<String>, String> colServicio;
+    @FXML private TableColumn<ObservableList<String>, String> colProveedor;
+    @FXML private TableColumn<ObservableList<String>, String> colFechaEvento;
     @FXML private TableColumn<ObservableList<String>, String> colMonto;
-    @FXML private TableColumn<ObservableList<String>, String> colMetodoPago;
-    @FXML private TableColumn<ObservableList<String>, String> colFechaPago;
-    @FXML private TableColumn<ObservableList<String>, String> colEstadoPago;
+    @FXML private TableColumn<ObservableList<String>, String> colEstado;
 
     @FXML
     public void initialize() {
         lblFechaActual.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-        colIdPago.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(0)));
-        colIdReserva.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(1)));
-        colMonto.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(2)));
-        colMetodoPago.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(3)));
-        colFechaPago.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(4)));
-        colEstadoPago.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(5)));
+        // Configurar columnas de la tabla
+        colIdReserva.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(0)));
+        colCliente.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(1)));
+        colServicio.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(2)));
+        colProveedor.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(3)));
+        colFechaEvento.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(4)));
+        colMonto.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(5)));
+        colEstado.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue().get(6)));
 
         cargarMetricas();
         cargarGraficoBarras();
         cargarGraficoPastel();
         cargarCanvasClientes();
-        cargarCanvasPagos();
-        cargarUltimosPagos();
+        cargarCanvasReservas();
+        cargarUltimasReservas();
     }
 
     private Connection conectar() {
@@ -77,22 +87,40 @@ public class AdminDashboardController {
 
     private void cargarMetricas() {
         try (Connection con = conectar()) {
+            // Total Clientes
             String sqlClientes = "SELECT COUNT(*) FROM dbo.tbl_clientes";
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sqlClientes)) {
                 if (rs.next()) lblTotalClientes.setText(String.valueOf(rs.getInt(1)));
             }
 
+            // Total Proveedores
             String sqlProveedores = "SELECT COUNT(*) FROM dbo.tbl_suplidores";
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sqlProveedores)) {
                 if (rs.next()) lblTotalProveedores.setText(String.valueOf(rs.getInt(1)));
             }
 
-            String sqlReservas = "SELECT COUNT(*) FROM dbo.tbl_reservas WHERE estado = 'Activa'";
+            // Total Reservas y por estado
+            String sqlReservas = "SELECT estado, COUNT(*) FROM dbo.tbl_reservas GROUP BY estado";
+            int total = 0, pendientes = 0, confirmadas = 0, completadas = 0;
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sqlReservas)) {
-                if (rs.next()) lblTotalReservas.setText(String.valueOf(rs.getInt(1)));
+                while (rs.next()) {
+                    String estado = rs.getString(1);
+                    int count = rs.getInt(2);
+                    total += count;
+                    switch (estado.toLowerCase()) {
+                        case "pendiente": pendientes = count; break;
+                        case "confirmada": confirmadas = count; break;
+                        case "completada": completadas = count; break;
+                    }
+                }
             }
+            lblTotalReservas.setText(String.valueOf(total));
+            lblReservasPendientes.setText(String.valueOf(pendientes));
+            lblReservasConfirmadas.setText(String.valueOf(confirmadas));
+            lblReservasCompletadas.setText(String.valueOf(completadas));
 
-            String sqlIngresos = "SELECT ISNULL(SUM(monto), 0) FROM dbo.tbl_pagos WHERE estado = 'Recibido'";
+            // Total Ingresos (suma de total de reservas confirmadas y completadas)
+            String sqlIngresos = "SELECT ISNULL(SUM(total), 0) FROM dbo.tbl_reservas WHERE estado IN ('confirmada', 'completada')";
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sqlIngresos)) {
                 if (rs.next()) lblTotalIngresos.setText("$" + String.format("%,.2f", rs.getDouble(1)));
             }
@@ -103,24 +131,53 @@ public class AdminDashboardController {
 
     private void cargarGraficoBarras() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Ingresos 2026");
-        series.getData().add(new XYChart.Data<>("Ene", 12500));
-        series.getData().add(new XYChart.Data<>("Feb", 14800));
-        series.getData().add(new XYChart.Data<>("Mar", 16200));
-        series.getData().add(new XYChart.Data<>("Abr", 18900));
-        series.getData().add(new XYChart.Data<>("May", 21000));
-        series.getData().add(new XYChart.Data<>("Jun", 23500));
+        series.setName("Ingresos Mensuales");
+
+        // Obtener ingresos reales por mes
+        Map<Integer, Double> ingresosPorMes = new HashMap<>();
+        for (int i = 1; i <= 12; i++) ingresosPorMes.put(i, 0.0);
+
+        String sql = "SELECT MONTH(fecha_evento) AS mes, ISNULL(SUM(total), 0) AS total " +
+                "FROM dbo.tbl_reservas WHERE estado IN ('confirmada', 'completada') AND YEAR(fecha_evento) = YEAR(GETDATE()) " +
+                "GROUP BY MONTH(fecha_evento)";
+
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                ingresosPorMes.put(rs.getInt("mes"), rs.getDouble("total"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String[] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+        for (int i = 1; i <= 12; i++) {
+            series.getData().add(new XYChart.Data<>(meses[i-1], ingresosPorMes.get(i)));
+        }
+
         barChartIngresos.getData().clear();
         barChartIngresos.getData().add(series);
     }
 
     private void cargarGraficoPastel() {
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Fotografía", 35),
-                new PieChart.Data("Videografía", 28),
-                new PieChart.Data("Animación", 20),
-                new PieChart.Data("Diseño Gráfico", 17)
-        );
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        String sql = "SELECT s.categoria, COUNT(*) as total " +
+                "FROM dbo.tbl_reservas r " +
+                "INNER JOIN dbo.tbl_servicios s ON r.id_servicio = s.id_servicio " +
+                "GROUP BY s.categoria";
+
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                pieChartData.add(new PieChart.Data(rs.getString("categoria"), rs.getInt("total")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (pieChartData.isEmpty()) {
+            pieChartData.add(new PieChart.Data("Sin datos", 1));
+        }
+
         pieChartServicios.setData(pieChartData);
         pieChartServicios.setLabelsVisible(true);
     }
@@ -128,20 +185,44 @@ public class AdminDashboardController {
     private void cargarCanvasClientes() {
         Canvas canvas = new Canvas(400, 200);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        int[] clientes = {45, 52, 58, 65, 72, 85};
-        int max = 100;
+
+        // Obtener clientes por mes del año actual
+        int[] clientesPorMes = new int[6];
+        String[] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun"};
+
+        String sql = "SELECT MONTH(fecha_registro) AS mes, COUNT(*) as total " +
+                "FROM dbo.tbl_usuarios WHERE tipo_usuario = 'cliente' AND YEAR(fecha_registro) = YEAR(GETDATE()) " +
+                "GROUP BY MONTH(fecha_registro) ORDER BY mes";
+
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                int mes = rs.getInt("mes");
+                if (mes >= 1 && mes <= 6) {
+                    clientesPorMes[mes - 1] = rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int max = 1;
+        for (int valor : clientesPorMes) {
+            if (valor > max) max = valor;
+        }
+        if (max == 0) max = 1;
+
         int height = 150;
         int barWidth = 50;
         int startX = 25;
         int startY = 30;
 
         gc.setFill(Color.web("#3498db"));
-        for (int i = 0; i < clientes.length; i++) {
-            int barHeight = (int) ((double) clientes[i] / max * height);
+        for (int i = 0; i < clientesPorMes.length; i++) {
+            int barHeight = (int) ((double) clientesPorMes[i] / max * height);
             gc.fillRect(startX + i * (barWidth + 5), startY + height - barHeight, barWidth, barHeight);
             gc.setFill(Color.BLACK);
-            gc.fillText(String.valueOf(clientes[i]), startX + i * (barWidth + 5) + 15, startY + height - barHeight - 5);
-            gc.fillText(getMes(i), startX + i * (barWidth + 5) + 15, startY + height + 15);
+            gc.fillText(String.valueOf(clientesPorMes[i]), startX + i * (barWidth + 5) + 15, startY + height - barHeight - 5);
+            gc.fillText(meses[i], startX + i * (barWidth + 5) + 15, startY + height + 15);
         }
         gc.setStroke(Color.GRAY);
         gc.strokeLine(startX, startY, startX, startY + height);
@@ -151,17 +232,40 @@ public class AdminDashboardController {
         canvasClientesContainer.getChildren().add(canvas);
     }
 
-    private void cargarCanvasPagos() {
+    private void cargarCanvasReservas() {
         Canvas canvas = new Canvas(400, 200);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        String[] estados = {"Pendiente", "Recibido", "Anulado"};
-        int[] valores = {45, 120, 15};
-        int max = 150;
+
+        // Estados de reservas
+        String[] estados = {"Pendiente", "Confirmada", "Completada"};
+        int[] valores = new int[3];
+        Color[] colores = {Color.web("#f39c12"), Color.web("#27ae60"), Color.web("#3498db")};
+
+        String sql = "SELECT estado, COUNT(*) FROM dbo.tbl_reservas GROUP BY estado";
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                String estado = rs.getString(1);
+                int count = rs.getInt(2);
+                switch (estado.toLowerCase()) {
+                    case "pendiente": valores[0] = count; break;
+                    case "confirmada": valores[1] = count; break;
+                    case "completada": valores[2] = count; break;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int max = 1;
+        for (int valor : valores) {
+            if (valor > max) max = valor;
+        }
+        if (max == 0) max = 1;
+
         int height = 150;
         int barWidth = 80;
         int startX = 25;
         int startY = 30;
-        Color[] colores = {Color.web("#f39c12"), Color.web("#27ae60"), Color.web("#e74c3c")};
 
         for (int i = 0; i < estados.length; i++) {
             int barHeight = (int) ((double) valores[i] / max * height);
@@ -175,30 +279,42 @@ public class AdminDashboardController {
         gc.strokeLine(startX, startY, startX, startY + height);
         gc.strokeLine(startX, startY + height, startX + 400, startY + height);
 
-        canvasPagosContainer.getChildren().clear();
-        canvasPagosContainer.getChildren().add(canvas);
+        canvasReservasContainer.getChildren().clear();
+        canvasReservasContainer.getChildren().add(canvas);
     }
 
-    private String getMes(int index) {
-        String[] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun"};
-        return meses[index];
-    }
-
-    private void cargarUltimosPagos() {
+    private void cargarUltimasReservas() {
         ObservableList<ObservableList<String>> datos = FXCollections.observableArrayList();
-        try (Connection con = conectar(); Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery("SELECT TOP 10 id_pago, id_reserva, monto, metodo_pago, fecha_pago, estado FROM dbo.tbl_pagos ORDER BY id_pago DESC")) {
+
+        String sql = "SELECT TOP 10 " +
+                "r.id_reserva, " +
+                "CONCAT(c.nombre, ' ', c.apellido) AS cliente, " +
+                "s.nombre_servicio, " +
+                "p.nombre_empresa AS proveedor, " +
+                "FORMAT(r.fecha_evento, 'yyyy-MM-dd') AS fecha_evento, " +
+                "r.total, " +
+                "r.estado " +
+                "FROM dbo.tbl_reservas r " +
+                "INNER JOIN dbo.tbl_clientes c ON r.id_cliente = c.id_cliente " +
+                "INNER JOIN dbo.tbl_servicios s ON r.id_servicio = s.id_servicio " +
+                "INNER JOIN dbo.tbl_suplidores p ON s.id_suplidor = p.id_suplidor " +
+                "ORDER BY r.id_reserva DESC";
+
+        try (Connection con = conectar(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 ObservableList<String> fila = FXCollections.observableArrayList();
-                fila.add(rs.getString("id_pago"));
                 fila.add(rs.getString("id_reserva"));
-                fila.add("$" + rs.getString("monto"));
-                fila.add(rs.getString("metodo_pago"));
-                fila.add(rs.getString("fecha_pago"));
-                fila.add(rs.getString("estado"));
+                fila.add(rs.getString("cliente"));
+                fila.add(rs.getString("nombre_servicio"));
+                fila.add(rs.getString("proveedor"));
+                fila.add(rs.getString("fecha_evento"));
+                fila.add("$" + rs.getString("total"));
+
+                String estado = rs.getString("estado");
+                fila.add(estado);
                 datos.add(fila);
             }
-            tablaUltimosPagos.setItems(datos);
+            tablaUltimasReservas.setItems(datos);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -207,13 +323,25 @@ public class AdminDashboardController {
     @FXML
     void onActualizarClick(ActionEvent event) {
         cargarMetricas();
-        cargarUltimosPagos();
+        cargarGraficoBarras();
+        cargarGraficoPastel();
+        cargarCanvasClientes();
+        cargarCanvasReservas();
+        cargarUltimasReservas();
     }
 
     @FXML
     void onVolverClick(ActionEvent event) {
-        System.out.println("Volver al panel admin");
-
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminPanel.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Panel Admin - Premier Services");
+            stage.setMaximized(true);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

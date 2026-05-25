@@ -29,6 +29,9 @@ git push origin feature/clientes
 # Rama feature/admin-reportes
 git checkout feature/admin-reportes
 git add .
-git commit -m "Sistema de imprimir la factura al elegir el plan proveedor"
-git push 
+git commit -m "Arreglo en diseno en todos las pantallas admin y arreglos en sus funciones"
+git push origin feature/admin-reportes
 
+# Para forzar un commit
+
+git push origin "nombre del commit" --force

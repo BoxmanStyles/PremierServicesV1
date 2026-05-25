@@ -2,12 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,18 +12,18 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="688.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.AdminPanelController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.AdminPanelController">
     <children>
         <!-- Cabecera superior (logo, título) -->
         <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1288.0" spacing="20.0" style="-fx-padding: 20; -fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
             <children>
-                <Button alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#Buscador" prefHeight="45.0" prefWidth="135.0" style="-fx-background-color: transparent;" text="🔎 Buscar" textFill="WHITE">
-                    <font><Font name="System Bold" size="16.0" /></font>
-                </Button>
-                <Region prefHeight="65.0" prefWidth="299.0" />
+                <Region prefHeight="65.0" prefWidth="448.0" />
                 <Pane prefHeight="60.0" prefWidth="256.0">
                     <children>
                         <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c" strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
@@ -35,87 +32,84 @@
                         </Text>
                         <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0" layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
                             <effect><Glow level="0.81" /></effect>
-                            <Image url="@../../../IMG/Logo.png" />
                         </ImageView>
                     </children>
                 </Pane>
                 <Region prefHeight="65.0" prefWidth="87.0" />
-                <Pane prefHeight="65.0" prefWidth="149.0" style="-fx-background-color: #142440; -fx-background-radius: 24;">
-                    <children>
-                        <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="67.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button alignment="TOP_LEFT" layoutX="6.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="114.0" style="-fx-background-color: transparent;" text="Admin" textFill="WHITE">
-                            <font><Font size="16.0" /></font>
-                        </Button>
-                    </children>
-                </Pane>
-                <Pane prefHeight="65.0" prefWidth="138.0">
-                    <children>
-                        <Button fx:id="btnAdminPanel" alignment="BOTTOM_CENTER" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="125.0" style="-fx-background-color: transparent;" text="Panel Admin" textFill="WHITE">
-                            <font><Font name="System Bold" size="15.0" /></font>
-                        </Button>
-                    </children>
-                </Pane>
-                <Pane prefHeight="65.0" prefWidth="138.0">
-                    <children>
-                        <Button fx:id="btnNuevoServicio" alignment="BOTTOM_CENTER" layoutX="-12.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="147.0" style="-fx-background-color: transparent;" text="Nuevo Portafolio" textAlignment="CENTER" textFill="WHITE">
-                            <font><Font name="System Bold" size="15.0" /></font>
-                        </Button>
-                    </children>
-                </Pane>
+                <Pane prefHeight="65.0" prefWidth="138.0" />
+                <Pane prefHeight="65.0" prefWidth="138.0" />
             </children>
         </HBox>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="590.0" layoutY="104.0" stroke="BLACK" strokeType="INSIDE" width="1288.0">
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.8470588326454163" green="0.8588235378265381" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color green="0.2666666805744171" blue="0.5137255191802979" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Rectangle>
 
         <!-- Contenido del panel -->
-        <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1288.0">
+        <Pane layoutX="25.0" layoutY="122.0" prefHeight="71.0" prefWidth="1238.0" style="-fx-background-radius: 25; -fx-background-color: white; -fx-border-radius: 25;">
             <children>
-                <Text layoutX="490.0" layoutY="64.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panel Admin" wrappingWidth="289.21478271484375">
-                    <font><Font name="System Bold" size="48.0" /></font>
+                <Text layoutX="528.0" layoutY="47.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panel Admin" wrappingWidth="182.21478271484375">
+                    <font><Font name="System Bold" size="30.0" /></font>
                 </Text>
-                <Separator layoutY="90.0" prefHeight="5.0" prefWidth="1269.0" />
                 <!-- Botón de salida (X) que llama a SalirAdminPanel -->
-                <Button fx:id="SalirAdminPanel" layoutX="53.0" layoutY="26.0" maxHeight="53.0" maxWidth="57.0" mnemonicParsing="false" onAction="#SalirAdminPanel" prefHeight="53.0" prefWidth="57.0" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: #778899; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
+                <Button fx:id="SalirAdminPanel" layoutX="23.0" layoutY="10.0" maxHeight="53.0" maxWidth="57.0" mnemonicParsing="false" onAction="#SalirAdminPanel" prefHeight="53.0" prefWidth="57.0" style="-fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px; -fx-background-radius: 25px; -fx-background-color: #778899; -fx-text-fill: white; -fx-font-size: 18px;" text="X">
                     <font><Font size="14.0" /></font>
                     <effect><InnerShadow /></effect>
                 </Button>
             </children>
+         <effect>
+            <InnerShadow />
+         </effect>
         </Pane>
-
-        <!-- ScrollPane con los botones de gestión -->
-        <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="210.0" prefHeight="625.0" prefWidth="1269.0" style="-fx-background-color: #f5f5f5;">
-            <content>
-                <VBox alignment="TOP_CENTER" prefHeight="1053.0" prefWidth="1254.0" spacing="20.0" style="-fx-background-color: #f5f5f5;">
+      <Pane layoutX="21.0" layoutY="212.0" opacity="0.24" prefHeight="465.0" prefWidth="1244.0" style="-fx-border-radius: 25; -fx-background-color: white; -fx-background-radius: 25;">
+         <effect>
+            <DropShadow spread="0.72" />
+         </effect>
+      </Pane>
+      <Pane layoutX="36.0" layoutY="223.0" prefHeight="442.0" prefWidth="1213.0" style="-fx-background-color: white; -fx-background-radius: 16;">
+         <children>
+                <VBox alignment="TOP_CENTER" prefHeight="431.0" prefWidth="1213.0" spacing="20.0" style="-fx-background-color: transparent;">
                     <padding><Insets bottom="30.0" left="50.0" right="50.0" top="20.0" /></padding>
                     <children>
-                        <Pane prefHeight="608.0" prefWidth="1137.0">
+                        <Pane prefHeight="381.0" prefWidth="1141.0">
                             <children>
                                 <!-- Fila 1 -->
-                                <Button fx:id="btnGestionClientes" layoutX="39.0" layoutY="40.0" onAction="#onGestionClientesClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Clientes" textFill="WHITE">
+                                <Button fx:id="btnGestionClientes" layoutX="21.0" layoutY="14.0" onAction="#onGestionClientesClick" prefHeight="158.0" prefWidth="256.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Clientes" textFill="WHITE">
                                     <font><Font name="Agency FB" size="32.0" /></font>
                                     <effect><DropShadow /></effect>
                                 </Button>
 
-                                <Button fx:id="btnGestionProveedores" layoutX="427.0" layoutY="40.0" onAction="#onGestionProveedoresClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Proveedores" textFill="WHITE">
+                                <Button fx:id="btnGestionProveedores" layoutX="429.0" layoutY="14.0" onAction="#onGestionProveedoresClick" prefHeight="158.0" prefWidth="256.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Proveedores" textFill="WHITE">
                                     <font><Font name="Agency FB" size="32.0" /></font>
                                     <effect><DropShadow /></effect>
                                 </Button>
 
-                                <Button fx:id="btnGestionPagosFacturas" layoutX="815.0" layoutY="40.0" onAction="#onGestionPagosFacturasClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Pagos y Facturas" textFill="WHITE">
+                                <Button fx:id="btnGestionPagosFacturas" layoutX="818.0" layoutY="14.0" onAction="#onGestionPagosFacturasClick" prefHeight="158.0" prefWidth="256.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Facturas" textFill="WHITE">
                                     <font><Font name="Agency FB" size="27.0" /></font>
                                     <effect><DropShadow /></effect>
                                 </Button>
 
                                 <!-- Fila 2 -->
-                                <Button fx:id="btnGestionReservas" layoutX="39.0" layoutY="337.0" onAction="#onGestionReservasClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Reservas" textFill="WHITE">
+                                <Button fx:id="btnGestionReservas" layoutX="21.0" layoutY="209.0" onAction="#onGestionReservasClick" prefHeight="158.0" prefWidth="256.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Reservas" textFill="WHITE">
                                     <font><Font name="Agency FB" size="32.0" /></font>
                                     <effect><DropShadow><color><Color red="1.0" green="0.040123455226421356" blue="0.040123455226421356" /></color></DropShadow></effect>
                                 </Button>
 
-                                <Button fx:id="btnGestionPortafolios" layoutX="427.0" layoutY="337.0" onAction="#onGestionPortafoliosClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Gestion Portafolios" textFill="WHITE">
-                                    <font><Font name="Agency FB" size="32.0" /></font>
-                                    <effect><DropShadow /></effect>
-                                </Button>
-
-                                <Button fx:id="btnDashboard" layoutX="815.0" layoutY="337.0" onAction="#onDashboardClick" prefHeight="237.0" prefWidth="282.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Dashboard" textFill="WHITE">
+                                <Button fx:id="btnDashboard" layoutX="429.0" layoutY="209.0" onAction="#onDashboardClick" prefHeight="158.0" prefWidth="256.0" style="-fx-background-color: #1469b8; -fx-background-radius: 25px;" text="Dashboard" textFill="WHITE">
                                     <font><Font name="Agency FB" size="32.0" /></font>
                                     <effect><DropShadow /></effect>
                                 </Button>
@@ -123,7 +117,7 @@
                         </Pane>
                     </children>
                 </VBox>
-            </content>
-        </ScrollPane>
+         </children>
+      </Pane>
     </children>
 </AnchorPane>

@@ -12,6 +12,7 @@ public class TestEmail {
                     "Cliente Prueba",
                     "Servicio Test",
                     "15/06/2026",
+                    "Av. 27 de Febrero #150, Santo Domingo",  // dirección de entrega
                     "Proveedor Test",
                     "809-555-0000",
                     "test@test.com"

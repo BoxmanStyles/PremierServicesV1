@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="693.0" prefWidth="1283.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.Admin.controllerGestionReservas">
+    <children>
+        <!-- Cabecera con gradiente -->
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1269.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Region prefHeight="65.0" prefWidth="455.0" HBox.hgrow="ALWAYS" />
+                        <Pane prefHeight="60.0" prefWidth="256.0">
+                            <children>
+                                <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c" strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
+                                    <font>
+                                        <Font name="Elephant Italic" size="31.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow level="0.37" />
+                                    </effect>
+                                </Text>
+                                <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0" layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                                    <effect>
+                                        <Glow level="0.81" />
+                                    </effect>
+                                </ImageView>
+                            </children>
+                        </Pane>
+                        <Region prefHeight="65.0" prefWidth="486.0" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
+        <!-- Título y botón volver -->
+        <Pane layoutY="105.0" prefHeight="105.0" prefWidth="1269.0">
+            <children>
+                <Text layoutX="22.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestión de Reservas" wrappingWidth="350.0">
+                    <font>
+                        <Font name="System Bold" size="28.0" />
+                    </font>
+                </Text>
+                <Separator layoutY="90.0" prefHeight="3.0" prefWidth="1000.0" />
+                <Text fill="#040404" layoutX="22.0" layoutY="68.0" opacity="0.52" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualiza, filtra y gestiona todas las reservas del sistema" wrappingWidth="500.0">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Text>
+                <Button layoutX="1149.0" layoutY="32.0" onAction="#onVolverClick" style="-fx-background-color: Black; -fx-text-fill: white; -fx-font-weight: bold;" text="Volver al Panel">
+                    <font>
+                        <Font size="12.0" />
+                    </font>
+                </Button>
+            </children>
+        </Pane>
+
+        <!-- Contenido principal -->
+        <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="210.0" prefHeight="483.0" prefWidth="1269.0" style="-fx-background-color: #f5f5f5;">
+            <content>
+                <VBox alignment="TOP_CENTER" prefHeight="1053.0" prefWidth="1254.0" spacing="20.0" style="-fx-background-color: #f5f5f5;">
+                    <padding>
+                        <Insets bottom="30.0" left="50.0" right="50.0" top="20.0" />
+                    </padding>
+                    <children>
+                        <!-- Panel de filtros -->
+                        <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;" text="Filtrar por Estado:" />
+                                        <ComboBox fx:id="cmbFiltroEstado" prefWidth="200.0" promptText="Todos" />
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;" text="Filtrar por Proveedor:" />
+                                        <ComboBox fx:id="cmbFiltroProveedor" prefWidth="200.0" promptText="Todos" />
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;" text="Fecha desde:" />
+                                        <DatePicker fx:id="dpFechaDesde" prefWidth="180.0" promptText="dd/MM/yyyy" />
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;" text="Fecha hasta:" />
+                                        <DatePicker fx:id="dpFechaHasta" prefWidth="180.0" promptText="dd/MM/yyyy" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Button onAction="#onFiltrarClick" style="-fx-background-color: #4A7FA9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="🔍 Aplicar Filtros" />
+                                        <Button onAction="#onLimpiarFiltrosClick" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="🗑 Limpiar Filtros" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <!-- Tabla de Reservas -->
+                        <TableView fx:id="tablaReservas" prefHeight="410.0" prefWidth="1154.0">
+                            <columns>
+                                <TableColumn fx:id="colIdReserva" prefWidth="80.0" text="ID Reserva" />
+                                <TableColumn fx:id="colCliente" prefWidth="180.0" text="Cliente" />
+                                <TableColumn fx:id="colServicio" prefWidth="200.0" text="Servicio" />
+                                <TableColumn fx:id="colProveedor" prefWidth="200.0" text="Proveedor" />
+                                <TableColumn fx:id="colFechaEvento" prefWidth="120.0" text="Fecha Evento" />
+                                <TableColumn fx:id="colMonto" prefWidth="100.0" text="Monto" />
+                                <TableColumn fx:id="colEstado" prefWidth="120.0" text="Estado" />
+                            </columns>
+                        </TableView>
+
+                        <!-- Panel de estadísticas -->
+                        <HBox alignment="CENTER" spacing="20.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+                            <children>
+                                <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="📊 Total Reservas" />
+                                    <Label fx:id="lblTotalReservas" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0A1832;" text="0" />
+                                </VBox>
+                                <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="⏳ Pendientes" />
+                                    <Label fx:id="lblPendientes" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f39c12;" text="0" />
+                                </VBox>
+                                <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="✅ Confirmadas" />
+                                    <Label fx:id="lblConfirmadas" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #27ae60;" text="0" />
+                                </VBox>
+                                <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="💰 Total Ingresos" />
+                                    <Label fx:id="lblTotalIngresos" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0A1832;" text="0" />
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- Botones de acciones -->
+                        <HBox alignment="CENTER" prefHeight="83.0" prefWidth="1154.0" spacing="20.0">
+                            <children>
+                                <Button fx:id="btnConfirmar" onAction="#onConfirmarClick" prefWidth="160.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="✅ Confirmar" />
+                                <Button fx:id="btnCancelar" onAction="#onCancelarClick" prefWidth="160.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="❌ Cancelar" />
+                                <Button fx:id="btnCompletar" onAction="#onCompletarClick" prefWidth="160.0" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="🏆 Completar" />
+                                <Button fx:id="btnActualizar" onAction="#onActualizarClick" prefWidth="160.0" style="-fx-background-color: #4A7FA9; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 5; -fx-cursor: hand;" text="🔄 Actualizar" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

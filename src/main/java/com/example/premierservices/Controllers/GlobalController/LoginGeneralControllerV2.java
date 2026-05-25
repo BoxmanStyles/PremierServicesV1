@@ -99,6 +99,10 @@ public class LoginGeneralControllerV2 {
                     abrirPantallaProveedor();
                 } else if ("admin".equals(tipo)) {
                     abrirPantallaAdmin();
+                } else if ("gestor_suplidor".equals(tipo)) {
+                    abrirPantallaGestorSuplidores();
+                } else if ("gestor_factura".equals(tipo)) {
+                    abrirPantallaGestorFacturacion();
                 } else {
                     mostrarMensaje("Tipo de usuario no soportado", "error");
                 }
@@ -132,6 +136,34 @@ public class LoginGeneralControllerV2 {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminPaginaPrincipal.fxml"));
         Parent root = loader.load();
         cambiarEscena(root, "Premier Services - Administración");
+    }
+
+    private void abrirPantallaGestorSuplidores() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestorSuplidoresPanel.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        stage.setMaximized(false);
+        stage.setResizable(true);
+        stage.setScene(new Scene(root));
+        stage.setTitle("Premier Services - Gestión de Suplidores");
+        stage.setWidth(1288);
+        stage.setHeight(668);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    private void abrirPantallaGestorFacturacion() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestorFacturacionPanel.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        stage.setMaximized(false);
+        stage.setResizable(true);
+        stage.setScene(new Scene(root));
+        stage.setTitle("Premier Services - Gestión de Facturación");
+        stage.setWidth(1288);
+        stage.setHeight(668);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     private void cambiarEscena(Parent root, String titulo) {
