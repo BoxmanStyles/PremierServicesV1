@@ -11,7 +11,7 @@ git push origin main
 # Rama feature/auth-usuarios
 git checkout feature/auth-usuarios
 git add .
-git commit -m "2 nuevas pantallas mas sus logicas, gestion factura y gestion proveedor"
+git commit -m "feat: modulo autenticacion y suscripciones completo"
 git push origin feature/auth-usuarios
 
 # Rama feature/proveedores
