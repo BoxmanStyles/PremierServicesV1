@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="668.0" prefWidth="1288.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.premierservices.Controllers.GestorFacturacion.GestorFacturacionPanelController">
+    <children>
+
+        <!-- Cabecera fija -->
+        <VBox style="-fx-background-color: linear-gradient(to right, #0A1832, #4A7FA9);">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="1270.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Region prefHeight="65.0" prefWidth="437.0" />
+                        <Pane prefHeight="60.0" prefWidth="256.0">
+                            <children>
+                                <Text fill="#50b9ff" layoutX="31.0" layoutY="61.0" stroke="#0d0c0c" strokeType="OUTSIDE" strokeWidth="0.0" text="remier Services">
+                                    <font><Font name="Elephant Italic" size="31.0" /></font>
+                                    <effect><Glow level="0.37" /></effect>
+                                </Text>
+                                <ImageView fx:id="Logoimg" fitHeight="71.0" fitWidth="70.0" layoutX="-6.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                                    <Image url="@../../../IMG/Logo.png" />
+                                    <effect><Glow level="0.81" /></effect>
+                                </ImageView>
+                            </children>
+                        </Pane>
+                        <Region prefHeight="65.0" prefWidth="297.0" />
+                        <Pane prefHeight="75.0" prefWidth="200.0" style="-fx-background-color: #142440; -fx-background-radius: 24;">
+                            <children>
+                                <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="45.0" layoutX="150.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                                <Button alignment="TOP_LEFT" layoutX="6.0" layoutY="12.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: transparent;" text="Gestor de Facturación" textFill="WHITE">
+                                    <font><Font size="13.0" /></font>
+                                </Button>
+                                <Button layoutX="6.0" layoutY="38.0" onAction="#cerrarSesion" style="-fx-background-color: transparent; -fx-text-fill: #ff6b6b; -fx-font-size: 10px; -fx-cursor: hand;" text="Cerrar sesión" />
+                            </children>
+                        </Pane>
+                    </children>
+                </HBox>
+
+                <!-- Barra de filtros por estado de factura -->
+                <HBox alignment="CENTER_LEFT" prefHeight="53.0" prefWidth="1288.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Region prefHeight="25.0" prefWidth="75.0" />
+                        <Button onAction="#filtrarTodas" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 10; -fx-border-width: 1;" text="📋 Todas" textFill="WHITE" />
+                        <Button onAction="#filtrarPendientes" style="-fx-background-color: transparent;" text="⏳ Pendientes" textFill="WHITE" />
+                        <Button onAction="#filtrarPagadas" style="-fx-background-color: transparent;" text="✅ Pagadas" textFill="WHITE" />
+                        <Button onAction="#filtrarAnuladas" style="-fx-background-color: transparent;" text="❌ Anuladas" textFill="WHITE" />
+                        <Region prefHeight="25.0" prefWidth="72.0" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
+        <!-- Contenido principal (mismo diseño que admin, adaptado) -->
+        <ScrollPane layoutY="158.0" prefHeight="668.0" prefWidth="1287.0">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1356.0" prefWidth="1272.0">
+                    <children>
+                        <Pane layoutY="-8.0" prefHeight="1395.0" prefWidth="1272.0" style="-fx-background-color: #1c2a4f;">
+                            <children>
+      
+                                <Text fill="WHITE" layoutX="490.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestión de Facturación" wrappingWidth="260.0">
+                                    <font>
+                              <Font name="Agency FB" size="33.0" />
+                           </font>
+                                </Text>
+      
+                                <!-- Panel de Factura -->
+                                <Pane layoutX="17.0" layoutY="74.0" prefHeight="550.0" prefWidth="1235.0" style="-fx-background-color: white; -fx-border-color: #191970; -fx-border-radius: 75px; -fx-background-radius: 75px;">
+                                    <children>
+                                        <VBox layoutX="341.0" layoutY="39.0" prefHeight="470.0" prefWidth="543.0" style="-fx-background-color: #1a233b; -fx-background-radius: 25px;">
+                                            <children>
+                                                <Pane prefHeight="17.0" prefWidth="550.0" />
+      
+                                                <!-- Fila 1: Número Factura + ITBIS -->
+                                                <Pane prefHeight="65.0" prefWidth="492.0">
+                                                    <children>
+                                                        <TextField fx:id="txtNumeroFactura" layoutX="29.0" layoutY="34.0" prefHeight="25.0" prefWidth="214.0" promptText="Número de factura" />
+                                                        <Text fill="WHITE" layoutX="30.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numero de factura:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                        <TextField fx:id="txtItbis" layoutX="275.0" layoutY="34.0" prefHeight="25.0" prefWidth="214.0" promptText="ITBIS %" />
+                                                        <Text fill="WHITE" layoutX="275.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ITBIS %:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+      
+                                                <!-- Fila 2: Suplidor + Descuento -->
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <TextField fx:id="txtIdSuplidor" layoutX="27.0" layoutY="33.0" prefHeight="25.0" prefWidth="214.0" promptText="ID del suplidor" />
+                                                        <Text fill="WHITE" layoutX="27.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Suplidor:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                        <TextField fx:id="txtDescuento" layoutX="274.0" layoutY="35.0" prefHeight="25.0" prefWidth="215.0" promptText="Descuento" />
+                                                        <Text fill="WHITE" layoutX="273.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descuento:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+      
+                                                <!-- Fila 3: Fecha + Estado -->
+                                                <Pane prefHeight="65.0" prefWidth="160.0">
+                                                    <children>
+                                                        <DatePicker fx:id="dpFechaFactura" layoutX="27.0" layoutY="32.0" prefHeight="25.0" prefWidth="214.0" promptText="Seleccione fecha" />
+                                                        <Text fill="WHITE" layoutX="25.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                        <Text fill="WHITE" layoutX="272.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Estado:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                        <ChoiceBox fx:id="cbEstadoFactura" layoutX="273.0" layoutY="39.0" prefHeight="25.0" prefWidth="212.0" />
+                                                    </children>
+                                                </Pane>
+      
+                                                <!-- Fila 4: Subtotal + Total -->
+                                                <Pane prefHeight="65.0" prefWidth="621.0">
+                                                    <children>
+                                                        <TextField fx:id="txtSubtotal" layoutX="28.0" layoutY="33.0" prefHeight="25.0" prefWidth="214.0" promptText="Subtotal" />
+                                                        <Text fill="WHITE" layoutX="27.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sub-Total:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                        <TextField fx:id="txtTotal" layoutX="275.0" layoutY="34.0" prefHeight="25.0" prefWidth="214.0" promptText="Total" />
+                                                        <Text fill="WHITE" layoutX="272.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+      
+                                                <!-- Fila 5: Descripción -->
+                                                <Pane prefHeight="85.0" prefWidth="543.0">
+                                                    <children>
+                                                        <TextField fx:id="txtDescripcionFactura" layoutX="28.0" layoutY="34.0" prefHeight="25.0" prefWidth="460.0" promptText="Descripción de la factura" />
+                                                        <Text fill="WHITE" layoutX="27.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descripción:">
+                                                            <font>
+                                                <Font name="Dubai Bold" size="15.0" />
+                                             </font>
+                                                        </Text>
+                                                    </children>
+                                                </Pane>
+      
+                                                <!-- Fila 6: Botones -->
+                                                <Pane prefHeight="82.0" prefWidth="543.0">
+                                                    <children>
+                                                        <Button fx:id="registrarFacturaButton" defaultButton="true" layoutX="40.0" layoutY="30.0" onAction="#onRegistrarFacturaClick" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" text="Crear Factura" />
+                                                        <Button fx:id="limpiarFacturaButton" layoutX="230.0" layoutY="30.0" onAction="#onLimpiarFacturaClick" prefHeight="34.0" prefWidth="140.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" text="Limpiar" />
+                                                    </children>
+                                                </Pane>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </Pane>
+      
+                                <!-- Tabla de Facturas -->
+                                <Text fill="WHITE" layoutX="509.0" layoutY="668.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tabla de Facturas">
+                                    <font>
+                              <Font name="Agency FB" size="40.0" />
+                           </font>
+                                </Text>
+                                <Line endX="637.0" layoutX="639.0" layoutY="681.0" startX="-635.0" stroke="WHITE" />
+      
+                                <Pane layoutX="17.0" layoutY="684.0" prefHeight="400.0" prefWidth="1235.0" style="-fx-background-color: white; -fx-border-color: #191970; -fx-border-radius: 75px; -fx-background-radius: 75px;">
+                                    <children>
+                                        <TableView fx:id="tablaFacturas" layoutX="55.0" layoutY="12.0" prefHeight="330.0" prefWidth="1096.0">
+                                            <columns>
+                                                <TableColumn fx:id="colNumeroFactura" prefWidth="80.0" text="N° Factura" />
+                                                <TableColumn fx:id="colComprobante" prefWidth="120.0" text="Comprobante" />
+                                                <TableColumn fx:id="colFechaFactura" prefWidth="100.0" text="Fecha" />
+                                                <TableColumn fx:id="colIdSuplidorFactura" prefWidth="80.0" text="ID Suplidor" />
+                                                <TableColumn fx:id="colDescripcionFactura" prefWidth="250.0" text="Descripción" />
+                                                <TableColumn fx:id="colSubtotal" prefWidth="90.0" text="Subtotal" />
+                                                <TableColumn fx:id="colItbis" prefWidth="70.0" text="ITBIS" />
+                                                <TableColumn fx:id="colDescuento" prefWidth="80.0" text="Descuento" />
+                                                <TableColumn fx:id="colTotal" prefWidth="90.0" text="Total" />
+                                                <TableColumn fx:id="colEstadoFactura" prefWidth="100.0" text="Estado" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </Pane>
+      
+                                <!-- Botón Editar (sin Eliminar — rol restringido) -->
+                                <Button fx:id="editarFacturaButton" layoutX="530.0" layoutY="1102.0" onAction="#onEditarFacturaClick" prefHeight="34.0" prefWidth="180.0" style="-fx-background-color: #007cff; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" text="✏️ Editar Estado" />
+      
+                            </children>
+                        </Pane>
+                    </children>
+                </AnchorPane>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

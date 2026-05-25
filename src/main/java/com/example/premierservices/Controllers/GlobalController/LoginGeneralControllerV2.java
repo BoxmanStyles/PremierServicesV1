@@ -99,6 +99,10 @@ public class LoginGeneralControllerV2 {
                     abrirPantallaProveedor();
                 } else if ("admin".equals(tipo)) {
                     abrirPantallaAdmin();
+                } else if ("gestor_suplidor".equals(tipo)) {
+                    abrirPantallaGestorSuplidores();
+                } else if ("gestor_factura".equals(tipo)) {
+                    abrirPantallaGestorFacturacion();
                 } else {
                     mostrarMensaje("Tipo de usuario no soportado", "error");
                 }
@@ -132,6 +136,18 @@ public class LoginGeneralControllerV2 {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminPaginaPrincipal.fxml"));
         Parent root = loader.load();
         cambiarEscena(root, "Premier Services - Administración");
+    }
+
+    private void abrirPantallaGestorSuplidores() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestorSuplidoresPanel.fxml"));
+        Parent root = loader.load();
+        cambiarEscena(root, "Premier Services - Gestión de Suplidores");
+    }
+
+    private void abrirPantallaGestorFacturacion() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestorFacturacionPanel.fxml"));
+        Parent root = loader.load();
+        cambiarEscena(root, "Premier Services - Gestión de Facturación");
     }
 
     private void cambiarEscena(Parent root, String titulo) {

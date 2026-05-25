@@ -414,11 +414,13 @@ public class ProveedorDashboardController {
             colAccion.setCellFactory(col -> new TableCell<>() {
                 private final Button btnConfirmar = new Button("✓ Confirmar");
                 private final Button btnCancelar = new Button("✗ Cancelar");
+                private final Button btnCompletar = new Button("🏆 Completar");
                 private final Button btnDetalle = new Button("👁 Ver");
 
                 {
                     btnConfirmar.setStyle("-fx-background-color:#059669; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
                     btnCancelar.setStyle("-fx-background-color:#dc2626; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
+                    btnCompletar.setStyle("-fx-background-color:#3498db; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
                     btnDetalle.setStyle("-fx-background-color:#4A7FA9; -fx-text-fill:white; -fx-background-radius:7; -fx-cursor:hand; -fx-font-size:11px; -fx-padding:5 10 5 10;");
                 }
 
@@ -427,12 +429,22 @@ public class ProveedorDashboardController {
                     if (empty) { setGraphic(null); return; }
                     SolicitudReserva s = getTableView().getItems().get(getIndex());
                     boolean pendiente = s.getEstado() == SolicitudReserva.Estado.PENDIENTE;
+                    boolean confirmado = s.getEstado() == SolicitudReserva.Estado.CONFIRMADO;
+                    boolean completado = s.getEstado() == SolicitudReserva.Estado.COMPLETADO;
+
                     btnConfirmar.setVisible(pendiente);
                     btnCancelar.setVisible(pendiente);
+                    btnCompletar.setVisible(confirmado && !completado);
 
-                    HBox buttons = new HBox(5, btnConfirmar, btnCancelar, btnDetalle);
+                    // Deshabilitar botón Completar si ya está completado
+                    if (completado) {
+                        btnCompletar.setVisible(false);
+                    }
+
+                    HBox buttons = new HBox(5, btnConfirmar, btnCancelar, btnCompletar, btnDetalle);
                     btnConfirmar.setOnAction(e -> confirmarReserva(s));
                     btnCancelar.setOnAction(e -> cancelarReserva(s));
+                    btnCompletar.setOnAction(e -> completarReserva(s));
                     btnDetalle.setOnAction(e -> mostrarDetalleReserva(s));
                     setGraphic(buttons); setText(null);
                 }
@@ -472,7 +484,6 @@ public class ProveedorDashboardController {
                 pst.setInt(1, solicitud.getIdReserva());
                 pst.executeUpdate();
 
-                // Enviar notificación y correo
                 enviarNotificacionesConfirmacion(solicitud);
 
                 cargarSolicitudesReales();
@@ -498,7 +509,6 @@ public class ProveedorDashboardController {
                 pst.setInt(1, solicitud.getIdReserva());
                 pst.executeUpdate();
 
-                // Enviar notificación de cancelación
                 enviarNotificacionesCancelacion(solicitud);
 
                 cargarSolicitudesReales();
@@ -506,6 +516,29 @@ public class ProveedorDashboardController {
             } catch (SQLException e) {
                 e.printStackTrace();
                 mostrarDialogoSimulado("Error", "No se pudo cancelar la reserva: " + e.getMessage());
+            }
+        }
+    }
+
+    private void completarReserva(SolicitudReserva solicitud) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Completar reserva");
+        confirm.setHeaderText("¿Marcar la reserva #" + solicitud.getIdReserva() + " como completada?");
+        confirm.setContentText("Cliente: " + solicitud.getCliente() + "\nServicio: " + solicitud.getServicio() +
+                "\nFecha: " + solicitud.getFechaEvento() + "\n\nEl evento se marcará como completado.");
+        estilizarAlerta(confirm);
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try (Connection con = conectar();
+                 PreparedStatement pst = con.prepareStatement("UPDATE tbl_reservas SET estado='completada' WHERE id_reserva=?")) {
+                pst.setInt(1, solicitud.getIdReserva());
+                pst.executeUpdate();
+
+                cargarSolicitudesReales();
+                mostrarDialogoSimulado("Éxito", "Reserva marcada como completada.\n¡Gracias por tu servicio!");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                mostrarDialogoSimulado("Error", "No se pudo completar la reserva: " + e.getMessage());
             }
         }
     }
@@ -539,7 +572,6 @@ public class ProveedorDashboardController {
 
     private void enviarNotificacionesConfirmacion(SolicitudReserva solicitud) {
         try (Connection con = conectar()) {
-            // 1. Obtener ID del cliente
             String sqlCliente = "SELECT id_cliente FROM tbl_reservas WHERE id_reserva = ?";
             int idCliente = -1;
             try (PreparedStatement pst = con.prepareStatement(sqlCliente)) {
@@ -550,7 +582,6 @@ public class ProveedorDashboardController {
                 }
             }
 
-            // 2. Obtener datos del cliente (usuario)
             String sqlDatosCliente = "SELECT u.id_usuario, u.nombre, c.email " +
                     "FROM tbl_usuarios u " +
                     "INNER JOIN tbl_clientes c ON u.id_usuario = c.id_usuario " +
@@ -569,13 +600,12 @@ public class ProveedorDashboardController {
                 }
             }
 
-            // 3. Obtener datos del servicio y proveedor (correo DESDE tbl_usuarios)
             String sqlServicio = "SELECT s.nombre_servicio, r.fecha_evento, " +
-                    "p.nombre_empresa, p.telefono, u.email AS correo_proveedor " +  // 👈 Desde tbl_usuarios
+                    "p.nombre_empresa, p.telefono, u.email AS correo_proveedor " +
                     "FROM tbl_servicios s " +
                     "INNER JOIN tbl_reservas r ON r.id_servicio = s.id_servicio " +
                     "INNER JOIN tbl_suplidores p ON s.id_suplidor = p.id_suplidor " +
-                    "INNER JOIN tbl_usuarios u ON p.id_usuario = u.id_usuario " +  // 👈 Join con usuarios
+                    "INNER JOIN tbl_usuarios u ON p.id_usuario = u.id_usuario " +
                     "WHERE r.id_reserva = ?";
 
             String nombreServicio = "";
@@ -593,19 +623,9 @@ public class ProveedorDashboardController {
                     nombreProveedor = rs.getString("nombre_empresa");
                     telefonoProveedor = rs.getString("telefono") != null ? rs.getString("telefono") : "No disponible";
                     emailProveedor = rs.getString("correo_proveedor") != null ? rs.getString("correo_proveedor") : "No disponible";
-
-                    // LOGS PARA DEPURAR
-                    System.out.println("=== DATOS DEL PROVEEDOR (DESDE USUARIOS) ===");
-                    System.out.println("Nombre Servicio: " + nombreServicio);
-                    System.out.println("Fecha Evento: " + fechaEvento);
-                    System.out.println("Nombre Proveedor: " + nombreProveedor);
-                    System.out.println("Teléfono Proveedor: " + telefonoProveedor);
-                    System.out.println("Email Proveedor (desde usuarios): " + emailProveedor);
-                    System.out.println("=============================================");
                 }
             }
 
-            // 4. Crear notificación push
             if (idUsuario != -1) {
                 String titulo = "✅ Reserva Confirmada";
                 String contenido = "Tu reserva para \"" + nombreServicio + "\" (Fecha: " + fechaEvento +
@@ -614,7 +634,6 @@ public class ProveedorDashboardController {
                 crearNotificacionCliente(idUsuario, titulo, contenido, "reserva_confirmada", urlAccion);
             }
 
-            // 5. Enviar correo electrónico
             if (emailCliente != null && !emailCliente.isEmpty()) {
                 try {
                     EmailSender.enviarCorreoConfirmacion(
@@ -624,7 +643,7 @@ public class ProveedorDashboardController {
                             fechaEvento,
                             nombreProveedor,
                             telefonoProveedor,
-                            emailProveedor  // 👈 Ahora viene de tbl_usuarios
+                            emailProveedor
                     );
                     System.out.println("✅ Correo enviado a: " + emailCliente);
                 } catch (Exception e) {
@@ -640,7 +659,6 @@ public class ProveedorDashboardController {
 
     private void enviarNotificacionesCancelacion(SolicitudReserva solicitud) {
         try (Connection con = conectar()) {
-            // Obtener ID del cliente
             String sqlCliente = "SELECT id_cliente FROM tbl_reservas WHERE id_reserva = ?";
             int idCliente = -1;
             try (PreparedStatement pst = con.prepareStatement(sqlCliente)) {
@@ -651,7 +669,6 @@ public class ProveedorDashboardController {
                 }
             }
 
-            // Obtener datos del cliente
             String sqlDatosCliente = "SELECT u.id_usuario, u.nombre, c.email " +
                     "FROM tbl_usuarios u INNER JOIN tbl_clientes c ON u.id_usuario = c.id_usuario " +
                     "WHERE c.id_cliente = ?";
@@ -668,7 +685,6 @@ public class ProveedorDashboardController {
                 }
             }
 
-            // Obtener datos del servicio (para la cancelación)
             String sqlServicio = "SELECT s.nombre_servicio, r.fecha_evento " +
                     "FROM tbl_servicios s INNER JOIN tbl_reservas r ON r.id_servicio = s.id_servicio " +
                     "WHERE r.id_reserva = ?";
@@ -683,7 +699,6 @@ public class ProveedorDashboardController {
                 }
             }
 
-            // Notificación push
             if (idUsuario != -1) {
                 String titulo = "❌ Reserva Cancelada";
                 String contenido = "Lamentamos informarte que tu reserva para \"" + nombreServicio +
@@ -691,7 +706,6 @@ public class ProveedorDashboardController {
                 crearNotificacionCliente(idUsuario, titulo, contenido, "reserva_cancelada", "/reservas/" + solicitud.getIdReserva());
             }
 
-            // Enviar correo de cancelación
             if (emailCliente != null && !emailCliente.isEmpty()) {
                 try {
                     EmailSender.enviarCorreoCancelacion(emailCliente, nombreCliente, nombreServicio, fechaEvento);
@@ -704,21 +718,6 @@ public class ProveedorDashboardController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    private int obtenerIdClientePorReserva(int idReserva) {
-        String sql = "SELECT id_cliente FROM tbl_reservas WHERE id_reserva = ?";
-        try (Connection con = conectar(); PreparedStatement pst = con.prepareStatement(sql)) {
-            pst.setInt(1, idReserva);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id_cliente");
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al obtener id_cliente: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return -1;
     }
 
     @FXML private void handleLogout() {

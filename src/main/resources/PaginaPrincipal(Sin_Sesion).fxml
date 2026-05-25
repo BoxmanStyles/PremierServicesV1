@@ -55,22 +55,14 @@
                         <Pane prefHeight="65.0" prefWidth="138.0">
                             <children>
                                 <ImageView fx:id="imagenPerfil" fitHeight="50.0" fitWidth="79.0" layoutX="77.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
-                                <Button fx:id="AbrirLoginPaquinaPrincipal" alignment="BOTTOM_CENTER" layoutX="7.0" layoutY="8.0" mnemonicParsing="false" onAction="#AbrirLoginPaquinaPrincipal" prefHeight="50.0" prefWidth="109.0" style="-fx-background-color: transparent;" text="Account" textFill="WHITE">
+                                <Button fx:id="AbrirLoginPaquinaPrincipal" alignment="BOTTOM_CENTER" layoutX="7.0" layoutY="8.0" mnemonicParsing="false" onAction="#AbrirLoginPaquinaPrincipal" prefHeight="50.0" prefWidth="101.0" style="-fx-background-color: transparent;" text="Account" textFill="WHITE">
                                     <font>
                                         <Font size="16.0" />
                                     </font>
                                 </Button>
                             </children>
                         </Pane>
-                        <Pane prefHeight="65.0" prefWidth="138.0">
-                            <children>
-                                <Button fx:id="BandejaAbir" alignment="BOTTOM_CENTER" layoutX="8.0" layoutY="8.0" mnemonicParsing="false" onAction="#BandejaAbrir" prefHeight="50.0" prefWidth="123.0" style="-fx-background-color: transparent;" text="Bandeja 📥" textFill="WHITE">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                                </Button>
-                            </children>
-                        </Pane>
+                        <Pane prefHeight="65.0" prefWidth="138.0" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" prefHeight="53.0" prefWidth="1288.0" spacing="20.0" style="-fx-padding: 20;">
