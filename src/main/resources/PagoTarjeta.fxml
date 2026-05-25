@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:id="rootPane" stylesheets="@pago-tarjeta.css"
+           styleClass="overlay-backdrop"
+           xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.premierservices.Controllers.GlobalController.PagoTarjetaController">
+    <children>
+
+        <!-- Fondo principal del modal (centrado sobre el backdrop) -->
+        <VBox fx:id="modalCard" alignment="TOP_CENTER" maxHeight="640.0" maxWidth="520.0"
+              prefHeight="640.0" prefWidth="520.0" spacing="22.0"
+              styleClass="modal-pago">
+
+            <padding><Insets bottom="28.0" left="40.0" right="40.0" top="32.0" /></padding>
+
+            <children>
+
+                <!-- Encabezado -->
+                <VBox alignment="CENTER" spacing="4.0">
+                    <children>
+                        <Label styleClass="titulo-modal" text="Información de pago" />
+                        <Label fx:id="lblPlanInfo" styleClass="subtitulo-modal"
+                               text="Plan Elite — USD 29.00 / mes" />
+                    </children>
+                </VBox>
+
+                <!-- ─── TARJETA VISUAL ─────────────────────────────────── -->
+                <StackPane styleClass="tarjeta-shadow">
+                    <children>
+                        <VBox alignment="TOP_LEFT" maxHeight="240.0" maxWidth="420.0"
+                              prefHeight="240.0" prefWidth="420.0" spacing="14.0"
+                              styleClass="tarjeta-credito">
+
+                            <padding><Insets bottom="22.0" left="26.0" right="26.0" top="22.0" /></padding>
+
+                            <children>
+
+                                <!-- Fila superior: chip + marca -->
+                                <HBox alignment="CENTER_LEFT" spacing="14.0">
+                                    <children>
+                                        <!-- Chip dorado -->
+                                        <Rectangle arcHeight="8.0" arcWidth="8.0"
+                                                   fill="#d4af37" height="32.0" width="42.0">
+                                            <effect>
+                                                <Glow level="0.3" />
+                                            </effect>
+                                        </Rectangle>
+                                        <!-- Logo Premier en la tarjeta -->
+                                        <Text fill="#50b9ff" strokeType="OUTSIDE" strokeWidth="0.0"
+                                              text="Premier" styleClass="card-logo" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <!-- Marca de la tarjeta (círculos tipo Mastercard) -->
+                                        <StackPane>
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="-12.0">
+                                                    <children>
+                                                        <Circle fill="#eb001b" radius="11.0" opacity="0.9" />
+                                                        <Circle fill="#f79e1b" radius="11.0" opacity="0.9" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </HBox>
+
+                                <!-- Número de tarjeta -->
+                                <Label fx:id="lblCardNumero" styleClass="card-numero"
+                                       text="•••• •••• •••• ••••" />
+
+                                <Region VBox.vgrow="ALWAYS" />
+
+                                <!-- Fila inferior: nombre y fecha -->
+                                <HBox alignment="BOTTOM_LEFT" spacing="30.0">
+                                    <children>
+                                        <VBox spacing="3.0">
+                                            <children>
+                                                <Label styleClass="card-label" text="TITULAR" />
+                                                <Label fx:id="lblCardNombre" styleClass="card-valor"
+                                                       text="NOMBRE APELLIDO" />
+                                            </children>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <VBox spacing="3.0">
+                                            <children>
+                                                <Label styleClass="card-label" text="EXPIRA" />
+                                                <Label fx:id="lblCardExpira" styleClass="card-valor"
+                                                       text="MM/YY" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+
+                <!-- ─── FORMULARIO ─────────────────────────────────────── -->
+                <VBox spacing="12.0">
+                    <children>
+
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label styleClass="form-label" text="Número de tarjeta" />
+                                <TextField fx:id="txtNumero" promptText="1234 5678 9012 3456"
+                                           styleClass="form-input" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label styleClass="form-label" text="Nombre del titular" />
+                                <TextField fx:id="txtNombre" promptText="Como aparece en la tarjeta"
+                                           styleClass="form-input" />
+                            </children>
+                        </VBox>
+
+                        <HBox spacing="14.0">
+                            <children>
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="form-label" text="MM/YY" />
+                                        <TextField fx:id="txtExpira" promptText="12/28"
+                                                   styleClass="form-input" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="form-label" text="CVV" />
+                                        <TextField fx:id="txtCvv" promptText="123"
+                                                   styleClass="form-input" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                    </children>
+                </VBox>
+
+                <!-- ─── BOTONES ────────────────────────────────────────── -->
+                <HBox alignment="CENTER" spacing="14.0">
+                    <children>
+                        <Button onAction="#onCancelar" styleClass="btn-cancelar" text="Cancelar" />
+                        <Button fx:id="btnPagar" onAction="#onPagar"
+                                styleClass="btn-pagar" text="🔒 Pagar y continuar" />
+                    </children>
+                </HBox>
+
+                <!-- Texto de seguridad -->
+                <Label styleClass="texto-seguridad"
+                       text="🛡️  Tus datos están protegidos con cifrado SSL · Modo Demo" />
+
+            </children>
+        </VBox>
+
+    </children>
+</StackPane>

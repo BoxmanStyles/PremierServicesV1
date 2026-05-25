@@ -9,7 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -126,7 +129,19 @@ public class SeleccionPlanController {
             if (planSeleccionado.equals("Elite") || planSeleccionado.equals("Prime")) {
                 int numeroFactura = crearFacturaEnBD(planSeleccionado);
                 if (numeroFactura > 0) {
-                    generarYMostrarFactura(idSuplidor, numeroFactura, event);
+                    // NUEVO: Mostrar modal de pago con tarjeta ANTES de la factura
+                    double monto = planSeleccionado.equals("Elite") ? 29.00 : 79.00;
+                    boolean pagoOk = mostrarModalPago(planSeleccionado, monto);
+
+                    if (pagoOk) {
+                        // Si el "pago" se completó (prototipo visual), continuar con la factura
+                        generarYMostrarFactura(idSuplidor, numeroFactura, event);
+                    } else {
+                        // Usuario canceló el pago
+                        mostrarAlerta("Pago cancelado",
+                                "El pago fue cancelado. Tu plan no fue activado en este intento.",
+                                Alert.AlertType.WARNING);
+                    }
                 } else {
                     mostrarAlerta("Error", "No se pudo generar la factura.", Alert.AlertType.ERROR);
                     irALogin(event);
@@ -137,6 +152,41 @@ public class SeleccionPlanController {
             }
         } else {
             mostrarAlerta("Error", "No se pudo guardar el plan seleccionado.", Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Abre la ventana modal de pago con tarjeta (encima de la pantalla actual).
+     * Bloquea hasta que el usuario cierre el modal.
+     * @return true si el usuario "pagó", false si canceló
+     */
+    private boolean mostrarModalPago(String plan, double monto) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PagoTarjeta.fxml"));
+            Parent root = loader.load();
+            PagoTarjetaController ctrl = loader.getController();
+            ctrl.setPlanInfo(plan, monto);
+
+            Stage modal = new Stage();
+            modal.setTitle("Pago - Premier Services");
+            modal.initModality(Modality.APPLICATION_MODAL);
+            // Owner: la ventana actual de la selección de plan
+            modal.initOwner(btnSiguiente.getScene().getWindow());
+            modal.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            modal.setScene(scene);
+            modal.setResizable(false);
+            modal.centerOnScreen();
+            modal.showAndWait();
+
+            return ctrl.isPagoCompletado();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar PagoTarjeta.fxml: " + e.getMessage());
+            // Si falla cargar el modal, continuar igual para no bloquear
+            return true;
         }
     }
 
@@ -196,10 +246,14 @@ public class SeleccionPlanController {
     }
 
     /**
-     * Genera la factura PDF y la muestra en el visor de JasperReports (Swing)
-     * El usuario puede imprimir, guardar o exportar desde el visor
+     * Genera la factura PDF (siempre se guarda en /Facturas) y pregunta al usuario
+     * si desea imprimirla. Si elige SÍ → abre el visor con diálogo de impresión
+     * y simultáneamente redirige al login. Si elige NO → va directo al login.
      */
     private void generarYMostrarFactura(int idSuplidor, int numeroFactura, ActionEvent event) {
+        final JasperPrint jasperPrint;
+
+        // ─── 1. Generar y guardar el PDF (siempre) ──────────────────────────
         try {
             String reportPath = "src/main/resources/ReportePlanV2.jrxml";
             File reportFile = new File(reportPath);
@@ -211,64 +265,65 @@ public class SeleccionPlanController {
                 return;
             }
 
-            // Compilar el reporte
             JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
 
-            // Parámetros
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("id_suplidor", idSuplidor);
 
-            // Conexión
-            Connection con = conectar();
-
-            // Llenar reporte
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con);
+            try (Connection con = conectar()) {
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, con);
+            }
 
             // Crear carpeta Facturas si no existe
-            String facturasDir = "Facturas";
-            File dir = new File(facturasDir);
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
+            File dir = new File("Facturas");
+            if (!dir.exists()) dir.mkdir();
 
-            // Guardar PDF en carpeta
-            String pdfPath = facturasDir + "/Factura_Proveedor_" + idSuplidor + "_Nro_" + numeroFactura + ".pdf";
+            // Guardar el PDF (siempre, sin importar la elección del usuario)
+            String pdfPath = "Facturas/Factura_Proveedor_" + idSuplidor + "_Nro_" + numeroFactura + ".pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, pdfPath);
             System.out.println("Factura PDF guardada en: " + pdfPath);
-
-            con.close();
-
-            // Mostrar el visor de JasperReports (Swing) en un hilo separado
-            // El visor tiene botones para: Guardar, Imprimir, Exportar, Zoom, etc.
-            SwingUtilities.invokeLater(() -> {
-                JasperViewer viewer = new JasperViewer(jasperPrint, false);
-                viewer.setTitle("Factura - Plan " + planSeleccionado);
-                viewer.setVisible(true);
-            });
-
-            // Preguntar si quiere ir al login o quedarse viendo la factura
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Factura generada");
-            alert.setHeaderText("La factura se generó correctamente");
-            alert.setContentText("¿Desea continuar al inicio de sesión?\n\nPuede cerrar la ventana de la factura cuando termine de imprimir o guardar.");
-
-            ButtonType btnSi = new ButtonType("Sí, ir al login");
-            ButtonType btnNo = new ButtonType("Ver factura primero", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(btnSi, btnNo);
-
-            Optional<ButtonType> resultado = alert.showAndWait();
-            if (resultado.isPresent() && resultado.get() == btnSi) {
-                irALogin(event);
-            }
-            // Si elige "Ver factura primero", la ventana de la factura ya está abierta
-            // y se queda en la pantalla actual
 
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error al generar factura: " + e.getMessage());
             mostrarAlerta("Error", "No se pudo generar la factura: " + e.getMessage(), Alert.AlertType.ERROR);
             irALogin(event);
+            return;
         }
+
+        // ─── 2. Preguntar al usuario si quiere imprimir ─────────────────────
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Factura generada");
+        alert.setHeaderText("Tu factura del plan " + planSeleccionado + " se generó correctamente");
+        alert.setContentText("¿Deseas imprimir la factura ahora?\n\nLa factura se guardó automáticamente en la carpeta 'Facturas'.");
+
+        ButtonType btnImprimir = new ButtonType("🖨️  Imprimir factura");
+        ButtonType btnNo       = new ButtonType("No, ir al login", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(btnImprimir, btnNo);
+
+        Optional<ButtonType> resultado = alert.showAndWait();
+        boolean quiereImprimir = resultado.isPresent() && resultado.get() == btnImprimir;
+
+        // ─── 3. Si elige imprimir → abrir visor con diálogo de impresión ────
+        if (quiereImprimir) {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    // Abrir el visor de JasperReports (con botones de imprimir/guardar/exportar)
+                    JasperViewer viewer = new JasperViewer(jasperPrint, false);
+                    viewer.setTitle("Factura - Plan " + planSeleccionado);
+                    viewer.setVisible(true);
+
+                    // Lanzar el diálogo nativo de impresión del sistema operativo
+                    JasperPrintManager.printReport(jasperPrint, true);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.err.println("Error al abrir visor/impresión: " + ex.getMessage());
+                }
+            });
+        }
+
+        // ─── 4. Ir al login (siempre, en ambos casos) ───────────────────────
+        irALogin(event);
     }
 
     private void irALogin(ActionEvent event) {
